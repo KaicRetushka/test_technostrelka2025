@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, VARCHAR, ForeignKey
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 
-engine = create_engine('sqlite:///backend/database/mydb.db', echo=True)
+engine = create_engine('sqlite:///backend/database/mydb.db')
 Base = declarative_base()
 
 class TableUsers(Base):

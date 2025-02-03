@@ -1,7 +1,6 @@
-Установка библиотек для python
-Windows
+Установка библиотек для python git
 python -m venv .venv
-.venv\Scripts\activate
+source .venv/Scripts/activate
 pip install -r requirements.txt
 Запуск бекенда
 python main.py
