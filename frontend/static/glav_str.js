@@ -5,7 +5,7 @@ async function exit() {
         headers: {'Content-Type': 'application/json'}
     })
 
-    window.location.href='vhod.html'
+    window.location.href='glav_str.html'
     
 }
 
