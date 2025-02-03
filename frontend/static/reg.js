@@ -24,16 +24,13 @@ async function getResponse() {
         alert('Успешный вход: ', data)
         localStorage.setItem('token', data.token);
         console.log(data)
-        window.location.href='privet.html'
+        window.location.href='glav_str.html'
 
     } else {
         alert('Неправильный логин или пароль')
         console.log('yyy')
     }
 
-    
-
 }
-
 
 document.querySelector('#submit').onclick = getResponse

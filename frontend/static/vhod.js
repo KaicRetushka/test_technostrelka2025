@@ -21,9 +21,8 @@ async function setResponse() {
         const data = await response.json()
         console.log('ttt')
         alert('Успешный вход: ', data)
-        localStorage.setItem('token', data.token);
         console.log(data)
-        window.location.href='privet.html'
+        window.location.href='glav_str.html'
     } else {
         alert('Неправильный логин или пароль')
         console.log('yyy')
