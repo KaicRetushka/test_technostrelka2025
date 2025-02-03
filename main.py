@@ -22,11 +22,11 @@ async def give_html(path: str, request: Request) -> HTMLResponse:
     file_path = os.path.join('frontend', f'{path}.html')
     if not os.path.isfile(file_path):
         raise HTTPException(status_code=404, detail='Такого файла не существует')
-    data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
-    if check_user(data_token['login'], data_token['password'])['status_code'] != 200:
+    try:
         is_enter = False
         fullname = ''
-    else:
+    except:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
         is_enter  = True
         fullname = select_fullname(data_token['login'], data_token['password'])
     return  templates.TemplateResponse(f'{path}.html', {'request': request, 'is_enter': is_enter, 'fullname': fullname})
