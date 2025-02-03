@@ -8,7 +8,7 @@ async function setResponse() {
         return;
     }
 
-    let response = await fetch('http://212.22.82.237:8000/enter', {
+    let response = await fetch('http://127.0.0.1:8000/enter', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

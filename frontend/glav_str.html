@@ -6,19 +6,32 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="glav_str.css">
+    <link rel="stylesheet" href="static/glav_str.css">
 </head>
 <body>
     
     {% if is_enter %}
     <p>{{ fullname }}</p>
+    <button id="button_glav_exit" type="button">Выйти</button>
     {% else %}
     
-    <p>Войти</p>
 
-    <p>Зарегистрироваться</p>
+    <a href="vhod.html">
+
+        <button id="button_glav_vhod">Войти</button>
+
+    </a>
+    
+
+    <a href="reg.html">
+
+        <button id="button_glav_reg">Зарегистрироваться</button>
+
+    </a>
 
     {% endif %}
+
+    <script src="static/glav_str.js"></script>
 
 </body>
 </html>

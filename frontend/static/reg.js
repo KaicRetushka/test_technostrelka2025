@@ -8,7 +8,7 @@ async function getResponse() {
         return;
     }
 
-    let response = await fetch('http://212.22.82.237:8000/registration', {
+    let response = await fetch('http://127.0.0.1:8000/registration', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -22,12 +22,11 @@ async function getResponse() {
     if (response.ok) {
         const data = await response.json()
         alert('Успешный вход: ', data)
-        localStorage.setItem('token', data.token);
         console.log(data)
         window.location.href='glav_str.html'
 
     } else {
-        alert('Неправильный логин или пароль')
+        alert('Такой логин уже занят')
         console.log('yyy')
     }
 
