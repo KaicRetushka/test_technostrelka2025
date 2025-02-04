@@ -14,7 +14,7 @@ from backend.database.requests_db import add_user, check_user, select_fullname
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
 
-templates = Jinja2Templates(directory='frontend')
+templates = Jinja2Templates(directory='frontend', cache_size=0)
 app.mount('/static', StaticFiles(directory='frontend/static'), name='static')
 
 @app.get('/{path:path}.html', tags=['Получить html'])

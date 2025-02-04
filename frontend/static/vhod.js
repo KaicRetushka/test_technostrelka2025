@@ -20,7 +20,6 @@ async function setResponse() {
     if (response.ok) {
         const data = await response.json()
         console.log('ttt')
-        alert('Успешный вход: ', data)
         console.log(data)
         window.location.href='glav_str.html'
     } else {

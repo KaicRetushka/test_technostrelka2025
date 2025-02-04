@@ -21,7 +21,6 @@ async function getResponse() {
 
     if (response.ok) {
         const data = await response.json()
-        alert('Успешный вход: ', data)
         console.log(data)
         window.location.href='glav_str.html'
 
