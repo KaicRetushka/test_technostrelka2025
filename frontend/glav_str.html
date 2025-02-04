@@ -11,27 +11,34 @@
 <body>
     
     {% if is_enter %}
-    <p>{{ fullname }}</p>
-    <button id="button_glav_exit" type="button">Выйти</button>
+
+        <p>{{ fullname }}</p>
+
+        <div id="map"></div>
+
+        <button id="button_glav_exit" type="button">Выйти</button>
+    
     {% else %}
-    
 
-    <a href="vhod.html" style="text-decoration: none;">
+        <a href="vhod.html" style="text-decoration: none;">
 
-        <button  id="button_glav_vhod">Войти</button>
+            <button  id="button_glav_vhod">Войти</button>
 
-    </a>
-    
+        </a>
+        
 
-    <a href="reg.html" style="text-decoration: none;">
-        <button id="button_glav_reg">Зарегистрироваться</button>
+        <a href="reg.html" style="text-decoration: none;">
+            <button id="button_glav_reg">Зарегистрироваться</button>
 
-    </a>
+        </a>
 
     {% endif %}
-    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A84ccc43caef786d30b986ca8632ae1dbecaaefcd4f404fb7634dc94638f26c6d&amp;source=constructor" width="500" height="400" frameborder="0"></iframe>
+    
+    
 
     <script src="static/glav_str.js"></script>
+    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor:%3A053bd947d462cc1a45aeba4070defff75501905071c0eaf68436ac9976ec698c&amp;width=602&amp;height=400&amp;lang=ru_RU&amp;scroll=true&amp;apikey=<126279f8-7d73-4da9-a3e6-369f3c5d0f2f>">
+    </script>
 
 </body>
 </html>
