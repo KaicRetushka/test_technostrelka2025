@@ -1,18 +1,26 @@
-from email.base64mime import decode
-
 from fastapi import FastAPI, Request, HTTPException, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import os
 import jwt
+# import httpx
 
 from backend.database.models_db import create_db
 from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail
 from backend.database.requests_db import add_user, check_user, select_fullname
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 templates = Jinja2Templates(directory='frontend', cache_size=0)
 app.mount('/static', StaticFiles(directory='frontend/static'), name='static')
