@@ -75,7 +75,7 @@ async def exit(response: Response):
     return {'detail': 'Вы успешно вышли из аккаунта'}
 
 @app.post('/polyline/add/',  tags=['Добавить маршрут'])
-async def add_polyline(request: Request, body: BodyAddPolyline, image: List[UploadFile] = File(...)) -> PydanticDetail:
+async def add_polyline(request: Request, body: BodyAddPolyline, photos: List[UploadFile] = File(...)) -> PydanticDetail:
     data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
     data = check_user(data_token['login'], data_token['password'])
     if data['status_code'] == 400:
