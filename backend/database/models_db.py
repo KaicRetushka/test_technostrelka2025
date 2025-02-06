@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, VARCHAR, ForeignKey, JSON, LargeBinary
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Session
 
 engine = create_engine('sqlite:///backend/database/mydb.db')
 Base = declarative_base()
@@ -12,6 +13,8 @@ class TableUsers(Base):
     surname: Mapped[str] = mapped_column(VARCHAR(100))
     role: Mapped[str] = mapped_column(VARCHAR(100), ForeignKey('roles.role'))
     roles = relationship('TableRoles', back_populates='users')
+    polylines_public = relationship('TablePolylinePublic', back_populates='users')
+    polylines_private = relationship('TablePolylinePrivate', back_populates='users')
 
 class TableRoles(Base):
     __tablename__ = 'roles'
@@ -27,6 +30,8 @@ class TablePolylinePublic(Base):
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
     is_conf: Mapped[bool]
     polylines_public_photos = relationship('TablePhotosPolylinePublic', back_populates='polylines_public')
+    login_user: Mapped[int] = mapped_column(ForeignKey('users.login'))
+    users = relationship('TableUsers', back_populates='polylines_public')
 
 class TablePhotosPolylinePublic(Base):
     __tablename__ = 'polylines_public_photos'
@@ -43,6 +48,8 @@ class TablePolylinePrivate(Base):
     p_arr: Mapped[list] = mapped_column(JSON)
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
     polylines_private_photos = relationship('TablePhotosPolylinePrivate', back_populates='polylines_private')
+    login_user: Mapped[int] = mapped_column(ForeignKey('users.login'))
+    users = relationship('TableUsers', back_populates='polylines_private')
 
 class TablePhotosPolylinePrivate(Base):
     __tablename__ = 'polylines_private_photos'
@@ -54,3 +61,9 @@ class TablePhotosPolylinePrivate(Base):
 
 def create_db():
     Base.metadata.create_all(bind=engine)
+    with Session(bind=engine, autoflush=False) as session:
+        if not(session.query(TableRoles.role).filter(TableRoles.role == 'Admin').first()):
+            role_admin = TableRoles(role='Admin')
+            role_user = TableRoles(role='User')
+            session.add_all([role_admin, role_user])
+            session.commit()
