@@ -67,3 +67,11 @@ def insert_photo_polyline(login, password, p_id, is_public, photo_blob):
         session.add(photo_polyline)
         session.commit()
         return {'status_code': 200, 'detail': 'Фотография вставлен успешно'}
+    
+def selet_logins_all():
+    with Session() as session:
+        logins = session.query(TableUsers.login).all()
+        arr_logins = []
+        for login in logins:
+            arr_logins.append(login[0])
+    return arr_logins

@@ -12,7 +12,7 @@ import jwt
 
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId
-from backend.database.requests_db import add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline
+from backend.database.requests_db import add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline, selet_logins_all
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -102,6 +102,12 @@ async def add_photo_polyline(request: Request, p_id: int = Query(...), is_bublic
     if data['status_code'] == 400:
         raise HTTPException(status_code=400, detail=data['detail'])
     return {'status_code': 200, 'detail': data['detail']}
+
+@app.get('/login/all/', tags=['Получение всех логинов пользователя'])
+async def give_logins_all() -> List[str]:
+    data = selet_logins_all()
+    print(data)
+    return data
 
 if __name__ == '__main__':
     create_db()
