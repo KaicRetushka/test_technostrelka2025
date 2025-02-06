@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException, Response, UploadFile, File
+from fastapi import FastAPI, Request, HTTPException, Response, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -11,8 +11,8 @@ import jwt
 
 
 from backend.database.models_db import create_db, engine
-from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline
-from backend.database.requests_db import add_user, check_user, select_fullname, insert_polyline, check_admin
+from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId
+from backend.database.requests_db import add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -76,15 +76,32 @@ async def exit(response: Response):
     return {'detail': 'Вы успешно вышли из аккаунта'}
 
 @app.post('/polyline/add/',  tags=['Добавить маршрут'])
-async def add_polyline(request: Request, body: BodyAddPolyline) -> PydanticDetail:
-    data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+async def add_polyline(request: Request, body: BodyAddPolyline) -> PydanticDetailPolylineId:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
     data = check_user(data_token['login'], data_token['password'])
     if data['status_code'] == 400:
         raise HTTPException(status_code=400, detail='Неверный логин или пароль')
-    insert_polyline(body.p_name, body.p_text, body.p_arr, body.p_color, body.is_public, data_token['login'], body.arr_blob)
+    p_id =  insert_polyline(body.p_name, body.p_text, body.p_arr, body.p_color, body.is_public, data_token['login'])
     if body.is_public:
-        return {'detail': 'Ваш маршрут отправлен на проверку'}
-    return {'detail': 'Вы добавили публичный маршрут'}
+        return {'detail': 'Ваш маршрут отправлен на проверку', 'p_id': p_id}
+    return {'detail': 'Вы добавили публичный маршрут', 'p_id': p_id}
+
+@app.post('/polyline/add/photo/', tags=['Добавление фотографии к маршруту'])
+async def add_photo_polyline(request: Request, p_id: int = Query(...), is_bublic: bool = Query(...),  photo: UploadFile = File(...)) -> PydanticDetail:
+    if photo.content_type[0:5] != 'image':
+        raise HTTPException(status_code=400, detail='Неверный тип файла')
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    photo_blob = await photo.read()
+    data = insert_photo_polyline(data_token['login'], data_token['password'], p_id, is_bublic, photo_blob)
+    if data['status_code'] == 400:
+        raise HTTPException(status_code=400, detail=data['detail'])
+    return {'status_code': 200, 'detail': data['detail']}
 
 if __name__ == '__main__':
     create_db()

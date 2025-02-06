@@ -39,7 +39,7 @@ def check_admin(login, password):
     except:
         return False
 
-def insert_polyline(p_name, p_text, p_arr, p_color, is_public, login_user, arr_blob):
+def insert_polyline(p_name, p_text, p_arr, p_color, is_public, login_user):
     with Session() as session:
         if is_public:
             polyline = TablePolylinePublic(p_name=p_name, p_text=p_text, p_arr=p_arr, p_color=p_color, is_conf=False, login_user=login_user)
@@ -48,10 +48,22 @@ def insert_polyline(p_name, p_text, p_arr, p_color, is_public, login_user, arr_b
         session.add(polyline)
         session.commit()
         p_id = polyline.p_id
-        for photo_blob in arr_blob:
-            if is_public:
-                photo = TablePhotosPolylinePublic(photo_blob=photo_blob, p_id=p_id)
-            else:
-                photo = TablePhotosPolylinePrivate(photo_blob=photo_blob, p_id=p_id)
-            session.add(photo)
-            session.commit()
+    return p_id
+
+def insert_photo_polyline(login, password, p_id, is_public, photo_blob):
+    if check_user(login, password)['status_code'] == 400:
+        return {'status_code': 400, 'detail': 'Неверный токен'}
+    with Session() as session:
+        if is_public:
+            polyline =  session.query(TablePolylinePublic).filter((TablePolylinePublic.login_user == login) & (TablePolylinePublic.p_id == p_id)).first()
+            if not(polyline):
+                return {'status_code': 400, 'detail': 'Неверный p_id'}
+            photo_polyline = TablePhotosPolylinePublic(photo_blob=photo_blob, p_id=p_id)
+        else:
+            polyline =  session.query(TablePolylinePrivate).filter((TablePolylinePrivate.login_user == login) & (TablePolylinePrivate.p_id == p_id)).first()
+            if not(polyline):
+                return {'status_code': 400, 'detail': 'Неверный p_id'}
+            photo_polyline = TablePhotosPolylinePrivate(photo_blob=photo_blob, p_id=p_id)
+        session.add(photo_polyline)
+        session.commit()
+        return {'status_code': 200, 'detail': 'Фотография вставлен успешно'}

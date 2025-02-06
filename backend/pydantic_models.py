@@ -20,4 +20,7 @@ class BodyAddPolyline(BaseModel):
     p_arr: List[Tuple[float, float]]
     p_color: str = Field(max_length=100)
     is_public: bool
-    arr_blob: List[bytes]
+
+class PydanticDetailPolylineId(BaseModel):
+    detail: str
+    p_id: int
