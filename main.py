@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from PIL import Image
 from sqladmin import Admin
 from typing import List
 import uvicorn
@@ -11,8 +12,9 @@ import jwt
 
 
 from backend.database.models_db import create_db, engine
-from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId
-from backend.database.requests_db import add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline, selet_logins_all
+from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline
+from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
+                                          selet_logins_all, select_p_p_all, select_p_p_photos_all)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -90,7 +92,7 @@ async def add_polyline(request: Request, body: BodyAddPolyline) -> PydanticDetai
     return {'detail': 'Вы добавили публичный маршрут', 'p_id': p_id}
 
 @app.post('/polyline/add/photo/', tags=['Добавление фотографии к маршруту'])
-async def add_photo_polyline(request: Request, p_id: int = Query(...), is_bublic: bool = Query(...),  photo: UploadFile = File(...)) -> PydanticDetail:
+async def add_photo_polyline(request: Request, p_id: int = Query(...), is_public: bool = Query(...),  photo: UploadFile = File(...)) -> PydanticDetail:
     if photo.content_type[0:5] != 'image':
         raise HTTPException(status_code=400, detail='Неверный тип файла')
     try:
@@ -98,16 +100,27 @@ async def add_photo_polyline(request: Request, p_id: int = Query(...), is_bublic
     except:
         raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
     photo_blob = await photo.read()
-    data = insert_photo_polyline(data_token['login'], data_token['password'], p_id, is_bublic, photo_blob)
+    data = insert_photo_polyline(data_token['login'], data_token['password'], p_id, is_public, photo_blob)
     if data['status_code'] == 400:
         raise HTTPException(status_code=400, detail=data['detail'])
     return {'status_code': 200, 'detail': data['detail']}
 
-@app.get('/login/all/', tags=['Получение всех логинов пользователя'])
+@app.get('/login/all/', tags=['Получение всех логинов пользователей'])
 async def give_logins_all() -> List[str]:
     data = selet_logins_all()
     print(data)
     return data
+
+@app.get('/polylines/public/', tags=['Получение всех подтверждённых публичных маршрутов пользовотеля'])
+async def give_all_p_p(login = Query(...)) -> List[InfoPolyline]:
+    data = select_p_p_all(login)
+    return data
+
+@app.get('/polylines/public/photos/', tags=['Получение всех фоток подтверждённых публичных маршрутов пользовотеля'])
+async def give_all_p_p(p_id = Query(...)):
+    data = select_p_p_photos_all(p_id)
+    return data
+
 
 if __name__ == '__main__':
     create_db()

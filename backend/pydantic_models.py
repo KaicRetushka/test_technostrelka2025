@@ -24,3 +24,9 @@ class BodyAddPolyline(BaseModel):
 class PydanticDetailPolylineId(BaseModel):
     detail: str
     p_id: int
+
+class InfoPolyline(BaseModel):
+    p_name: str = Field(max_length=100)
+    p_text: str
+    p_arr: List[Tuple[float, float]]
+    p_color: str = Field(max_length=100)

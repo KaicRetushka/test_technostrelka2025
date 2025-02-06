@@ -1,4 +1,5 @@
 from sqlalchemy.orm import sessionmaker
+import base64
 
 from backend.database.models_db import engine, TableUsers, TablePolylinePublic, TablePolylinePrivate, TablePhotosPolylinePublic, TablePhotosPolylinePrivate
 
@@ -75,3 +76,24 @@ def selet_logins_all():
         for login in logins:
             arr_logins.append(login[0])
     return arr_logins
+
+def select_p_p_all(login):
+    with Session() as session:
+        polylines_arr = []
+        polylines = session.query(TablePolylinePublic).filter((TablePolylinePublic.login_user == login) & (TablePolylinePublic.is_conf == True)).all()
+        for polyline in polylines:
+            print(polyline)
+            polylines_arr.append({'p_id': polyline.p_id, 
+                                 'p_name': polyline.p_name, 
+                                 'p_text': polyline.p_text, 
+                                 'p_arr': polyline.p_arr, 
+                                 'p_color': polyline.p_color})
+    return polylines_arr
+
+def select_p_p_photos_all(p_id):
+    with Session() as session:
+        photos_blob_arr = []
+        photos_blob = session.query(TablePhotosPolylinePublic.photo_blob).filter(TablePhotosPolylinePublic.p_id == p_id).all()
+        for photo_blob in photos_blob:
+            photos_blob_arr.append(base64.b64encode(photo_blob[0]).decode('utf-8'))
+    return photos_blob_arr
