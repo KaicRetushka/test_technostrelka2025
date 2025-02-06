@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from PIL import Image
 from sqladmin import Admin
 from typing import List
 import uvicorn
@@ -121,6 +120,7 @@ async def give_all_p_p(p_id = Query(...)):
     data = select_p_p_photos_all(p_id)
     return data
 
+# @app.get('/polylines/public/')
 
 if __name__ == '__main__':
     create_db()
