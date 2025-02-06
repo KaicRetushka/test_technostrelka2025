@@ -58,13 +58,11 @@ async function exit() {
 
 document.querySelector('#button_glav_exit').onclick = exit
 
-<<<<<<< Updated upstream
 function go_lich_kab(){
     window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
 }
 
 document.querySelector('#fullname').onclick = go_lich_kab
-=======
 
 let okno = document.querySelector('#okno')
 
@@ -82,4 +80,3 @@ let button_close = document.querySelector('#btnclose')
 button_cancel.addEventListener('click', () => {
     okno.close()
 });
->>>>>>> Stashed changes
