@@ -13,7 +13,7 @@ import jwt
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline
 from backend.database.requests_db import add_user, check_user, select_fullname, insert_polyline, check_admin
-from backend.admin_models import PolylinePublicAdmin
+from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
 
@@ -30,6 +30,7 @@ app.mount('/static', StaticFiles(directory='frontend/static'), name='static')
 
 admin = Admin(app, engine)
 admin.add_view(PolylinePublicAdmin)
+admin.add_view(PhotosPolylinePublicAdmin)
 
 @app.get('/{path:path}.html', tags=['Получить html'])
 async def give_html(path: str, request: Request) -> HTMLResponse:
