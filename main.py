@@ -13,7 +13,7 @@ import jwt
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
-                                          selet_logins_all, select_p_p_all, select_p_p_photos_all)
+                                          selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -88,7 +88,7 @@ async def add_polyline(request: Request, body: BodyAddPolyline) -> PydanticDetai
     p_id =  insert_polyline(body.p_name, body.p_text, body.p_arr, body.p_color, body.is_public, data_token['login'])
     if body.is_public:
         return {'detail': 'Ваш маршрут отправлен на проверку', 'p_id': p_id}
-    return {'detail': 'Вы добавили публичный маршрут', 'p_id': p_id}
+    return {'detail': 'Вы добавили приватный маршрут', 'p_id': p_id}
 
 @app.post('/polyline/add/photo/', tags=['Добавление фотографии к маршруту'])
 async def add_photo_polyline(request: Request, p_id: int = Query(...), is_public: bool = Query(...),  photo: UploadFile = File(...)) -> PydanticDetail:
@@ -115,12 +115,29 @@ async def give_all_p_p(login = Query(...)) -> List[InfoPolyline]:
     data = select_p_p_all(login)
     return data
 
-@app.get('/polylines/public/photos/', tags=['Получение всех фоток подтверждённых публичных маршрутов пользовотеля'])
-async def give_all_p_p(p_id = Query(...)):
+@app.get('/polylines/public/photos/', tags=['Получение всех фоток подтверждённого публичных маршрутов пользовотеля'])
+async def give_all_p_p(p_id = Query(...)) -> List:
     data = select_p_p_photos_all(p_id)
     return data
 
-# @app.get('/polylines/public/')
+@app.get('/polylines/private/', tags=['Получение всех приватных маршрутов пользовотеля'])
+async def give_all_private_p(request: Request) -> List[InfoPolyline]:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    data = select_private_p_all(data_token['login'])
+    return data
+
+
+@app.get('/polylines/private/photos/', tags=['Получение всех фоток приватного маршрутов пользовотеля'])
+async def give_all_private_p(request: Request, p_id = Query(...)) -> List:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    data = select_private_p_photos_all(data_token['login'], p_id)
+    return data
 
 if __name__ == '__main__':
     create_db()

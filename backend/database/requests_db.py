@@ -82,7 +82,6 @@ def select_p_p_all(login):
         polylines_arr = []
         polylines = session.query(TablePolylinePublic).filter((TablePolylinePublic.login_user == login) & (TablePolylinePublic.is_conf == True)).all()
         for polyline in polylines:
-            print(polyline)
             polylines_arr.append({'p_id': polyline.p_id, 
                                  'p_name': polyline.p_name, 
                                  'p_text': polyline.p_text, 
@@ -94,6 +93,26 @@ def select_p_p_photos_all(p_id):
     with Session() as session:
         photos_blob_arr = []
         photos_blob = session.query(TablePhotosPolylinePublic.photo_blob).filter(TablePhotosPolylinePublic.p_id == p_id).all()
+        for photo_blob in photos_blob:
+            photos_blob_arr.append(base64.b64encode(photo_blob[0]).decode('utf-8'))
+    return photos_blob_arr
+
+def select_private_p_all(login):
+    with Session() as session:
+        polylines_arr = []
+        polylines = session.query(TablePolylinePrivate).filter(TablePolylinePrivate.login_user == login).all()
+        for polyline in polylines:
+            polylines_arr.append({'p_id': polyline.p_id, 
+                                 'p_name': polyline.p_name, 
+                                 'p_text': polyline.p_text, 
+                                 'p_arr': polyline.p_arr, 
+                                 'p_color': polyline.p_color})
+    return polylines_arr   
+
+def select_private_p_photos_all(login, p_id):
+    with Session() as session:
+        photos_blob_arr = []
+        photos_blob = session.query(TablePhotosPolylinePrivate.photo_blob).filter(TablePhotosPolylinePrivate.p_id == p_id).all()
         for photo_blob in photos_blob:
             photos_blob_arr.append(base64.b64encode(photo_blob[0]).decode('utf-8'))
     return photos_blob_arr
