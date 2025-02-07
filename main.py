@@ -13,7 +13,8 @@ import jwt
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
-                                          selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all)
+                                          selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
+                                          update_avatar, select_avatar)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -111,7 +112,13 @@ async def give_logins_all() -> List[str]:
     return data
 
 @app.get('/polylines/public/', tags=['Получение всех подтверждённых публичных маршрутов пользовотеля'])
-async def give_all_p_p(login = Query(...)) -> List[InfoPolyline]:
+async def give_all_p_p(request: Request, login = Query(None)) -> List[InfoPolyline]:
+    if login == None:
+        try:
+            data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+            login = data_token['login']
+        except:
+            raise HTTPException(status_code=400, detail='Вы не зарегистрированы')  
     data = select_p_p_all(login)
     return data
 
@@ -137,6 +144,27 @@ async def give_all_private_p(request: Request, p_id = Query(...)) -> List:
     except:
         raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
     data = select_private_p_photos_all(data_token['login'], p_id)
+    return data
+
+@app.put('/user/avatar/', tags=['Изменение аватарки пользователя'])
+async def put_avatar(request: Request, avatar: UploadFile = File(...)):
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    avatar_blob = await avatar.read()
+    update_avatar(data_token['login'], avatar_blob)
+    return {'detail': 'Вы успешно изменили аватарку'}
+
+@app.get('/user/avatar', tags=['Получение аватарки пользователя'])
+async def give_avatar(request: Request, login: str = None):
+    if login == None:
+        try:
+            data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
+            login = data_token['login']
+        except:
+            raise HTTPException(status_code=400, detail='Вы не зарегистрированы')        
+    data = select_avatar(login)
     return data
 
 if __name__ == '__main__':

@@ -112,7 +112,24 @@ def select_private_p_all(login):
 def select_private_p_photos_all(login, p_id):
     with Session() as session:
         photos_blob_arr = []
-        photos_blob = session.query(TablePhotosPolylinePrivate.photo_blob).filter(TablePhotosPolylinePrivate.p_id == p_id).all()
+        photos_blob = session.query(TablePhotosPolylinePrivate.photo_blob).filter((TablePhotosPolylinePrivate.p_id == p_id) & (TablePhotosPolylinePrivate.login == login)).all()
         for photo_blob in photos_blob:
             photos_blob_arr.append(base64.b64encode(photo_blob[0]).decode('utf-8'))
     return photos_blob_arr
+
+def update_avatar(login, avatar_blob):
+    with Session() as session:
+        avatar_blob_db = session.query(TableUsers).filter(TableUsers.login == login).first()
+        avatar_blob_db.avatar_blob = avatar_blob
+        session.commit()
+
+def select_avatar(login):
+    with Session() as session:
+        avatar_blob = session.query(TableUsers.avatar_blob).filter(TableUsers.login == login).first()
+        if avatar_blob[0] is None:
+            with open('base.jpg', 'rb') as file:
+                avatar_blob = file.read()
+                avatar_base64 = base64.b64encode(avatar_blob).decode('utf-8')
+                return avatar_base64
+        avatar_base64 = base64.b64encode(avatar_blob[0]).decode('utf-8')
+        return avatar_base64

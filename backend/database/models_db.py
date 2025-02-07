@@ -15,6 +15,7 @@ class TableUsers(Base):
     roles = relationship('TableRoles', back_populates='users')
     polylines_public = relationship('TablePolylinePublic', back_populates='users')
     polylines_private = relationship('TablePolylinePrivate', back_populates='users')
+    avatar_blob: Mapped[bytes] = mapped_column(LargeBinary, nullable=True)
 
 class TableRoles(Base):
     __tablename__ = 'roles'
