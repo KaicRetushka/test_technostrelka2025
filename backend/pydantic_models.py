@@ -35,3 +35,7 @@ class InfoPolyline(BaseModel):
 class BodyCom(BaseModel):
     p_id: int
     comment: str
+
+class InfoCom(BaseModel):
+    login_user: str
+    c_text: str

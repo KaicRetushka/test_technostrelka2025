@@ -17,6 +17,7 @@ class TableUsers(Base):
     polylines_private = relationship('TablePolylinePrivate', back_populates='users')
     avatar_blob: Mapped[bytes] = mapped_column(LargeBinary, nullable=True)
     polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='users')
+    viseted_polylines_public: Mapped[str] = mapped_column(JSON, default='[]')
 
 class TableRoles(Base):
     __tablename__ = 'roles'

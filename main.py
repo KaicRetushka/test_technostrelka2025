@@ -11,10 +11,11 @@ import jwt
 
 
 from backend.database.models_db import create_db, engine
-from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, BodyCom
+from backend.pydantic_models import (PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, 
+                                     BodyCom, InfoCom)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
-                                          update_avatar, select_avatar, insert_message)
+                                          update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -167,7 +168,7 @@ async def give_avatar(request: Request, login: str = None):
     data = select_avatar(login)
     return data
 
-@app.post('/polylines/private/comment/', tags=['Добовление коментария к публичному маршруту'])
+@app.post('/polylines/public/comment/', tags=['Добовление коментария к публичному маршруту'])
 async def add_com_polylines(request: Request, body: BodyCom):
     try:
         data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
@@ -177,6 +178,22 @@ async def add_com_polylines(request: Request, body: BodyCom):
     if not(data):
         raise HTTPException(status_code=400, detail='Неверный p_id')
     return {'detail': 'Коментарий добавлен'}
+
+@app.get('/polylines/public/comment/', tags=['Получение всех комментарий к маршруту'])
+async def give_comments(p_id) -> List[InfoCom]:
+    data = select_comments(p_id)
+    return data
+
+@app.put('/users/visited/public/polyline', tags=['Добавление отметки о посещении маршрута'])
+async def add_visited(request: Request, p_id: int) -> PydanticDetail:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    data = update_visited_polylines(data_token['login'], p_id)
+    if not(data):
+        raise HTTPException(status_code=400, detail='Неверный p_id')
+    return {'detail': 'Отметка о посещении добавлена'}
 
 if __name__ == '__main__':
     create_db()

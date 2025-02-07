@@ -1,5 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 import base64
+import json
 
 from backend.database.models_db import (engine, TableUsers, TablePolylinePublic, TablePolylinePrivate, TablePhotosPolylinePublic, TablePhotosPolylinePrivate,
                                         TableCommentsPolylinePublic)
@@ -144,3 +145,24 @@ def insert_message(login, comment, p_id):
         session.add(comment)
         session.commit()
     return True
+
+def update_visited_polylines(login, p_id):
+    with Session() as session:
+        polyline = session.query(TablePolylinePublic).filter(TablePolylinePublic.p_id == p_id).filter()
+        if not(polyline):
+            return False
+        user = session.query(TableUsers).filter(TableUsers.login == login).first()
+        viseted_polylines_public = json.loads(user.viseted_polylines_public)
+        if not(p_id in viseted_polylines_public):
+            viseted_polylines_public.append(p_id)
+        user.viseted_polylines_public = json.dumps(viseted_polylines_public)
+        session.commit()
+    return True
+
+def select_comments(p_id):
+    with Session() as session:
+        arr_comments = []
+        comments = session.query(TableCommentsPolylinePublic).filter(TableCommentsPolylinePublic.p_id == p_id).all()
+        for comment in comments:
+            arr_comments.append({'login_user': comment.login_user, 'c_text': comment.c_text})
+    return arr_comments
