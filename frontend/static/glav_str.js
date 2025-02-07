@@ -1,8 +1,8 @@
 const btn_add_polyline = document.getElementById('btn_add_route')
+const dobav_foto = document.getElementById('dobav_foto')
 console.log(btn_add_polyline)
 let is_polyline = false
-
-
+let arr = []
 
 ymaps.ready(init);
 function init(){
@@ -31,7 +31,6 @@ function init(){
         }
     });
     myMap.geoObjects.add(myPolyline);
-    let arr = []
     myMap.events.add('click', (event) => {
     if (is_polyline){
         let eCoords = event.get('coords');
@@ -80,3 +79,45 @@ let button_close = document.querySelector('#btnclose')
 button_cancel.addEventListener('click', () => {
     okno.close()
 });
+
+
+async function set_save_route() {
+    console.log('Data being sent:', {
+        p_name: document.querySelector('#p_name').value,
+        p_text: document.querySelector('#p_text').value,
+        p_arr: arr,
+        p_color: document.querySelector('#p_color').value,
+        is_public: document.querySelector('#public').value,
+    });
+
+    const response = await fetch('http://127.0.0.1:8000/polyline/add/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            p_name: document.querySelector('#p_name').value,
+            p_text: document.querySelector('#p_text').value,
+            p_arr: arr,
+            p_color: document.querySelector('#p_color').value,
+            is_public: true,
+        })
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    let route_id = data.p_id;
+    let pub = true;
+    for (file of dobav_foto.files){
+        let formData = new FormData()
+        formData.append('photo', file)
+        let response = await fetch(`http://127.0.0.1:8000/polyline/add/photo/?p_id=${route_id}&is_public=${pub}`, {
+            method: 'POST',
+            body: formData
+        })
+        response = await response.json()
+        console.log(response.detail)
+    }
+
+}
+
+document.getElementById('button_send').onclick = set_save_route;

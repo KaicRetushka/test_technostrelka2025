@@ -18,14 +18,15 @@
 
         <a href="reg.html" style="text-decoration: none;">
             <button id="button_glav_reg">Зарегистрироваться</button>
-        </a>
+        </a> <br><br>
     {% endif %}
 
     <div id="map" style="width: 600px; height: 400px"></div><br>
-
+    
+    {% if is_enter %}
     <button id="btn_add_route">Добавить маршрут</button>
     <button id="btn_save_route">Сохрнаить маршрут</button>
-    
+    {% endif %}
     <dialog id="okno">
         <form id="form">
             <div class="modal">
@@ -35,17 +36,17 @@
 
                     <div>
                         <p>Название</p>
-                        <input type="text">
+                        <input id="p_name" type="text">
                     </div>
 
                     <div>
                         <p>Описание</p>
-                        <textarea name="" id=""></textarea>
+                        <textarea id="p_text" name="" id=""></textarea>
                     </div>
 
                     <div>
                         <p>Выберите цвет линий:</p>
-                        <input type="color">
+                        <input id="p_color" type="color">
                     </div><br>
                     
                     <div class="file-input-container">
@@ -77,7 +78,7 @@
                     </div>
                     
                     <button id="button_cancel" type="button">Отменить</button>
-                    <button id="button_send" type="submit">Отправить</button>
+                    <button id="button_send" type="button">Отправить</button>
                 </div>
                 <div class="overlay"></div>
             </div>
