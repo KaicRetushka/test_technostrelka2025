@@ -11,10 +11,10 @@ import jwt
 
 
 from backend.database.models_db import create_db, engine
-from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline
+from backend.pydantic_models import PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, BodyCom
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
-                                          update_avatar, select_avatar)
+                                          update_avatar, select_avatar, insert_message)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -147,7 +147,7 @@ async def give_all_private_p(request: Request, p_id = Query(...)) -> List:
     return data
 
 @app.put('/user/avatar/', tags=['Изменение аватарки пользователя'])
-async def put_avatar(request: Request, avatar: UploadFile = File(...)):
+async def put_avatar(request: Request, avatar: UploadFile = File(...)) -> PydanticDetail:
     try:
         data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
     except:
@@ -166,6 +166,17 @@ async def give_avatar(request: Request, login: str = None):
             raise HTTPException(status_code=400, detail='Вы не зарегистрированы')        
     data = select_avatar(login)
     return data
+
+@app.post('/polylines/private/comment/', tags=['Добовление коментария к публичному маршруту'])
+async def add_com_polylines(request: Request, body: BodyCom):
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')      
+    data = insert_message(data_token['login'], body.comment, body.p_id)
+    if not(data):
+        raise HTTPException(status_code=400, detail='Неверный p_id')
+    return {'detail': 'Коментарий добавлен'}
 
 if __name__ == '__main__':
     create_db()

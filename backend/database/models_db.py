@@ -16,6 +16,7 @@ class TableUsers(Base):
     polylines_public = relationship('TablePolylinePublic', back_populates='users')
     polylines_private = relationship('TablePolylinePrivate', back_populates='users')
     avatar_blob: Mapped[bytes] = mapped_column(LargeBinary, nullable=True)
+    polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='users')
 
 class TableRoles(Base):
     __tablename__ = 'roles'
@@ -33,6 +34,7 @@ class TablePolylinePublic(Base):
     polylines_public_photos = relationship('TablePhotosPolylinePublic', back_populates='polylines_public')
     login_user: Mapped[int] = mapped_column(ForeignKey('users.login'))
     users = relationship('TableUsers', back_populates='polylines_public')
+    polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='polylines_public')
 
 class TablePhotosPolylinePublic(Base):
     __tablename__ = 'polylines_public_photos'
@@ -40,6 +42,15 @@ class TablePhotosPolylinePublic(Base):
     photo_blob: Mapped[bytes] = mapped_column(LargeBinary)
     polylines_public = relationship('TablePolylinePublic', back_populates='polylines_public_photos')
     p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id'))
+
+class TableCommentsPolylinePublic(Base):
+    __tablename__ = 'polylines_public_comments'
+    c_id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
+    c_text: Mapped[str]
+    polylines_public = relationship('TablePolylinePublic', back_populates='polylines_public_comments')
+    p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id'))
+    users = relationship('TableUsers', back_populates='polylines_public_comments')
+    login_user: Mapped[int] = mapped_column(ForeignKey('users.login'))
 
 class TablePolylinePrivate(Base):
     __tablename__ = 'polylines_private'
@@ -58,7 +69,6 @@ class TablePhotosPolylinePrivate(Base):
     photo_blob: Mapped[bytes] = mapped_column(LargeBinary)
     polylines_private = relationship('TablePolylinePrivate', back_populates='polylines_private_photos')
     p_id: Mapped[int] = mapped_column(ForeignKey('polylines_private.p_id'))
-
 
 def create_db():
     Base.metadata.create_all(bind=engine)

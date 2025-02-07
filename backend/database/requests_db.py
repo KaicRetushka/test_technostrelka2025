@@ -1,7 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 import base64
 
-from backend.database.models_db import engine, TableUsers, TablePolylinePublic, TablePolylinePrivate, TablePhotosPolylinePublic, TablePhotosPolylinePrivate
+from backend.database.models_db import (engine, TableUsers, TablePolylinePublic, TablePolylinePrivate, TablePhotosPolylinePublic, TablePhotosPolylinePrivate,
+                                        TableCommentsPolylinePublic)
 
 Session = sessionmaker(bind=engine, autoflush=False)
 
@@ -133,3 +134,13 @@ def select_avatar(login):
                 return avatar_base64
         avatar_base64 = base64.b64encode(avatar_blob[0]).decode('utf-8')
         return avatar_base64
+    
+def insert_message(login, comment, p_id):
+    with Session() as session:
+        polyline = session.query(TablePolylinePublic).filter(TablePolylinePublic.p_id == p_id).first()
+        if not(polyline):
+            return False
+        comment = TableCommentsPolylinePublic(login_user=login, c_text=comment, p_id=p_id)
+        session.add(comment)
+        session.commit()
+    return True
