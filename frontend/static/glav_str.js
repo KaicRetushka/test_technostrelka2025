@@ -107,6 +107,7 @@ async function set_save_route() {
 
     let route_id = data.p_id;
     let pub = true;
+
     for (file of dobav_foto.files){
         let formData = new FormData()
         formData.append('photo', file)
@@ -121,3 +122,46 @@ async function set_save_route() {
 }
 
 document.getElementById('button_send').onclick = set_save_route;
+
+
+async function get_user_info() {
+    const el = document.getElementById('login_all')
+    let data = await fetch('http://127.0.0.1:8000/login/all/', {
+        headers: {'Content-Type': 'application/json'}
+    });
+    
+    detail = await data.json()
+    console.log(detail)
+
+    if (data.ok) {
+        for (element of detail){
+            el.innerHTML += `<p class='but_login'>${element}</p>`
+        }
+    }
+    arr_but_login = document.querySelectorAll('.but_login')
+    console.log('Массив ', arr_but_login)
+
+    for (arl of arr_but_login) {
+        // arl.onclick = () => get_public_route(arl.innerHTML)
+        arl.addEventListener('click', async () => {
+            console.log(this.arl.innerHTML)
+            let data = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${this.arl.innerHTML}`, {
+                headers: {'Content-Type': 'application/json'}
+            })
+            data = await data.json()
+            console.log(data)
+        })
+    }
+}
+
+get_user_info()
+
+async function get_public_route(login) {
+    console.log
+    let data = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login}`, {
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    data = await data.json()
+    console.log(data)
+}
