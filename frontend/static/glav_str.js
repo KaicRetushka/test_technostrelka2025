@@ -130,26 +130,27 @@ async function get_user_info() {
         headers: {'Content-Type': 'application/json'}
     });
     
-    detail = await data.json()
+    let detail = await data.json()
     console.log(detail)
 
     if (data.ok) {
-        for (element of detail){
+        for (let element of detail){
             el.innerHTML += `<p class='but_login'>${element}</p>`
         }
     }
-    arr_but_login = document.querySelectorAll('.but_login')
+    let arr_but_login = document.querySelectorAll('.but_login')
     console.log('Массив ', arr_but_login)
 
-    for (arl of arr_but_login) {
-        // arl.onclick = () => get_public_route(arl.innerHTML)
+    for (const arl of arr_but_login) {
+        
         arl.addEventListener('click', async () => {
-            console.log(this.arl.innerHTML)
-            let data = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${this.arl.innerHTML}`, {
+            let login = arl.innerHTML
+            console.log(login)
+            let routeData = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login}`, {
                 headers: {'Content-Type': 'application/json'}
             })
-            data = await data.json()
-            console.log(data)
+            routeData = await routeData.json()
+            console.log(routeData)
         })
     }
 }
