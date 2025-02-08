@@ -12,10 +12,10 @@ import jwt
 
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import (PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, 
-                                     BodyCom, InfoCom)
+                                     BodyCom, InfoCom, ResponseInfoUser)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
-                                          update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments)
+                                          update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -194,6 +194,16 @@ async def add_visited(request: Request, p_id: int) -> PydanticDetail:
     if not(data):
         raise HTTPException(status_code=400, detail='Неверный p_id')
     return {'detail': 'Отметка о посещении добавлена'}
+
+@app.get('/user/info/', tags=['Получение всей информации о пользователе'])
+async def give_user_indo(request: Request) -> ResponseInfoUser:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    data = select_info_user(data_token['login'])
+    return data    
+    
 
 if __name__ == '__main__':
     create_db()

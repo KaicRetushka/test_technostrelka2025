@@ -166,3 +166,16 @@ def select_comments(p_id):
         for comment in comments:
             arr_comments.append({'login_user': comment.login_user, 'c_text': comment.c_text})
     return arr_comments
+
+def select_info_user(login):
+    with Session() as session:
+        user = session.query(TableUsers).filter(TableUsers.login == login).first()
+    data = {
+        'login': user.login,
+        'password': user.password,
+        'name': user.name,
+        'surname': user.surname,
+        'role': user.role,
+        'viseted_polylines_public': json.loads(user.viseted_polylines_public)
+    } 
+    return data

@@ -39,3 +39,11 @@ class BodyCom(BaseModel):
 class InfoCom(BaseModel):
     login_user: str
     c_text: str
+
+class ResponseInfoUser(BaseModel):
+    login: str = Field(max_length=100)
+    password: str = Field(max_length=100)
+    name: str = Field(max_length=100)
+    surname: str = Field(max_length=100)
+    role: str = Field(max_length=100)
+    viseted_polylines_public: List[int]
