@@ -8,7 +8,8 @@ class PolylinePublicAdmin(ModelView, model=TablePolylinePublic):
                    TablePolylinePublic.p_text,
                    TablePolylinePublic.p_arr,
                    TablePolylinePublic.p_color,
-                   TablePolylinePublic.is_conf]
+                   TablePolylinePublic.is_conf,
+                   TablePolylinePublic.login_user]
     
 class PhotosPolylinePublicAdmin(ModelView, model=TablePhotosPolylinePublic):
     column_list = [
