@@ -4,8 +4,12 @@ console.log(btn_add_polyline)
 let is_polyline = false
 let arr = []
 
+
+//создание карты и возможность добавлять маршрут
 ymaps.ready(init);
+
 function init(){
+    
     let myMap = new ymaps.Map("map", {
         center: [55.76, 37.64],
         zoom: 16
@@ -21,7 +25,6 @@ function init(){
             items.push({
                 title: "Удалить линию",
                 onClick: function () {
-                    // myMap.geoObjects.remove(myPolyline);
                     arr = []
                     myPolyline.geometry.setCoordinates(arr)
                     is_polyline = false
@@ -41,11 +44,15 @@ function init(){
     myPolyline.editor.startEditing();
 }
 
+
+//позволяет создавать ломанную линию (маршрут) при нажатии на кнопку
 btn_add_polyline.addEventListener('click', () => {
   console.log('Было нажатие')
   is_polyline = true
 })
 
+
+//выход из аккаунта
 async function exit() {
     let response = await fetch('http://127.0.0.1:8000/exit', {
         method: 'DELETE',
@@ -57,12 +64,15 @@ async function exit() {
 
 document.querySelector('#button_glav_exit').onclick = exit
 
+//при нажатии на свое имя с фамилией перекидывает в личный кабинет
 function go_lich_kab(){
     window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
 }
 
 document.querySelector('#fullname').onclick = go_lich_kab
 
+
+//показ модального окна для сохранения маршрута
 let okno = document.querySelector('#okno')
 
 let button_save_route = document.querySelector('#btn_save_route')
@@ -81,16 +91,17 @@ button_cancel.addEventListener('click', () => {
 });
 
 
+//сохранения данных о маршруте на сервере
 async function set_save_route() {
-    console.log('Data being sent:', {
+    console.log('Отправка формы:', {
         p_name: document.querySelector('#p_name').value,
         p_text: document.querySelector('#p_text').value,
         p_arr: arr,
         p_color: document.querySelector('#p_color').value,
-        is_public: document.querySelector('#public').value,
+        is_public: document.querySelector('#public').checked
     });
 
-    const response = await fetch('http://127.0.0.1:8000/polyline/add/', {
+    let response = await fetch('http://127.0.0.1:8000/polyline/add/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -98,15 +109,15 @@ async function set_save_route() {
             p_text: document.querySelector('#p_text').value,
             p_arr: arr,
             p_color: document.querySelector('#p_color').value,
-            is_public: true,
+            is_public: document.querySelector('#public').checked,
         })
     });
 
-    const data = await response.json();
+    let data = await response.json();
     console.log(data);
 
-    let route_id = data.p_id;
-    let pub = true;
+    let route_id  = data.p_id;
+    let pub = document.querySelector('#public').checked; 
 
     for (file of dobav_foto.files){
         let formData = new FormData()
@@ -124,45 +135,135 @@ async function set_save_route() {
 document.getElementById('button_send').onclick = set_save_route;
 
 
-async function get_user_info() {
+
+
+
+//получение всех логинов => ПОПЫТКА получения всех публичных маршрутов + ПОПЫТКА получения аватарок всех пользователей 
+async function get_user_login() {
     const el = document.getElementById('login_all')
     let data = await fetch('http://127.0.0.1:8000/login/all/', {
         headers: {'Content-Type': 'application/json'}
     });
     
-    let detail = await data.json()
-    console.log(detail)
+    let logs = await data.json()
+    console.log(logs)
 
     if (data.ok) {
-        for (let element of detail){
-            el.innerHTML += `<p class='but_login'>${element}</p>`
+        for (let element of logs){
+            el.innerHTML += `<button class='but_login'>${element}</button><br>`
+            
         }
     }
-    let arr_but_login = document.querySelectorAll('.but_login')
-    console.log('Массив ', arr_but_login)
 
-    for (const arl of arr_but_login) {
+    let arr_but_login = document.querySelectorAll('.but_login')
+    console.log('Массив логинов: ', arr_but_login)
+
+    //получение всех публичных маршрутов каждого пользователя
+    for (let arl of arr_but_login) {
         
-        arl.addEventListener('click', async () => {
-            let login = arl.innerHTML
-            console.log(login)
-            let routeData = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login}`, {
-                headers: {'Content-Type': 'application/json'}
-            })
-            routeData = await routeData.json()
-            console.log(routeData)
-        })
+        console.log(arl)
+
+
+        // let karta = document.getElementById('map')
+        // karta.remove()
+        // let newDiv = document.createElement('div');
+        // newDiv.setAttribute('id', 'new_map');
+        // let myMap = new ymaps.Map("new_map", {
+        //     center: [55.76, 37.64],
+        //     zoom: 16
+        // });
+        
+        // let myPolyline = new ymaps.Polyline([routeData.p_arr], {}, {
+        //     strokeColor: "#00000088",
+        //     strokeWidth: 4,
+        // });
+        // myMap.geoObjects.add(myPolyline);
+          
+        
     }
+
+    //получение аватарки каждого пользователя из base64
+    for (log of logs) {
+        
+        let response = await fetch(`http://127.0.0.1:8000/user/avatar?login=${log}`, {
+            headers: {'Content-Type': 'application/json'}
+        })
+        
+        let base64 = await response.json() 
+        
+        const reBase = window.atob(decodeURIComponent(base64))
+        console.log(reBase)
+
+
+        const container = document.getElementById('avatarka')
+
+        const img = document.createElement('img')
+    
+        img.src = reBase
+    
+        img.style.width = '100px'
+        img.style.height = '100px'
+    
+        container.appendChild(img)
+
+    }
+
+}
+
+get_user_login()
+
+
+
+//получение всей информации о текущем пользователе
+async function get_user_info() {
+    let data = await fetch('http://127.0.0.1:8000/user/info/', {
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    let user_info = await data.json()
+    console.log(user_info)
 }
 
 get_user_info()
 
-async function get_public_route(login) {
-    console.log
-    let data = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login}`, {
-        headers: {'Content-Type': 'application/json'}
-    })
 
-    data = await data.json()
-    console.log(data)
+
+//изменение аватарки пользователя
+async function set_user_avatar() {
+    try {
+        
+        const fileInput = document.getElementById('smena_avatarki')
+        const file = fileInput.files[0]
+
+        if (!file) {
+            alert('Пожалуйста, выберите изображение для смены аватарки')
+            return
+        }
+
+        const formData = new FormData()
+        formData.append('avatar', file)
+
+        let response = await fetch('http://127.0.0.1:8000/user/avatar/', {
+            method: 'PUT',
+            body: formData
+        })
+            
+
+        if (!response.ok) {
+            throw new Error('Что-то пошло не так')
+        }
+
+        alert('Аватарка успешно изменена')
+
+        document.getElementById('avatarka').innerHTML = ''
+
+        get_user_login()
+
+    } catch (error) {
+        console.error('Ошибка при получении изображения:', error)
+    }
 }
+
+document.querySelector('#button_avatarka').onclick = set_user_avatar
+
+

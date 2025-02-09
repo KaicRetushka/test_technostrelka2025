@@ -8,7 +8,7 @@
 </head>
 
 <body>
-        {% if is_enter %}
+    {% if is_enter %}
         <p id="fullname">{{ fullname }}</p>
         <button id="button_glav_exit" type="button">Выйти</button><br><br>
     {% else %}
@@ -23,11 +23,11 @@
 
     <div id="map" style="width: 600px; height: 400px"></div><br>
     
-    {% if is_enter %}
+    
     <button id="btn_add_route">Добавить маршрут</button>
     <button id="btn_save_route">Сохрнаить маршрут</button><br>
-    <h1>Мои публичные маршруты</h1>
-    {% endif %}
+    <h1>Все пользователи</h1>
+    
     <dialog id="okno">
         <form id="form">
             <div class="modal">
@@ -62,7 +62,7 @@
                                 type="radio"
                                 id="public"
                                 name="choice"
-                                value="public"
+                                checked
                             />
                             <label for="public">Публичная</label>
                         </div>
@@ -72,7 +72,6 @@
                                 type="radio"
                                 id="privat"
                                 name="choice"
-                                value="privat"
                             />
                             <label for="privat">Приватная</label>
                         </div> <br>
@@ -86,7 +85,21 @@
         </form>
     </dialog>
 
-    <div class="login_all" id="login_all"></div>
+   
+
+    <div class="login_all" id="login_all">  </div>
+
+
+
+    <div class="avatar" id="avatarka"> 
+        <input id="smena_avatarki" type="file"> 
+    </div> <br> 
+    
+    <label for="smena_avatarki" class="file-upload-label">+</label> 
+ 
+    <button id="button_avatarka" type="submit">Поменять аватарку</button><br><br>
+
+
 
     <script src="static/glav_str.js" type="text/javascript"></script>
 </body>
