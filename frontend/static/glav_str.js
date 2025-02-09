@@ -3,7 +3,7 @@ const dobav_foto = document.getElementById('dobav_foto')
 console.log(btn_add_polyline)
 let is_polyline = false
 let arr = []
-
+let mass = []
 
 //создание карты и возможность добавлять маршрут
 ymaps.ready(init);
@@ -148,39 +148,59 @@ async function get_user_login() {
     let logs = await data.json()
     console.log(logs)
 
-    if (data.ok) {
-        for (let element of logs){
-            el.innerHTML += `<button class='but_login'>${element}</button><br>`
-            
+
+    //если запрос возвращает ok, то проходимся по каждому пользователю и создаем ему кнопку с его логином и уникальным id
+    if (data.ok) { 
+        
+        //очищаем элемент перед добавлением новых кнопок
+        el.innerHTML = '';
+
+        for (let i = 0; i < logs.length; i++) {
+            const button = document.createElement('button');
+            button.id = `but_login${i}`;
+            button.innerText = logs[i];
+            button.onclick = () => go_profiles(logs[i]); //передаем логин в функцию
+
+            el.appendChild(button);
+            el.appendChild(document.createElement('br')); //добавляем перенос строки
         }
+
+    } else {
+        console.error('Ошибка при загрузке данных:', response.statusText);
     }
 
-    let arr_but_login = document.querySelectorAll('.but_login')
-    console.log('Массив логинов: ', arr_but_login)
+
+
+    //добавляем в массив каждый логин
+    // let arr_but_login = document.querySelector('#but_login')
+    // console.log('Массив логинов: ', arr_but_login)
+
+
+
 
     //получение всех публичных маршрутов каждого пользователя
-    for (let arl of arr_but_login) {
+    // for (let arl of arr_but_login) {
         
-        console.log(arl)
+    //     console.log(arl)
 
 
-        // let karta = document.getElementById('map')
-        // karta.remove()
-        // let newDiv = document.createElement('div');
-        // newDiv.setAttribute('id', 'new_map');
-        // let myMap = new ymaps.Map("new_map", {
-        //     center: [55.76, 37.64],
-        //     zoom: 16
-        // });
+    //     let karta = document.getElementById('map')
+    //     karta.remove()
+    //     let newDiv = document.createElement('div');
+    //     newDiv.setAttribute('id', 'new_map');
+    //     let myMap = new ymaps.Map("new_map", {
+    //         center: [55.76, 37.64],
+    //         zoom: 16
+    //     });
         
-        // let myPolyline = new ymaps.Polyline([routeData.p_arr], {}, {
-        //     strokeColor: "#00000088",
-        //     strokeWidth: 4,
-        // });
-        // myMap.geoObjects.add(myPolyline);
+    //     let myPolyline = new ymaps.Polyline([routeData.p_arr], {}, {
+    //         strokeColor: "#00000088",
+    //         strokeWidth: 4,
+    //     });
+    //     myMap.geoObjects.add(myPolyline);
           
         
-    }
+    // }
 
     //получение аватарки каждого пользователя из base64
     for (log of logs) {
@@ -212,7 +232,10 @@ async function get_user_login() {
 
 get_user_login()
 
-
+function go_profiles(login) {
+    window.location.href = 'profiles.html'
+    console.log(`Переход к профилю пользователя: ${login}`);
+}
 
 //получение всей информации о текущем пользователе
 async function get_user_info() {
