@@ -210,16 +210,12 @@ async function get_user_login() {
         })
         
         let base64 = await response.json() 
-        
-        const reBase = window.atob(decodeURIComponent(base64))
-        console.log(reBase)
-
 
         const container = document.getElementById('avatarka')
 
         const img = document.createElement('img')
     
-        img.src = reBase
+        img.src = `data:image/png;base64,${base64}`
     
         img.style.width = '100px'
         img.style.height = '100px'

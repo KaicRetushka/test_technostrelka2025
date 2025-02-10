@@ -44,7 +44,6 @@ async def give_html(path: str, request: Request) -> HTMLResponse:
         data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])
         is_enter  = True
         fullname = select_fullname(data_token['login'], data_token['password'])
-        print(check_admin(data_token['login'], data_token['password']))
         if check_admin(data_token['login'], data_token['password']):
             url_admin = 'http://127.0.0.1:8000/admin/'
         else:
@@ -109,7 +108,6 @@ async def add_photo_polyline(request: Request, p_id: int = Query(...), is_public
 @app.get('/login/all/', tags=['Получение всех логинов пользователей'])
 async def give_logins_all() -> List[str]:
     data = selet_logins_all()
-    print(data)
     return data
 
 @app.get('/polylines/public/', tags=['Получение всех подтверждённых публичных маршрутов пользовотеля'])
