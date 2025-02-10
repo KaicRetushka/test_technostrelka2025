@@ -138,7 +138,7 @@ document.getElementById('button_send').onclick = set_save_route;
 
 
 
-//получение всех логинов => ПОПЫТКА получения всех публичных маршрутов + ПОПЫТКА получения аватарок всех пользователей 
+//получение всех логинов => ПОПЫТКА получения всех публичных маршрутов + ПОПЫТКА получения аватарок всех пользователей
 async function get_user_login() {
     const el = document.getElementById('login_all')
     let data = await fetch('http://127.0.0.1:8000/login/all/', {
@@ -146,7 +146,7 @@ async function get_user_login() {
     });
     
     let logs = await data.json()
-    console.log(logs)
+    console.log('МАССИВ ЛОГИНОВ: ',logs)
 
 
     //если запрос возвращает ok, то проходимся по каждому пользователю и создаем ему кнопку с его логином и уникальным id
