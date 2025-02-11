@@ -166,7 +166,7 @@ async function get_user_login() {
         }
 
     } else {
-        console.error('Ошибка при загрузке данных:', response.statusText);
+        console.error('Ошибка при загрузке данных:', data.statusText);
     }
 
 
@@ -228,10 +228,10 @@ async function get_user_login() {
 
 get_user_login()
 
-function go_profiles(login) {
-    window.location.href = 'profiles.html'
-    console.log(`Переход к профилю пользователя: ${login}`);
-}
+// function go_profiles(login) {
+//     window.location.href = 'profiles.html'
+//     console.log(`Переход к профилю пользователя: ${login}`);
+// }
 
 //получение всей информации о текущем пользователе
 async function get_user_info() {
@@ -245,44 +245,5 @@ async function get_user_info() {
 
 get_user_info()
 
-
-
-//изменение аватарки пользователя
-async function set_user_avatar() {
-    try {
-        
-        const fileInput = document.getElementById('smena_avatarki')
-        const file = fileInput.files[0]
-
-        if (!file) {
-            alert('Пожалуйста, выберите изображение для смены аватарки')
-            return
-        }
-
-        const formData = new FormData()
-        formData.append('avatar', file)
-
-        let response = await fetch('http://127.0.0.1:8000/user/avatar/', {
-            method: 'PUT',
-            body: formData
-        })
-            
-
-        if (!response.ok) {
-            throw new Error('Что-то пошло не так')
-        }
-
-        alert('Аватарка успешно изменена')
-
-        document.getElementById('avatarka').innerHTML = ''
-
-        get_user_login()
-
-    } catch (error) {
-        console.error('Ошибка при получении изображения:', error)
-    }
-}
-
-document.querySelector('#button_avatarka').onclick = set_user_avatar
 
 
