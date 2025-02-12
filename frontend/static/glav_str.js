@@ -5,10 +5,19 @@ let is_polyline = false
 let arr = []
 let mass = []
 
+
+
+
+
+
+
+
+
+
 //создание карты и возможность добавлять маршрут
 ymaps.ready(init);
 
-function init(){
+async function init(){
     
     let myMap = new ymaps.Map("map", {
         center: [55.76, 37.64],
@@ -33,6 +42,33 @@ function init(){
             return items;
         }
     });
+
+    const el = document.getElementById('login_all')
+    let data = await fetch('http://127.0.0.1:8000/login/all/', {
+        headers: {'Content-Type': 'application/json'}
+    });
+
+    let logs = await data.json()
+    console.log('МАССИВ ЛОГИНОВ: ', logs)
+
+
+    
+
+    for (let i = 0; i < logs.length; i++) {
+        let login_for_route = logs[i]
+        but_route = document.getElementById(`but_login${i}`) 
+        but_route.addEventListener('click', async () => {
+
+            let response = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login_for_route}`, {
+                headers: {'Content-Type': 'application/json'}
+            })
+
+            let route = await response.json()
+            console.log('Маршруты: ', route)
+         
+        })
+    }
+
     myMap.geoObjects.add(myPolyline);
     myMap.events.add('click', (event) => {
     if (is_polyline){
@@ -42,13 +78,28 @@ function init(){
     }
     });
     myPolyline.editor.startEditing();
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //позволяет создавать ломанную линию (маршрут) при нажатии на кнопку
 btn_add_polyline.addEventListener('click', () => {
-  console.log('Было нажатие')
-  is_polyline = true
+    console.log('Было нажатие')
+    is_polyline = true
 })
 
 
@@ -138,7 +189,7 @@ document.getElementById('button_send').onclick = set_save_route;
 
 
 
-//получение всех логинов => ПОПЫТКА получения всех публичных маршрутов + ПОПЫТКА получения аватарок всех пользователей
+//получение всех логинов => ПОПЫТКА получения всех публичных маршрутов + получение аватарок всех пользователей
 async function get_user_login() {
     const el = document.getElementById('login_all')
     let data = await fetch('http://127.0.0.1:8000/login/all/', {
@@ -159,7 +210,6 @@ async function get_user_login() {
             const button = document.createElement('button');
             button.id = `but_login${i}`;
             button.innerText = logs[i];
-            button.onclick = () => go_profiles(logs[i]); //передаем логин в функцию
 
             el.appendChild(button);
             el.appendChild(document.createElement('br')); //добавляем перенос строки
@@ -228,10 +278,6 @@ async function get_user_login() {
 
 get_user_login()
 
-// function go_profiles(login) {
-//     window.location.href = 'profiles.html'
-//     console.log(`Переход к профилю пользователя: ${login}`);
-// }
 
 //получение всей информации о текущем пользователе
 async function get_user_info() {
@@ -240,7 +286,7 @@ async function get_user_info() {
     })
 
     let user_info = await data.json()
-    console.log(user_info)
+    console.log('Информация о текущем пользователе: ', user_info)
 }
 
 get_user_info()

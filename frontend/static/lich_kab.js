@@ -77,3 +77,8 @@ async function set_user_avatar() {
 }
 
 document.querySelector('#button_avatarka').onclick = set_user_avatar
+
+let but_back_glav_str = document.querySelector('#back_glav_str')
+but_back_glav_str.addEventListener('click', () => {
+    window.location.href='glav_str.html'
+});
