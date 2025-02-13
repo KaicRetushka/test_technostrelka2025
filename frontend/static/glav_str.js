@@ -65,7 +65,14 @@ async function init(){
 
             let route = await response.json()
             console.log('Маршруты: ', route)
-         
+
+            for (let j = 0; j < route.length; ++j){
+                polyline = new ymaps.Polyline(route[j].p_arr, {}, {
+                    strokeColor: route[j].p_color,
+                    strokeWidth: 4
+                })
+                myMap.geoObjects.add(polyline)
+            }
         })
     }
 
