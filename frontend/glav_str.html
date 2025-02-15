@@ -27,7 +27,8 @@
     <button id="btn_add_route">Добавить маршрут</button>
     <button id="btn_save_route">Сохрнаить маршрут</button><br>
     <h1>Все пользователи</h1>
-    
+   
+
     <dialog id="okno">
         <form id="form">
             <div class="modal">
@@ -85,7 +86,62 @@
         </form>
     </dialog>
 
-   
+
+
+    <dialog id="info_route">
+        <form id="info_form">
+            <div class="info_modal">
+                <div class="info_modal-window">
+                    <h1>Маршрут</h1>
+
+                    <div>
+                        <div>Название</div>
+                        <p id="info_name"></p>
+                    </div>
+
+                    <div>
+                        <div>Описание</div>
+                        <p id="info_opisanie"></p>
+                    </div>
+
+                    <div>
+                        <div>Фотографии маршрута</div>
+                        <div id="info_photo_route"></div>
+                    </div><br>
+
+                    <button id="comments" type="button">Комментарии</button>
+
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+
+
+    <dialog id="comment_route">
+        <form id="comment_form">
+            <div class="comment_modal">
+                <div class="info_modal-window">
+                    <h1>Комментарии</h1>
+
+                    <div id="image_from_comments"></div>
+
+                    <div id="comments">
+                       <div id="div_comment">g</div>
+                    </div>
+
+                    <div id="vvod_comments"> 
+                        <input id="input_comment" type="text">
+                    </div>
+                    <button id="set_comments" type="button">Отправить комментарий</button>
+
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+
+
 
     <div class="login_all" id="login_all">  </div>
 

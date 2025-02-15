@@ -4,14 +4,8 @@ console.log(btn_add_polyline)
 let is_polyline = false
 let arr = []
 let mass = []
-
-
-
-
-
-
-
-
+let polyline
+let info_route = document.querySelector('#info_route')
 
 
 //создание карты и возможность добавлять маршрут
@@ -49,7 +43,6 @@ async function init(){
     });
 
     let logs = await data.json()
-    console.log('МАССИВ ЛОГИНОВ: ', logs)
 
 
     
@@ -59,24 +52,54 @@ async function init(){
         but_route = document.getElementById(`but_login${i}`) 
         but_route.addEventListener('click', async () => {
 
+
+            if (polyline) {
+                myMap.geoObjects.removeAll(polyline);
+            }
+
+
             let response = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login_for_route}`, {
                 headers: {'Content-Type': 'application/json'}
             })
 
             let route = await response.json()
             console.log('Маршруты: ', route)
-
+            
+            
             for (let j = 0; j < route.length; ++j){
                 polyline = new ymaps.Polyline(route[j].p_arr, {}, {
                     strokeColor: route[j].p_color,
                     strokeWidth: 4
-                })
+                })     
                 myMap.geoObjects.add(polyline)
+
+                polyline.events.add(['click'], () => {
+                    
+                    info_route.showModal()
+
+                    let open_comment = document.querySelector('#comments')
+                    open_comment.addEventListener('click', () => {
+                        comment_route.showModal()
+                    });
+
+                    let p_id = route[j].p_id; 
+                    console.log('Это маршрут номер ', p_id)
+                    get_user_comment(p_id);
+
+
+                    let otpravka = document.getElementById('set_comments')
+                    otpravka.addEventListener('click', () => {
+                        add_user_comment(p_id)
+                    })
+                    
+                })
+
             }
+        
         })
     }
 
-    myMap.geoObjects.add(myPolyline);
+    myMap.geoObjects.add(myPolyline)
     myMap.events.add('click', (event) => {
     if (is_polyline){
         let eCoords = event.get('coords');
@@ -87,15 +110,6 @@ async function init(){
     myPolyline.editor.startEditing();
 
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -132,7 +146,6 @@ document.querySelector('#fullname').onclick = go_lich_kab
 
 //показ модального окна для сохранения маршрута
 let okno = document.querySelector('#okno')
-
 let button_save_route = document.querySelector('#btn_save_route')
 button_save_route.addEventListener('click', () => {
     okno.showModal()
@@ -187,6 +200,8 @@ async function set_save_route() {
         response = await response.json()
         console.log(response.detail)
     }
+
+    okno.close()
 
 }
 
@@ -266,8 +281,7 @@ async function get_user_login() {
             headers: {'Content-Type': 'application/json'}
         })
         
-        let base64 = await response.json() 
-
+        let base64 = await response.json()
         const container = document.getElementById('avatarka')
 
         const img = document.createElement('img')
@@ -299,4 +313,45 @@ async function get_user_info() {
 get_user_info()
 
 
+async function get_user_comment(p_id) {
+    //ДОБАВИТЬ ПЕРЕДАЧУ p_id В ЭТУ ФУНКЦИЮ
+    let response = await fetch(`http://127.0.0.1:8000/polylines/public/comment/?p_id=${p_id}`, {
+        headers: {'Content-Type': 'application/json'}
+    })
 
+    if (!response.ok) {
+        throw new Error('Ошибка: ' + response.statusText);
+    }
+
+    data = await response.json()
+    console.log('Комментарии: ', data)
+
+
+    el = document.getElementById('div_comment')
+
+    el.innerHTML = ''
+
+    
+    //ДОБАВИТЬ СЮДА АВАТАРКУ ПОЛЬЗОВАТЕЛЯ ПОСЛЕ +=
+    for(let i = 0; i < data.length; i++) {
+        el.innerHTML += '<p>' + data[i].login_user + '</p>' + '<p>' + data[i].c_text + '</p>' + '</br>'
+        console.log('КОММЕНТАРИИ ПОЛУЧЕНЫ УСПЕШНО ', p_id)
+    }
+    
+}
+
+
+async function add_user_comment(p_id) {
+    let otvet = await fetch('http://127.0.0.1:8000/polylines/public/comment/', { 
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            p_id: p_id, 
+            comment: document.querySelector('#input_comment').value
+        })
+    })
+
+    console.log('КОММЕНТАРИЙ ДОБАВЛЕН УСПЕШНО: ', p_id)
+    get_user_comment(p_id)
+
+}
