@@ -1,11 +1,16 @@
 const btn_add_polyline = document.getElementById('btn_add_route')
 const dobav_foto = document.getElementById('dobav_foto')
+const universe = document.getElementById('info_photo_route')
+let open_comment = document.querySelector('#comments')
 console.log(btn_add_polyline)
 let is_polyline = false
 let arr = []
 let mass = []
 let polyline
 let info_route = document.querySelector('#info_route')
+let star = document.querySelector('#info_name')
+let space = document.querySelector('#info_opisanie')
+
 
 
 //создание карты и возможность добавлять маршрут
@@ -77,7 +82,37 @@ async function init(){
                     
                     info_route.showModal()
 
-                    let open_comment = document.querySelector('#comments')
+                    star.innerHTML = ''
+                    space.innerHTML = ''
+                    universe.innerHTML = ''
+
+                    star.innerHTML += route[j].p_name
+                    space.innerHTML += route[j].p_text
+
+
+
+
+
+
+
+                    let p_id_route = route[j].p_id
+
+                    info_image(p_id_route)
+
+                    
+
+
+
+
+
+
+
+
+
+                    open_comment.removeEventListener('click', () => {
+                        comment_route.showModal()
+                    });
+
                     open_comment.addEventListener('click', () => {
                         comment_route.showModal()
                     });
@@ -112,7 +147,32 @@ async function init(){
 }
 
 
+//получение фоток публичного маршрута
+async function info_image(p_id_route) { 
+    let info_image = await fetch(`http://127.0.0.1:8000/polylines/public/photos/?p_id=${p_id_route}`, {
+        headers: {'Content-Type': 'application/json'}
+    }) 
 
+    image = await info_image.json()
+    console.log('массив изображений: ', image)
+
+    
+
+    for(photo of image){
+
+        const base_to_img = document.createElement('img')
+    
+        base_to_img.src = `data:image/png;base64,${photo}`
+    
+        base_to_img.style.width = '50px'
+        base_to_img.style.height = '50px'
+    
+        universe.appendChild(base_to_img)
+        console.log('asdasdasdasdasdasd')
+    }
+    
+
+}
 
 
 
@@ -351,7 +411,10 @@ async function add_user_comment(p_id) {
         })
     })
 
-    console.log('КОММЕНТАРИЙ ДОБАВЛЕН УСПЕШНО: ', p_id)
-    get_user_comment(p_id)
+    if (otvet.ok) {
+        console.log('КОММЕНТАРИЙ ДОБАВЛЕН УСПЕШНО/номер маршрута: ', p_id)
+        await get_user_comment(p_id)
+    }
+    
 
 }
