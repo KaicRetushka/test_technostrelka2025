@@ -114,7 +114,7 @@ def select_private_p_all(login):
 def select_private_p_photos_all(login, p_id):
     with Session() as session:
         photos_blob_arr = []
-        photos_blob = session.query(TablePhotosPolylinePrivate.photo_blob).filter((TablePhotosPolylinePrivate.p_id == p_id) & (TablePhotosPolylinePrivate.login == login)).all()
+        photos_blob = session.query(TablePhotosPolylinePrivate.photo_blob).filter((TablePhotosPolylinePrivate.p_id == p_id)).all()
         for photo_blob in photos_blob:
             photos_blob_arr.append(base64.b64encode(photo_blob[0]).decode('utf-8'))
     return photos_blob_arr
