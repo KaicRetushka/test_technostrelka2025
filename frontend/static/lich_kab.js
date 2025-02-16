@@ -6,7 +6,7 @@ let space = document.querySelector('#info_opisanie')
 const universe = document.getElementById('info_photo_route')
 let polyline
 let info_route = document.querySelector('#info_route')
-
+let myMap
 
 
 
@@ -101,7 +101,7 @@ ymaps.ready(init);
 async function init(){
     
     //создаем карту
-    let myMap = new ymaps.Map("map", {
+    myMap = new ymaps.Map("map", {
         center: [55.76, 37.64],
         zoom: 16
     });
