@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=126279f8-7d73-4da9-a3e6-369f3c5d0f2f&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="static/lich_kab.css">
     <title>Личный кабинет</title>
 </head>
 <body>
@@ -21,6 +23,105 @@
     <button id="button_avatarka" type="submit">Поменять аватарку</button><br><br>
 
     <button id="back_glav_str" type="button">На Главную</button>
+
+    <div id="map" style="width: 600px; height: 400px"></div><br>
+
+    <div>
+        <button id="check_route">Посмотреть мои маршруты</button>
+        <button id="btn_add_route">Добавить маршрут</button>
+        <button id="btn_save_route">Сохрнаить маршрут</button><br>
+    </div>
+
+    
+    
+    <dialog id="okno">
+        <form id="form">
+            <div class="modal">
+                <div class="modal-window">
+                    <h1>Сохранить маршрут</h1>
+                    <button id="btn_close" class="btn-close" type="button">X</button>
+
+                    <div>
+                        <p>Название</p>
+                        <input id="p_name" type="text">
+                    </div>
+
+                    <div>
+                        <p>Описание</p>
+                        <textarea id="p_text" name="" id=""></textarea>
+                    </div>
+
+                    <div>
+                        <p>Выберите цвет линий:</p>
+                        <input id="p_color" type="color">
+                    </div><br>
+                    
+                    <div class="file-input-container">
+                        <label class="file-input-label" for="dobav_foto">Добавить фото</label>
+                        <input id="dobav_foto" class="file-input" type="file" multiple>
+                    </div><br>
+
+                    <div>
+                        Выберите тип публикации: <br>
+                        <div>
+                            <input 
+                                type="radio"
+                                id="public"
+                                name="choice"
+                                checked
+                            />
+                            <label for="public">Публичная</label>
+                        </div>
+            
+                        <div>
+                            <input 
+                                type="radio"
+                                id="privat"
+                                name="choice"
+                            />
+                            <label for="privat">Приватная</label>
+                        </div> <br>
+                    </div>
+                    
+                    <button id="button_cancel" type="button">Отменить</button>
+                    <button id="button_send" type="button">Отправить</button>
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+    
+    
+    
+    
+    <dialog id="info_route">
+        <form id="info_form">
+            <div class="info_modal">
+                <div class="info_modal-window">
+                    <h1>Маршрут</h1>
+
+                    <div>
+                        <div>Название</div>
+                        <p id="info_name"></p>
+                    </div>
+
+                    <div>
+                        <div>Описание</div>
+                        <p id="info_opisanie"></p>
+                    </div>
+
+                    <div>
+                        <div>Фотографии маршрута</div>
+                        <p id="info_photo_route"></p>
+                    </div><br>
+
+                    <button id="button__info_exit" type="button">Выйти</button>
+                
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
 
     <script src="static/lich_kab.js"></script>
 </body>

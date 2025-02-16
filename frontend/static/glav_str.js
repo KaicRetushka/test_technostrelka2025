@@ -216,14 +216,15 @@ button_cancel.addEventListener('click', () => {
     okno.close()
 });
 
-let button_close = document.querySelector('#btnclose')
-button_cancel.addEventListener('click', () => {
+let button_close = document.getElementById('btn_close')
+button_close.addEventListener('click', () => {
     okno.close()
 });
 
 
 //сохранения данных о маршруте на сервере
 async function set_save_route() {
+
     console.log('Отправка формы:', {
         p_name: document.querySelector('#p_name').value,
         p_text: document.querySelector('#p_text').value,
