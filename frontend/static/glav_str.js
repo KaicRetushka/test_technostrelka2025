@@ -22,26 +22,9 @@ async function init(){
         center: [55.76, 37.64],
         zoom: 16
     });
-    
-    let myPolyline = new ymaps.Polyline([], {}, {
-        strokeColor: "#00000088",
-        // Ширину линии.
-        strokeWidth: 4,
-    
-        // Добавляем в контекстное меню новый пункт, позволяющий удалить ломаную.
-        editorMenuManager: function (items) {
-            items.push({
-                title: "Удалить линию",
-                onClick: function () {
-                    arr = []
-                    myPolyline.geometry.setCoordinates(arr)
-                    is_polyline = false
-                }
-            });
-            return items;
-        }
-    });
 
+    // myMap.options.set('dragCursor', 'crosschair')
+    
     const el = document.getElementById('login_all')
     let data = await fetch('http://127.0.0.1:8000/login/all/', {
         headers: {'Content-Type': 'application/json'}
@@ -58,9 +41,9 @@ async function init(){
         but_route.addEventListener('click', async () => {
 
 
-            if (polyline) {
+            // if (polyline) {
                 myMap.geoObjects.removeAll(polyline);
-            }
+            // }
 
 
             let response = await fetch(`http://127.0.0.1:8000/polylines/public/?login=${login_for_route}`, {
@@ -89,24 +72,9 @@ async function init(){
                     star.innerHTML += route[j].p_name
                     space.innerHTML += route[j].p_text
 
-
-
-
-
-
-
                     let p_id_route = route[j].p_id
 
                     info_image(p_id_route)
-
-                    
-
-
-
-
-
-
-
 
 
                     open_comment.removeEventListener('click', () => {
@@ -133,16 +101,39 @@ async function init(){
         
         })
     }
-
-    myMap.geoObjects.add(myPolyline)
-    myMap.events.add('click', (event) => {
-    if (is_polyline){
-        let eCoords = event.get('coords');
-        arr.push(eCoords)
-        myPolyline.geometry.setCoordinates(arr)
-    }
-    });
-    myPolyline.editor.startEditing();
+    btn_add_polyline.addEventListener('click', () => {
+        myMap.geoObjects.removeAll(polyline);
+        let myPolyline = new ymaps.Polyline([], {}, {
+            strokeColor: "#00000088",
+            // Ширину линии.
+            strokeWidth: 4,
+        
+            // Добавляем в контекстное меню новый пункт, позволяющий удалить ломаную.
+            editorMenuManager: function (items) {
+                items.push({
+                    title: "Удалить линию",
+                    onClick: function () {
+                        arr = []
+                        myPolyline.geometry.setCoordinates(arr)
+                        is_polyline = false
+                    }
+                });
+                return items;
+            }
+        });
+        arr = []
+        console.log('Было нажатие')
+        is_polyline = true
+        myMap.geoObjects.add(myPolyline)
+        myMap.events.add('click', (event) => {
+        if (is_polyline){
+            let eCoords = event.get('coords');
+            arr.push(eCoords)
+            myPolyline.geometry.setCoordinates(arr)
+        }
+        });
+        myPolyline.editor.startEditing();
+    })
 
 }
 
@@ -178,10 +169,6 @@ async function info_image(p_id_route) {
 
 
 //позволяет создавать ломанную линию (маршрут) при нажатии на кнопку
-btn_add_polyline.addEventListener('click', () => {
-    console.log('Было нажатие')
-    is_polyline = true
-})
 
 
 //выход из аккаунта
