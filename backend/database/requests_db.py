@@ -149,7 +149,7 @@ def insert_message(login, comment, p_id):
 
 def update_visited_polylines(login, p_id):
     with Session() as session:
-        polyline = session.query(TablePolylinePublic).filter(TablePolylinePublic.p_id == p_id).filter()
+        polyline = session.query(TablePolylinePublic).filter((TablePolylinePublic.p_id == p_id) & (TablePolylinePublic.is_conf == True)).filter()
         if not(polyline):
             return False
         user = session.query(TableUsers).filter(TableUsers.login == login).first()
@@ -159,6 +159,20 @@ def update_visited_polylines(login, p_id):
         user.viseted_polylines_public = json.dumps(viseted_polylines_public)
         session.commit()
     return True
+
+def delte_visited_polylines(login, p_id):
+    with Session() as session:
+        polyline = session.query(TablePolylinePublic).filter((TablePolylinePublic.p_id == p_id) & (TablePolylinePublic.is_conf == True)).filter()
+        if not(polyline):
+            return False
+        user = session.query(TableUsers).filter(TableUsers.login == login).first()
+        viseted_polylines_public = json.loads(user.viseted_polylines_public)
+        if not(p_id in viseted_polylines_public):
+            return False
+        viseted_polylines_public.remove(p_id)  
+        user.viseted_polylines_public = json.dumps(viseted_polylines_public)
+        session.commit()
+    return True 
 
 def select_comments(p_id):
     with Session() as session:
