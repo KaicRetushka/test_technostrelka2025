@@ -1,8 +1,9 @@
-from sqlalchemy import create_engine, VARCHAR, ForeignKey, JSON, LargeBinary, event
+from sqlalchemy import create_engine, VARCHAR, ForeignKey, JSON, LargeBinary, event, TEXT
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy.orm import Session
 
 engine = create_engine('sqlite:///backend/database/mydb.db')
+# engine = create_engine('mysql+mysqlconnector://hakaton_user:hakaton@212.22.82.237:3306/hakaton')
 Base = declarative_base()
 
 @event.listens_for(engine, "connect")
@@ -33,12 +34,12 @@ class TablePolylinePublic(Base):
     __tablename__ = 'polylines_public'
     p_id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
     p_name: Mapped[str] = mapped_column(VARCHAR(100))
-    p_text: Mapped[str]
+    p_text: Mapped[str] = mapped_column(TEXT)
     p_arr: Mapped[list] = mapped_column(JSON)
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
     is_conf: Mapped[bool]
     polylines_public_photos = relationship('TablePhotosPolylinePublic', back_populates='polylines_public')
-    login_user: Mapped[str] = mapped_column(ForeignKey('users.login'), onupdate='CASCADE')
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login', onupdate='CASCADE'))
     users = relationship('TableUsers', back_populates='polylines_public')
     polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='polylines_public')
     polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='polylines_public')
@@ -46,7 +47,7 @@ class TablePolylinePublic(Base):
 
 class TableMarksPolylinePublic(Base):
     __tablename__ = 'polylines_public_marks'
-    login_user: Mapped[str] = mapped_column(ForeignKey('users.login'), primary_key=True, onupdate='CASCADE')
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login', onupdate='CASCADE'), primary_key=True)
     users = relationship('TableUsers', back_populates='polylines_public_marks')
     p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id'), primary_key=True)
     polylines_public = relationship('TablePolylinePublic', back_populates='polylines_public_marks')
@@ -62,21 +63,21 @@ class TablePhotosPolylinePublic(Base):
 class TableCommentsPolylinePublic(Base):
     __tablename__ = 'polylines_public_comments'
     c_id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
-    c_text: Mapped[str]
+    c_text: Mapped[str] = mapped_column(TEXT)
     polylines_public = relationship('TablePolylinePublic', back_populates='polylines_public_comments')
     p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id'))
     users = relationship('TableUsers', back_populates='polylines_public_comments')
-    login_user: Mapped[int] = mapped_column(ForeignKey('users.login'), onupdate='CASCADE')
+    login_user: Mapped[int] = mapped_column(ForeignKey('users.login', onupdate='CASCADE'))
 
 class TablePolylinePrivate(Base):
     __tablename__ = 'polylines_private'
     p_id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
     p_name: Mapped[str] = mapped_column(VARCHAR(100))
-    p_text: Mapped[str]
+    p_text: Mapped[str] = mapped_column(TEXT)
     p_arr: Mapped[list] = mapped_column(JSON)
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
     polylines_private_photos = relationship('TablePhotosPolylinePrivate', back_populates='polylines_private')
-    login_user: Mapped[int] = mapped_column(ForeignKey('users.login'), onupdate='CASCADE')
+    login_user: Mapped[int] = mapped_column(ForeignKey('users.login', onupdate='CASCADE'))
     users = relationship('TableUsers', back_populates='polylines_private')
 
 class TablePhotosPolylinePrivate(Base):
