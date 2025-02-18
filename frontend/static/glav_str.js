@@ -14,14 +14,6 @@ let exit_glav_str = document.getElementById('button_glav_exit')
 let lich_kab = document.getElementById('fullname')
 
 
-
-
-
-
-
-
-
-
 exit_glav_str.addEventListener('click', async () => {
     let response = await fetch('http://127.0.0.1:8000/exit', {
         method: 'DELETE',
@@ -31,14 +23,9 @@ exit_glav_str.addEventListener('click', async () => {
 })
 
 
-
-
 lich_kab.addEventListener('click', () => {
-    console.log('hhhhh')
     window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
 })
-
-
 
 
 //создание карты и возможность добавлять маршрут
@@ -50,8 +37,6 @@ async function init(){
         center: [55.76, 37.64],
         zoom: 16
     });
-
-    // myMap.options.set('dragCursor', 'crosschair')
     
     const el = document.getElementById('login_all')
     let data = await fetch('http://127.0.0.1:8000/login/all/', {
@@ -253,6 +238,8 @@ async function set_save_route() {
     }
 
     okno.close()
+
+    myMap.geoObjects.removeAll(polyline);
 
 }
 
