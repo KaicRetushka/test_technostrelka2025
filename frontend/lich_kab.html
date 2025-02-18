@@ -8,11 +8,45 @@
     <title>Личный кабинет</title>
 </head>
 <body>
+
     {% if url_admin != '' %}
     <a href="{{ url_admin }}">Панель администратора</a>
     {% endif %}
 
-    <div id="name_user"></div>
+    
+
+    <div id="login">
+        <div id="name_user"></div>
+        <button id="button_change_login">Поменять логин</button>
+    </div>
+
+
+
+
+    <dialog id="modal_change_login">
+        <form id="change_login_form">
+            <div class="change_modal">
+                <div class="change_login_modal-window">
+                    <h1>Смена логина</h1>
+
+                    <label for="input_change_login">Введите новый логин</label> 
+
+                    <div>
+                        <input id="input_change_login" type="text" placeholder="new login"> 
+                        <button id="accept_change_login" type="submit">✔️</button>
+                    </div><br>
+                    
+                    <button id="button_change_login_exit" type="button">Отменить</button>
+                
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+
+
+
+
 
     <div class="avatar" id="avatarka"> 
         <input id="smena_avatarki" type="file"> 
@@ -32,7 +66,6 @@
         <button id="btn_save_route">Сохрнаить маршрут</button><br>
     </div>
 
-    
     
     <dialog id="okno">
         <form id="form">
@@ -91,9 +124,7 @@
         </form>
     </dialog>
     
-    
-    
-    
+
     <dialog id="info_route">
         <form id="info_form">
             <div class="info_modal">
@@ -115,7 +146,7 @@
                         <p id="info_photo_route"></p>
                     </div><br>
 
-                    <button id="button__info_exit" type="button">Выйти</button>
+                    <button id="button_info_exit" type="button">Выйти</button>
                 
                 </div>
                 <div class="overlay"></div>
@@ -124,5 +155,6 @@
     </dialog>
 
     <script src="static/lich_kab.js"></script>
+
 </body>
 </html>

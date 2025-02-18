@@ -14,18 +14,31 @@ let exit_glav_str = document.getElementById('button_glav_exit')
 let lich_kab = document.getElementById('fullname')
 
 
-exit_glav_str.addEventListener('click', async () => {
-    let response = await fetch('http://127.0.0.1:8000/exit', {
-        method: 'DELETE',
-        headers: {'Content-Type': 'application/json'}
-    })
-    window.location.href='glav_str.html' 
-})
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (exit_glav_str !== null) {
+        exit_glav_str.addEventListener('click', async () => {
+            let response = await fetch('http://127.0.0.1:8000/exit', {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'}
+            });
+            window.location.href = 'glav_str.html'; 
+        });
+    }
 
 
-lich_kab.addEventListener('click', () => {
-    window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
-})
+    if (lich_kab !== undefined) {
+        lich_kab.addEventListener('click', () => {
+            console.log('fsd')
+            window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
+        })
+    }
+    
+});
+
+
+
+
 
 
 //создание карты и возможность добавлять маршрут

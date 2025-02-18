@@ -7,6 +7,39 @@ const universe = document.getElementById('info_photo_route')
 let polyline
 let info_route = document.querySelector('#info_route')
 let myMap
+let change_login = document.querySelector('#button_change_login')
+let modal_change_login = document.querySelector('#modal_change_login')
+let modal_change_login_exit = document.querySelector('#button_change_login_exit')
+let accept_change_login = document.querySelector('#accept_change_login')
+
+
+change_login.addEventListener('click', () => {
+    modal_change_login.showModal()
+})
+
+modal_change_login_exit.addEventListener('click', () => {
+    modal_change_login.close()
+})
+
+accept_change_login.addEventListener('click', async () => {
+
+    let new_login = document.querySelector('#input_change_login').value
+
+    console.log('Новый логин: ', new_login)
+
+    let response = await fetch(`http://127.0.0.1:8000/user/login/?new_login=${new_login}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'}
+    })
+
+})
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 
@@ -17,11 +50,11 @@ async function get_user_info() {
     })
 
     let user_info = await data.json()
-    console.log(user_info)
+    console.log('Информация о текущем пользователе: ', user_info)
 
     let el = document.getElementById('name_user')
 
-    el.innerHTML = user_info.name + ' ' + user_info.surname
+    el.innerHTML = user_info.login
 
 }
 
@@ -136,12 +169,17 @@ async function init(){
 
 
     //действия при нажатии на линию маршрута
-    but_check_route = document.getElementById('check_route')
+    but_check_route = document.querySelector('#check_route')
     but_check_route.addEventListener('click', async () => {
+
+        console.log('РАБОТАЕТ')
 
         if (polyline) {
             myMap.geoObjects.removeAll(polyline);
+            console.log('РАБОТАЕТ_3')
         }
+
+        console.log('РАБОТАЕТ_2')
 
         let response = await fetch('http://127.0.0.1:8000/polylines/private/', {
             headers: {'Content-Type': 'application/json'}
