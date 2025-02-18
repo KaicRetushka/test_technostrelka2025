@@ -15,7 +15,8 @@ from backend.pydantic_models import (PydanticRegistration, PydanticEnter, Pydant
                                      BodyCom, InfoCom, ResponseInfoUser)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
-                                          update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user)
+                                          update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user,
+                                          update_login)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -201,7 +202,19 @@ async def give_user_indo(request: Request) -> ResponseInfoUser:
         raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
     data = select_info_user(data_token['login'])
     return data    
-    
+
+@app.put('/user/login/', tags=['Изменение логина']) 
+async def change_login(request: Request, response: Response, new_login=Query(...)):
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')
+    data = update_login(data_token['login'], new_login)
+    if data:
+        token = jwt.encode({'login': new_login, 'password': data_token['password']}, 'secret', algorithm='HS256')
+        response.set_cookie(key='token', value=token)
+        return {'detail': 'Логин изменён'}
+    raise HTTPException(status_code=400, detail='Такой логин занят')
 
 if __name__ == '__main__':
     create_db()

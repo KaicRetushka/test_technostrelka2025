@@ -179,3 +179,14 @@ def select_info_user(login):
         'viseted_polylines_public': json.loads(user.viseted_polylines_public)
     } 
     return data
+
+def update_login(login, new_login):
+    with Session() as session:
+        user = session.query(TableUsers).filter(TableUsers.login == new_login).first()
+    if user:
+        return False
+    with Session() as session:
+        user = session.query(TableUsers).filter(TableUsers.login == login).first()
+        user.login = new_login
+        session.commit()
+    return True
