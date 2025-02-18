@@ -10,6 +10,34 @@ let polyline
 let info_route = document.querySelector('#info_route')
 let star = document.querySelector('#info_name')
 let space = document.querySelector('#info_opisanie')
+let exit_glav_str = document.getElementById('button_glav_exit')
+let lich_kab = document.getElementById('fullname')
+
+
+
+
+
+
+
+
+
+
+exit_glav_str.addEventListener('click', async () => {
+    let response = await fetch('http://127.0.0.1:8000/exit', {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    })
+    window.location.href='glav_str.html' 
+})
+
+
+
+
+lich_kab.addEventListener('click', () => {
+    console.log('hhhhh')
+    window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
+})
+
 
 
 
@@ -164,31 +192,6 @@ async function info_image(p_id_route) {
     
 
 }
-
-
-
-
-//позволяет создавать ломанную линию (маршрут) при нажатии на кнопку
-
-
-//выход из аккаунта
-async function exit() {
-    let response = await fetch('http://127.0.0.1:8000/exit', {
-        method: 'DELETE',
-        headers: {'Content-Type': 'application/json'}
-    })
-
-    window.location.href='glav_str.html'  
-}
-
-document.querySelector('#button_glav_exit').onclick = exit
-
-//при нажатии на свое имя с фамилией перекидывает в личный кабинет
-function go_lich_kab(){
-    window.location.href = 'http://127.0.0.1:8000/lich_kab.html'
-}
-
-document.querySelector('#fullname').onclick = go_lich_kab
 
 
 //показ модального окна для сохранения маршрута
