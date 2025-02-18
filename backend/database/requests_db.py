@@ -1,9 +1,10 @@
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import func
 import base64
 import json
 
 from backend.database.models_db import (engine, TableUsers, TablePolylinePublic, TablePolylinePrivate, TablePhotosPolylinePublic, TablePhotosPolylinePrivate,
-                                        TableCommentsPolylinePublic)
+                                        TableCommentsPolylinePublic, TableMarksPolylinePublic)
 
 Session = sessionmaker(bind=engine, autoflush=False)
 
@@ -190,3 +191,37 @@ def update_login(login, new_login):
         user.login = new_login
         session.commit()
     return True
+
+def add_mark(p_id, login, is_like):
+    with Session() as session:
+        polyline = session.query(TablePolylinePublic).filter((TablePolylinePublic.p_id == p_id) & (TablePolylinePublic.is_conf == True)).first()
+        if polyline:
+            mark = session.query(TableMarksPolylinePublic).filter((TableMarksPolylinePublic.login_user == login) & (TableMarksPolylinePublic.p_id == p_id)).first()
+            if mark:
+                session.delete(mark)
+            try:
+                mark = TableMarksPolylinePublic(p_id=p_id, login_user=login, is_like=is_like)
+                session.add(mark)
+                session.commit()
+                return True
+            except:
+                return False
+        
+def drop_mark(p_id, login):
+    with Session() as session:
+        polyline = session.query(TablePolylinePublic).filter((TablePolylinePublic.p_id == p_id) & (TablePolylinePublic.is_conf == True)).first()
+        if polyline:
+            mark = session.query(TableMarksPolylinePublic).filter((TableMarksPolylinePublic.login_user == login) & (TableMarksPolylinePublic.p_id == p_id)).first()
+            if mark:
+                session.delete(mark)
+                session.commit()
+                return True
+            return False
+    
+def select_marks(p_id):
+    with Session() as session:
+        count_like = session.query(func.count(TableMarksPolylinePublic.is_like)).filter((TableMarksPolylinePublic.p_id == p_id) & 
+                                                                                        (TableMarksPolylinePublic.is_like == True)).scalar()
+        count_dislike = session.query(func.count(TableMarksPolylinePublic.is_like)).filter((TableMarksPolylinePublic.p_id == p_id) & 
+                                                                                        (TableMarksPolylinePublic.is_like == False)).scalar()
+        return {'count_like': count_like, 'count_dislike': count_dislike}

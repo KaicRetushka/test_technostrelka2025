@@ -47,3 +47,7 @@ class ResponseInfoUser(BaseModel):
     surname: str = Field(max_length=100)
     role: str = Field(max_length=100)
     viseted_polylines_public: List[int]
+
+class MarksPolyline(BaseModel):
+    count_like: int
+    count_dislike: int

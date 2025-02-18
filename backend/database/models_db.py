@@ -1,9 +1,13 @@
-from sqlalchemy import create_engine, VARCHAR, ForeignKey, JSON, LargeBinary
+from sqlalchemy import create_engine, VARCHAR, ForeignKey, JSON, LargeBinary, event
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy.orm import Session
 
 engine = create_engine('sqlite:///backend/database/mydb.db')
 Base = declarative_base()
+
+@event.listens_for(engine, "connect")
+def set_foreign_keys(dbapi_connection, connection_record):
+    dbapi_connection.execute("PRAGMA foreign_keys = ON")
 
 class TableUsers(Base):
     __tablename__ = 'users'
@@ -18,6 +22,7 @@ class TableUsers(Base):
     avatar_blob: Mapped[bytes] = mapped_column(LargeBinary, nullable=True)
     polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='users')
     viseted_polylines_public: Mapped[list] = mapped_column(JSON, default='[]')
+    polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='users')
 
 class TableRoles(Base):
     __tablename__ = 'roles'
@@ -33,9 +38,19 @@ class TablePolylinePublic(Base):
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
     is_conf: Mapped[bool]
     polylines_public_photos = relationship('TablePhotosPolylinePublic', back_populates='polylines_public')
-    login_user: Mapped[int] = mapped_column(ForeignKey('users.login'))
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login'))
     users = relationship('TableUsers', back_populates='polylines_public')
     polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='polylines_public')
+    polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='polylines_public')
+
+
+class TableMarksPolylinePublic(Base):
+    __tablename__ = 'polylines_public_marks'
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login'), primary_key=True)
+    users = relationship('TableUsers', back_populates='polylines_public_marks')
+    p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id'), primary_key=True)
+    polylines_public = relationship('TablePolylinePublic', back_populates='polylines_public_marks')
+    is_like: Mapped[bool]
 
 class TablePhotosPolylinePublic(Base):
     __tablename__ = 'polylines_public_photos'
@@ -72,6 +87,7 @@ class TablePhotosPolylinePrivate(Base):
     p_id: Mapped[int] = mapped_column(ForeignKey('polylines_private.p_id'))
 
 def create_db():
+    # Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     with Session(bind=engine, autoflush=False) as session:
         if not(session.query(TableRoles.role).filter(TableRoles.role == 'Admin').first()):

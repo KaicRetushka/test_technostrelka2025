@@ -12,11 +12,11 @@ import jwt
 
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import (PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, 
-                                     BodyCom, InfoCom, ResponseInfoUser)
+                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
                                           update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user,
-                                          update_login)
+                                          update_login, add_mark, drop_mark, select_marks)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -204,7 +204,7 @@ async def give_user_indo(request: Request) -> ResponseInfoUser:
     return data    
 
 @app.put('/user/login/', tags=['Изменение логина']) 
-async def change_login(request: Request, response: Response, new_login=Query(...)):
+async def change_login(request: Request, response: Response, new_login: str = Query(...)) -> PydanticDetail:
     try:
         data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
     except:
@@ -215,6 +215,33 @@ async def change_login(request: Request, response: Response, new_login=Query(...
         response.set_cookie(key='token', value=token)
         return {'detail': 'Логин изменён'}
     raise HTTPException(status_code=400, detail='Такой логин занят')
+
+@app.put('/mark/polyline/', tags=['Поставить лайк или дизлайк к маршруту'])
+async def give_mark(request: Request, p_id: int = Query(...), is_like: bool = Query(...)) -> PydanticDetail:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')   
+    data = add_mark(p_id, data_token['login'], is_like)
+    if data:
+        return {'detail': 'Оценка поставлена'}
+    raise HTTPException(status_code=400, detail='Неверные данные')
+
+@app.delete('/mark/polyline/', tags=['Удалить лайк или дизлайк к маршруту'])
+async def delete_mark(request: Request, p_id: int = Query(...)) -> PydanticDetail:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')   
+    data = drop_mark(p_id, data_token['login']) 
+    if data:
+        return {'detail': 'Оценка удалена'}
+    raise HTTPException(status_code=400, detail='Неверные данные')   
+
+@app.get('/mark/polyline/', tags=['Получить все оценки маршрута'])
+async def give_marks(p_id: int = Query(...)) -> MarksPolyline:
+    data = select_marks(p_id)
+    return data
 
 if __name__ == '__main__':
     create_db()
