@@ -113,6 +113,7 @@ async function init(){
 
                     let p_id = route[j].p_id; 
                     console.log('Это маршрут номер ', p_id)
+
                     get_user_comment(p_id);
 
                     let otpravka = document.getElementById('set_comments')
@@ -120,30 +121,30 @@ async function init(){
                         add_user_comment(p_id)
                     })
                     
+
                     get_mark_route(p_id)
-
-
                     
-                    but_mark_good.addEventListener('click', () => {
-                        console.log('поставили лайк')
-                        is_like = true 
-                        set_mark_route(p_id, is_like)
-                    })
-                    
-                    
-                    but_mark_bad.addEventListener('click', () => {
-                        console.log('поставили дизлайк')
-                        is_like = false 
-                        set_mark_route(p_id, is_like)
-                    })
-                    
-
+                    but_mark_good.onclick = async () => {
+                        console.log('поставили лайк');
+                        let is_like = true;
+                        await set_mark_route(p_id, is_like); // Передаем конкретный p_id
+                        get_mark_route(p_id); // Обновляем оценки
+                    };
+            
+                    // Обработчик для дизлайка
+                    but_mark_bad.onclick = async () => {
+                        console.log('поставили дизлайк');
+                        let is_like = false;
+                        await set_mark_route(p_id, is_like); // Передаем конкретный p_id
+                        get_mark_route(p_id); // Обновляем оценки
+                    };
 
                 })
 
             }
         
         })
+        
     }
     btn_add_polyline.addEventListener('click', () => {
         myMap.geoObjects.removeAll(polyline);
