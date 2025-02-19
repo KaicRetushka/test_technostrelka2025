@@ -125,18 +125,78 @@ async function init(){
                     get_mark_route(p_id)
                     
                     but_mark_good.onclick = async () => {
-                        console.log('поставили лайк');
-                        let is_like = true;
-                        await set_mark_route(p_id, is_like); // Передаем конкретный p_id
-                        get_mark_route(p_id); // Обновляем оценки
+                        // if () СДЕЛАТЬ ПРОВЕРКУ УСЛОВИЯ (ЕСЛИ is_like = 1 или 0, то delete + то, что ниже, либо только то, что ниже)
+                        let user_mark = await fetch(`http://127.0.0.1:8000/user/mark/polyline/?p_id=${p_id}`, {
+                            headers: {'Content-Type': 'application/json'}
+                        })
+
+                        user_mark = await user_mark.json()
+                        let user_is_like = user_mark.is_like
+
+                        console.log('p_id: ', p_id)
+                        console.log('user_is_like: ', user_is_like)
+ 
+                        if (user_is_like === 1) {
+
+                            delete_mark_route(p_id)
+                        
+                        } else if (user_is_like === 0) {
+                         
+                            delete_mark_route(p_id)
+
+                            let is_like = true
+                            set_mark_route(p_id, is_like)
+                            console.log('поставили лайк')
+                            get_mark_route(p_id)
+
+                        } else {
+                            
+                            let is_like = true
+                            set_mark_route(p_id, is_like)
+                            console.log('поставили лайк')
+                            get_mark_route(p_id)
+                        
+                        }
+                        
                     };
             
                     // Обработчик для дизлайка
                     but_mark_bad.onclick = async () => {
-                        console.log('поставили дизлайк');
-                        let is_like = false;
-                        await set_mark_route(p_id, is_like); // Передаем конкретный p_id
-                        get_mark_route(p_id); // Обновляем оценки
+
+                        let user_mark = await fetch(`http://127.0.0.1:8000/user/mark/polyline/?p_id=${p_id}`, {
+                            headers: {'Content-Type': 'application/json'}
+                        })
+
+                        user_mark = await user_mark.json()
+                        let user_is_like = user_mark.is_like
+                        
+                        console.log('p_id: ', p_id)
+
+                        console.log('user_is_like: ', user_is_like)
+ 
+                        if (user_is_like === 1) {
+
+                            delete_mark_route(p_id)
+
+                            //ТО, ЧТО НИЖЕ, ПОЧЕМУ-ТО НЕ ВЫПОЛНЯЕТСЯ
+                            let is_like = false
+                            set_mark_route(p_id, is_like)
+                            console.log('поставили дизлайк')
+                            get_mark_route(p_id)
+
+                        } else if (user_is_like === 0) {
+
+                            delete_mark_route(p_id)
+
+                        } else {
+
+                            let is_like = false
+                            set_mark_route(p_id, is_like)
+                            console.log('поставили дизлайк')
+                            get_mark_route(p_id)
+
+                        }
+                        
                     };
 
                 })
@@ -144,7 +204,7 @@ async function init(){
             }
         
         })
-        
+
     }
     btn_add_polyline.addEventListener('click', () => {
         myMap.geoObjects.removeAll(polyline);
@@ -240,6 +300,23 @@ async function set_mark_route(p_id, is_like) {
 
     set_mark = await set_mark.json()
     console.log(set_mark)
+    
+    get_mark_route(p_id)
+
+}
+
+
+
+//удаляет оценку к маршруту
+async function delete_mark_route(p_id) {
+
+    let set_mark = await fetch(`http://127.0.0.1:8000/mark/polyline/?p_id=${p_id}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    delete_mark = await set_mark.json()
+    console.log('УДАЛЯЕМ ОЦЕНКУ: ', delete_mark)
     
     get_mark_route(p_id)
 
