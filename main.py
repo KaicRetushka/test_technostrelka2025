@@ -12,11 +12,11 @@ import jwt
 
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import (PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, 
-                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline)
+                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline, BodyLike)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
                                           update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user,
-                                          update_login, add_mark, drop_mark, select_marks, delte_visited_polylines)
+                                          update_login, add_mark, drop_mark, select_marks, delte_visited_polylines, select_mark_polyline_user)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -253,6 +253,15 @@ async def delete_mark(request: Request, p_id: int = Query(...)) -> PydanticDetai
 async def give_marks(p_id: int = Query(...)) -> MarksPolyline:
     data = select_marks(p_id)
     return data
+
+@app.get('/user/mark/polyline/', tags=['Получение оценки пользователя маршрута'])
+async def give_mark_polyline(request: Request, p_id: int = Query(...)) -> BodyLike:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы')  
+    data = select_mark_polyline_user(data_token['login'], p_id)  
+    return data  
 
 if __name__ == '__main__':
     create_db()

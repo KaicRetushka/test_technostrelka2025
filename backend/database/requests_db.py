@@ -239,3 +239,11 @@ def select_marks(p_id):
         count_dislike = session.query(func.count(TableMarksPolylinePublic.is_like)).filter((TableMarksPolylinePublic.p_id == p_id) & 
                                                                                         (TableMarksPolylinePublic.is_like == False)).scalar()
         return {'count_like': count_like, 'count_dislike': count_dislike}
+    
+def select_mark_polyline_user(login, p_id):
+    with Session() as session:
+        mark = session.query(TableMarksPolylinePublic).filter((TableMarksPolylinePublic.login_user == login) &
+                                                              (TableMarksPolylinePublic.p_id == p_id)).first()
+        if mark:
+            return {'is_like': mark.is_like}
+        return {'is_like': None}

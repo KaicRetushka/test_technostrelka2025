@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 class PydanticRegistration(BaseModel):
     login: str = Field(max_length=100)
@@ -51,3 +51,6 @@ class ResponseInfoUser(BaseModel):
 class MarksPolyline(BaseModel):
     count_like: int
     count_dislike: int
+
+class BodyLike(BaseModel):
+    is_like: Optional[int] = None
