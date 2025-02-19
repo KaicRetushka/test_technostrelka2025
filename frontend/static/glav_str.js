@@ -16,7 +16,7 @@ let mark_good = document.querySelector('#kolvo_mark_good')
 let mark_bad = document.querySelector('#kolvo_mark_bad')
 let but_mark_good = document.querySelector('#but_mark_good')
 let but_mark_bad = document.querySelector('#but_mark_bad')
-
+let myMap
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,7 +46,7 @@ ymaps.ready(init);
 
 async function init(){
     
-    let myMap = new ymaps.Map("map", {
+    myMap = new ymaps.Map("map", {
         center: [55.76, 37.64],
         zoom: 16
     });
@@ -57,6 +57,8 @@ async function init(){
     });
 
     let logs = await data.json()
+
+
     
     //отображение всех логинов и создание к ним кнопок
     for (let i = 0; i < logs.length; i++) {
@@ -134,6 +136,8 @@ async function init(){
                         is_like = false 
                         set_mark_route(p_id, is_like)
                     })
+                    
+
 
                 })
 
@@ -141,7 +145,6 @@ async function init(){
         
         })
     }
-
     btn_add_polyline.addEventListener('click', () => {
         myMap.geoObjects.removeAll(polyline);
         let myPolyline = new ymaps.Polyline([], {}, {
@@ -181,13 +184,14 @@ async function init(){
 
 //получение фоток публичного маршрута
 async function info_image(p_id_route) { 
-
     let info_image = await fetch(`http://127.0.0.1:8000/polylines/public/photos/?p_id=${p_id_route}`, {
         headers: {'Content-Type': 'application/json'}
     }) 
 
     image = await info_image.json()
     console.log('массив изображений: ', image)
+
+    
 
     for(photo of image){
 
@@ -202,6 +206,7 @@ async function info_image(p_id_route) {
         console.log('asdasdasdasdasdasd')
     }
     
+
 }
 
 
@@ -227,7 +232,6 @@ async function get_mark_route(p_id) {
 
 //добавляет оценку к маршруту
 async function set_mark_route(p_id, is_like) {
-
     let set_mark = await fetch(`http://127.0.0.1:8000/mark/polyline/?p_id=${p_id}&is_like=${is_like}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'}
@@ -244,22 +248,17 @@ async function set_mark_route(p_id, is_like) {
 
 //показ модального окна для сохранения маршрута
 let okno = document.querySelector('#okno')
-
 let button_save_route = document.querySelector('#btn_save_route')
 button_save_route.addEventListener('click', () => {
     okno.showModal()
 });
 
-
 let button_cancel = document.querySelector('#button_cancel')
-
 button_cancel.addEventListener('click', () => {
     okno.close()
 });
 
-
 let button_close = document.getElementById('btn_close')
-
 button_close.addEventListener('click', () => {
     okno.close()
 });
@@ -313,7 +312,6 @@ async function set_save_route() {
 }
 
 document.getElementById('button_send').onclick = set_save_route;
-
 
 
 //получение всех логинов
@@ -379,7 +377,6 @@ get_user_info()
 
 
 
-//получаем все комментарии
 async function get_user_comment(p_id) {
     //ДОБАВИТЬ ПЕРЕДАЧУ p_id В ЭТУ ФУНКЦИЮ
     let response = await fetch(`http://127.0.0.1:8000/polylines/public/comment/?p_id=${p_id}`, {
@@ -393,10 +390,12 @@ async function get_user_comment(p_id) {
     data = await response.json()
     console.log('Комментарии: ', data)
 
+
     el = document.getElementById('div_comment')
 
     el.innerHTML = ''
 
+    
     //ДОБАВИТЬ СЮДА АВАТАРКУ ПОЛЬЗОВАТЕЛЯ ПОСЛЕ +=
     for(let i = 0; i < data.length; i++) {
         el.innerHTML += '<p>' + data[i].login_user + '</p>' + '<p>' + data[i].c_text + '</p>' + '</br>'
@@ -407,7 +406,6 @@ async function get_user_comment(p_id) {
 
 
 
-//добавление комментариев
 async function add_user_comment(p_id) {
     let otvet = await fetch('http://127.0.0.1:8000/polylines/public/comment/', { 
         method: 'POST',

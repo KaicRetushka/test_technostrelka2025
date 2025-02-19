@@ -338,39 +338,46 @@ async function set_save_route() {
         is_public: document.querySelector('#public').checked
     });
 
-    let response = await fetch('http://127.0.0.1:8000/polyline/add/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            p_name: document.querySelector('#p_name').value,
-            p_text: document.querySelector('#p_text').value,
-            p_arr: arr,
-            p_color: document.querySelector('#p_color').value,
-            is_public: document.querySelector('#public').checked,
-        })
-    });
 
-    let data = await response.json();
-    console.log(data);
-
-    let route_id  = data.p_id;
-    let pub = document.querySelector('#public').checked; 
-
-    for (file of dobav_foto.files){
-        let formData = new FormData()
-        formData.append('photo', file)
-        let response = await fetch(`http://127.0.0.1:8000/polyline/add/photo/?p_id=${route_id}&is_public=${pub}`, {
+    try {
+        let response = await fetch('http://127.0.0.1:8000/polyline/add/', {
             method: 'POST',
-            body: formData
-        })
-        response = await response.json()
-        console.log(response.detail)
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                p_name: document.querySelector('#p_name').value,
+                p_text: document.querySelector('#p_text').value,
+                p_arr: arr,
+                p_color: document.querySelector('#p_color').value,
+                is_public: document.querySelector('#public').checked,
+            })
+        });
+    
+        let data = await response.json();
+        console.log(data);
+    
+        let route_id  = data.p_id;
+        let pub = document.querySelector('#public').checked; 
+    
+        for (file of dobav_foto.files){
+            let formData = new FormData()
+            formData.append('photo', file)
+            let response = await fetch(`http://127.0.0.1:8000/polyline/add/photo/?p_id=${route_id}&is_public=${pub}`, {
+                method: 'POST',
+                body: formData
+            })
+            response = await response.json()
+            console.log(response.detail)
+        }
+    
+        okno.close()
+    
+        myMap.geoObjects.removeAll(polyline);
+    } catch (error) {
+        console.error('Ошибка при получении изображений:', error);
     }
+    
 
-    okno.close()
-
-    myMap.geoObjects.removeAll(polyline);
-
+    
 }
 
 document.getElementById('button_send').onclick = set_save_route;
