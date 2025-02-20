@@ -247,3 +247,17 @@ def select_mark_polyline_user(login, p_id):
         if mark:
             return {'is_like': mark.is_like}
         return {'is_like': None}
+    
+def delete_polyline_db(login, p_id, is_public):
+    with Session() as session:
+        if is_public:
+            polyline = session.query(TablePolylinePublic).filter((TablePolylinePublic.login_user == login)
+                                                                 & (TablePolylinePublic.p_id == p_id)).first()
+        else:
+            polyline = session.query(TablePolylinePrivate).filter((TablePolylinePrivate.login_user == login)
+                                                                 & (TablePolylinePrivate.p_id == p_id)).first()
+        if polyline:
+            session.delete(polyline)
+            session.commit()
+            return True
+        return False

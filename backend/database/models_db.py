@@ -38,11 +38,11 @@ class TablePolylinePublic(Base):
     p_arr: Mapped[list] = mapped_column(JSON)
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
     is_conf: Mapped[bool]
-    polylines_public_photos = relationship('TablePhotosPolylinePublic', back_populates='polylines_public')
+    polylines_public_photos = relationship('TablePhotosPolylinePublic', back_populates='polylines_public', cascade="all, delete-orphan")
     login_user: Mapped[str] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
     users = relationship('TableUsers', back_populates='polylines_public')
-    polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='polylines_public')
-    polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='polylines_public')
+    polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='polylines_public', cascade="all, delete-orphan")
+    polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='polylines_public', cascade="all, delete-orphan")
 
 
 class TableMarksPolylinePublic(Base):
@@ -67,7 +67,7 @@ class TableCommentsPolylinePublic(Base):
     polylines_public = relationship('TablePolylinePublic', back_populates='polylines_public_comments')
     p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id', onupdate='CASCADE', ondelete='CASCADE'))
     users = relationship('TableUsers', back_populates='polylines_public_comments')
-    login_user: Mapped[int] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
 
 class TablePolylinePrivate(Base):
     __tablename__ = 'polylines_private'
@@ -76,7 +76,7 @@ class TablePolylinePrivate(Base):
     p_text: Mapped[str] = mapped_column(TEXT)
     p_arr: Mapped[list] = mapped_column(JSON)
     p_color: Mapped[str] = mapped_column(VARCHAR(100))
-    polylines_private_photos = relationship('TablePhotosPolylinePrivate', back_populates='polylines_private')
+    polylines_private_photos = relationship('TablePhotosPolylinePrivate', back_populates='polylines_private', cascade="all, delete-orphan")
     login_user: Mapped[int] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
     users = relationship('TableUsers', back_populates='polylines_private')
 
