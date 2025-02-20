@@ -92,9 +92,7 @@ async function init(){
                     star.innerHTML = ''
                     space.innerHTML = ''
                     universe.innerHTML = ''
-                    mark_good.innerHTML = ''
-                    mark_bad.innerHTML = ''
-
+                    
                     star.innerHTML += route[j].p_name
                     space.innerHTML += route[j].p_text
 
@@ -137,25 +135,18 @@ async function init(){
                         console.log('user_is_like: ', user_is_like)
  
                         if (user_is_like === 1) {
-
-                            delete_mark_route(p_id)
-                        
+                            // Убираем лайк
+                            await delete_mark_route(p_id);
+                            console.log('Убрали лайк');
                         } else if (user_is_like === 0) {
-                         
-                            delete_mark_route(p_id)
-
-                            let is_like = true
-                            set_mark_route(p_id, is_like)
-                            console.log('поставили лайк')
-                            get_mark_route(p_id)
-
+                            // Убираем дизлайк и ставим лайк
+                            await delete_mark_route(p_id);
+                            await set_mark_route(p_id, true);
+                            console.log('Поставили лайк');
                         } else {
-                            
-                            let is_like = true
-                            set_mark_route(p_id, is_like)
-                            console.log('поставили лайк')
-                            get_mark_route(p_id)
-                        
+                            // Ставим лайк
+                            await set_mark_route(p_id, true);
+                            console.log('Поставили лайк');
                         }
                         
                     };
@@ -174,27 +165,19 @@ async function init(){
 
                         console.log('user_is_like: ', user_is_like)
  
-                        if (user_is_like === 1) {
-
-                            delete_mark_route(p_id)
-
-                            //ТО, ЧТО НИЖЕ, ПОЧЕМУ-ТО НЕ ВЫПОЛНЯЕТСЯ
-                            let is_like = false
-                            set_mark_route(p_id, is_like)
-                            console.log('поставили дизлайк')
-                            get_mark_route(p_id)
-
-                        } else if (user_is_like === 0) {
-
-                            delete_mark_route(p_id)
-
+                        if (user_is_like === 0) {
+                            // Убираем дизлайк
+                            await delete_mark_route(p_id);
+                            console.log('Убрали дизлайк');
+                        } else if (user_is_like === 1) {
+                            // Убираем лайк и ставим дизлайк
+                            await delete_mark_route(p_id);
+                            await set_mark_route(p_id, false);
+                            console.log('Поставили дизлайк');
                         } else {
-
-                            let is_like = false
-                            set_mark_route(p_id, is_like)
-                            console.log('поставили дизлайк')
-                            get_mark_route(p_id)
-
+                            // Ставим дизлайк
+                            await set_mark_route(p_id, false);
+                            console.log('Поставили дизлайк');
                         }
                         
                     };
@@ -274,6 +257,9 @@ async function info_image(p_id_route) {
 //показывает оценки маршрута
 async function get_mark_route(p_id) {
 
+    mark_good.innerHTML = ''
+    mark_bad.innerHTML = ''
+
     let mark_route = await fetch(`http://127.0.0.1:8000/mark/polyline/?p_id=${p_id}`, {
         headers: {'Content-Type': 'application/json'}
     })
@@ -321,6 +307,8 @@ async function delete_mark_route(p_id) {
     get_mark_route(p_id)
 
 }
+
+
 
 
 
