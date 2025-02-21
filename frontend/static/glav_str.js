@@ -17,6 +17,7 @@ let mark_bad = document.querySelector('#kolvo_mark_bad')
 let but_mark_good = document.querySelector('#but_mark_good')
 let but_mark_bad = document.querySelector('#but_mark_bad')
 let myMap
+let but_visit_route = document.querySelector('#visit_route')
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
 //создание карты и возможность добавлять маршрут
 ymaps.ready(init);
 
@@ -51,21 +53,62 @@ async function init(){
         zoom: 16
     });
     
-    const el = document.getElementById('login_all')
+
+
+    const el = document.getElementById('login_all');
     let data = await fetch('http://127.0.0.1:8000/login/all/', {
         headers: {'Content-Type': 'application/json'}
     });
 
-    let logs = await data.json()
+    let logs = await data.json();
+    console.log('МАССИВ ЛОГИНОВ: ', logs);
+
+    //если запрос возвращает ok, то проходимся по каждому пользователю
+    if (data.ok) { 
+        //очищаем элемент перед добавлением новых кнопок
+        el.innerHTML = '';
+
+    } else {
+        console.error('Ошибка при загрузке данных:', data.statusText);
+    }
 
 
     
     //отображение всех логинов и создание к ним кнопок
     for (let i = 0; i < logs.length; i++) {
+        
+        //создаем контейнер для логина и аватарки
+        const userContainer = document.createElement('div');
+
+        //создаем кнопку с логином
+        const button = document.createElement('button');
+        button.id = `but_login${i}`;
+        button.innerText = logs[i];
+        userContainer.appendChild(button); // Добавляем кнопку в контейнер
+
+        //получаем аватарку пользователя
+        let response = await fetch(`http://127.0.0.1:8000/user/avatar?login=${logs[i]}`, {
+            headers: {'Content-Type': 'application/json'}
+        });
+
+        let base64 = await response.json();
+        const img = document.createElement('img');
+        img.src = `data:image/png;base64,${base64}`;
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.marginLeft = '10px'; // Отступ между логином и аватаркой
+
+        userContainer.appendChild(img); // Добавляем аватарку в контейнер
+        el.appendChild(userContainer); // Добавляем контейнер в основной элемент
+
         let login_for_route = logs[i]
-        but_route = document.getElementById(`but_login${i}`) 
+        but_route = document.getElementById(`but_login${i}`)
+        console.log(`but_login${i}: `, login_for_route)
+
         //то, что будет происходить при нажатии на кнопки с логинами
         but_route.addEventListener('click', async () => {
+
+            console.log('ЧТО-ТО НАЖАЛОСЬ')
 
             myMap.geoObjects.removeAll(polyline);
             
@@ -85,7 +128,7 @@ async function init(){
                 myMap.geoObjects.add(polyline)
 
                 //вывод информации о маршруте, при нажатии на линию маршрута
-                polyline.events.add(['click'], () => {
+                polyline.events.add(['click'], async () => {
                     
                     info_route.showModal()
 
@@ -181,6 +224,30 @@ async function init(){
                         }
                         
                     };
+
+
+                    //получаем инфу о пользователе, чтобы видеть его отметки о посещении маршрутов
+                    let user_info = await get_user_info()
+                    
+                    let isVisited = user_info.viseted_polylines_public.includes(p_id);
+                    but_visit_route.textContent = isVisited ? '𒊹' : '𒊹';
+
+                    but_visit_route.onclick = async () => {
+                        if (isVisited) {
+                            await delete_visit_route(p_id);
+                            but_visit_route.textContent = '𒊹';
+                            but_visit_route.style.color = 'rgb(255, 0, 0)'
+                        } else {
+                            await add_visit_route(p_id);
+                            but_visit_route.textContent = '𒊹';
+                            but_visit_route.style.color = 'rgb(0, 255, 0)'
+                        }
+                        isVisited = !isVisited; // Переключаем состояние
+                    };
+
+
+
+
 
                 })
 
@@ -310,6 +377,34 @@ async function delete_mark_route(p_id) {
 
 
 
+//добавление отметки о посещении
+async function add_visit_route(p_id) {
+    
+    let visit = await fetch (`http://127.0.0.1:8000/users/visited/public/polyline/?p_id=${p_id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    visit = await visit.json()
+    console.log('visit: ', visit)
+
+}
+
+
+
+//удаление отметки о посещении
+async function delete_visit_route(p_id) {
+    
+    let del_visit = await fetch (`http://127.0.0.1:8000/users/visited/public/polyline/?p_id=${p_id}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    del_visit = await del_visit.json()
+    console.log('visit: ', del_visit)
+
+}
+
 
 
 //показ модального окна для сохранения маршрута
@@ -380,52 +475,10 @@ async function set_save_route() {
 document.getElementById('button_send').onclick = set_save_route;
 
 
-//получение всех логинов
-async function get_user_login() {
-    const el = document.getElementById('login_all');
-    let data = await fetch('http://127.0.0.1:8000/login/all/', {
-        headers: {'Content-Type': 'application/json'}
-    });
 
-    let logs = await data.json();
-    console.log('МАССИВ ЛОГИНОВ: ', logs);
 
-    //если запрос возвращает ok, то проходимся по каждому пользователю
-    if (data.ok) { 
-        //очищаем элемент перед добавлением новых кнопок
-        el.innerHTML = '';
 
-        for (let i = 0; i < logs.length; i++) {
-            //создаем контейнер для логина и аватарки
-            const userContainer = document.createElement('div');
 
-            //создаем кнопку с логином
-            const button = document.createElement('button');
-            button.id = `but_login${i}`;
-            button.innerText = logs[i];
-            userContainer.appendChild(button); // Добавляем кнопку в контейнер
-
-            //получаем аватарку пользователя
-            let response = await fetch(`http://127.0.0.1:8000/user/avatar?login=${logs[i]}`, {
-                headers: {'Content-Type': 'application/json'}
-            });
-
-            let base64 = await response.json();
-            const img = document.createElement('img');
-            img.src = `data:image/png;base64,${base64}`;
-            img.style.width = '100px';
-            img.style.height = '100px';
-            img.style.marginLeft = '10px'; // Отступ между логином и аватаркой
-
-            userContainer.appendChild(img); // Добавляем аватарку в контейнер
-            el.appendChild(userContainer); // Добавляем контейнер в основной элемент
-        }
-    } else {
-        console.error('Ошибка при загрузке данных:', data.statusText);
-    }
-}
-
-get_user_login();
 
 
 
@@ -437,6 +490,7 @@ async function get_user_info() {
 
     let user_info = await data.json()
     console.log('Информация о текущем пользователе: ', user_info)
+    return user_info
 }
 
 get_user_info()
