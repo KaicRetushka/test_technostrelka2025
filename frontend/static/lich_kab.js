@@ -17,6 +17,8 @@ let but_del_cancel = document.getElementById('but_del_cancel')
 let but_del_route = document.getElementById('but_del_route')
 let but_delete_route = document.getElementById('but_delete_route')
 let is_public_route
+let info_type_route = document.querySelector('#info_type_route')
+
 
 
 
@@ -205,9 +207,11 @@ async function init(){
                 star.innerHTML = ''
                 space.innerHTML = ''
                 universe.innerHTML = ''
-                
+                info_type_route.innerHTML = ''
+
                 star.innerHTML += route[j].p_name
                 space.innerHTML += route[j].p_text
+                info_type_route.innerHTML += 'Приватный'
 
                 let p_id_route = route[j].p_id
                 is_public_route = false  
@@ -257,9 +261,11 @@ async function init(){
                 star.innerHTML = ''
                 space.innerHTML = ''
                 universe.innerHTML = ''
+                info_type_route.innerHTML = ''
                 
                 star.innerHTML += route_public[g].p_name
                 space.innerHTML += route_public[g].p_text
+                info_type_route.innerHTML += 'Публичный'
 
                 let p_id_route = route_public[g].p_id
                 let is_public_route = true
