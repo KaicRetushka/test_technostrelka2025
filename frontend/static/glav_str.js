@@ -164,9 +164,8 @@ async function init(){
                     get_user_comment(p_id);
 
                     let otpravka = document.getElementById('set_comments')
-                    otpravka.addEventListener('click', () => {
-                        add_user_comment(p_id)
-                    })
+                    otpravka.onclick = () => add_user_comment(p_id)
+                    
                     
 
                     get_mark_route(p_id)
@@ -552,7 +551,7 @@ async function add_user_comment(p_id) {
         console.log('КОММЕНТАРИЙ ДОБАВЛЕН УСПЕШНО/номер маршрута: ', p_id)
         await get_user_comment(p_id)
     }
-    
+
 }
 
 

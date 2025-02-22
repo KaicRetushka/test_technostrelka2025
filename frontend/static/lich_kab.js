@@ -19,6 +19,7 @@ let but_delete_route = document.getElementById('but_delete_route')
 let is_public_route
 
 
+
 change_login.addEventListener('click', () => {
     modal_change_login.showModal()
     console.log('Вы открыли модальное окно с изменением логина')
@@ -41,7 +42,6 @@ but_del_cancel.addEventListener('click', () => {
 
 
 
-
 accept_change_login.addEventListener('click', async () => {
 
     let new_login = document.querySelector('#input_change_login').value
@@ -54,13 +54,6 @@ accept_change_login.addEventListener('click', async () => {
     })
 
 })
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 
@@ -178,16 +171,6 @@ async function init(){
             return items;
         }
     });
-    
-
-
-
-
-
-
-
-
-
 
     //действия при нажатии на линию маршрута
     but_check_route = document.querySelector('#check_route')
@@ -203,10 +186,6 @@ async function init(){
         
         let route = await response.json()
         console.log('Приватные маршруты: ', route)
-
-
-
-
 
         //вывод приватных маршрутов пользователя на карту
         for (let j = 0; j < route.length; ++j){
@@ -244,32 +223,10 @@ async function init(){
                     delete_route(p_id_route, is_public_route)
                     myMap.geoObjects.remove(polyline)
                 })
-                
-                
-                
-
+           
             })
 
-            
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //вывод публичных маршрутов пользователя на карту
         let response_public = await fetch('http://127.0.0.1:8000/polylines/public/', {
@@ -281,8 +238,6 @@ async function init(){
 
         //проходимся по каждому маршруту
         for (let g = 0; g < route_public.length; ++g){
-
-            let 
 
             polyline = new ymaps.Polyline(route_public[g].p_arr, {}, {
                 strokeColor: route_public[g].p_color,
@@ -325,8 +280,6 @@ async function init(){
 
         }
 
-
-        
     })
     
     myMap.geoObjects.add(myPolyline)
@@ -494,8 +447,6 @@ async function set_save_route() {
     } catch (error) {
         console.error('Ошибка при получении изображений:', error);
     }
-    
-
     
 }
 
