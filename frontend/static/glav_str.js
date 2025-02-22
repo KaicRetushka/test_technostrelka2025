@@ -18,6 +18,9 @@ let but_mark_good = document.querySelector('#but_mark_good')
 let but_mark_bad = document.querySelector('#but_mark_bad')
 let myMap
 let but_visit_route = document.querySelector('#visit_route')
+let button_info_exit = document.getElementById('button_info_exit')
+
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -96,10 +99,10 @@ async function init(){
         img.src = `data:image/png;base64,${base64}`;
         img.style.width = '100px';
         img.style.height = '100px';
-        img.style.marginLeft = '10px'; // Отступ между логином и аватаркой
+        img.style.marginLeft = '10px'; //отступ между логином и аватаркой
 
-        userContainer.appendChild(img); // Добавляем аватарку в контейнер
-        el.appendChild(userContainer); // Добавляем контейнер в основной элемент
+        userContainer.appendChild(img); //добавляем аватарку в контейнер
+        el.appendChild(userContainer); //добавляем контейнер в основной элемент
 
         let login_for_route = logs[i]
         but_route = document.getElementById(`but_login${i}`)
@@ -131,6 +134,9 @@ async function init(){
                 polyline.events.add(['click'], async () => {
                     
                     info_route.showModal()
+
+                    console.log('Вы открыли модальное окно с информацией о маршруте')
+
 
                     star.innerHTML = ''
                     space.innerHTML = ''
@@ -166,7 +172,7 @@ async function init(){
                     get_mark_route(p_id)
                     
                     but_mark_good.onclick = async () => {
-                        // if () СДЕЛАТЬ ПРОВЕРКУ УСЛОВИЯ (ЕСЛИ is_like = 1 или 0, то delete + то, что ниже, либо только то, что ниже)
+                        
                         let user_mark = await fetch(`http://127.0.0.1:8000/user/mark/polyline/?p_id=${p_id}`, {
                             headers: {'Content-Type': 'application/json'}
                         })
@@ -178,16 +184,16 @@ async function init(){
                         console.log('user_is_like: ', user_is_like)
  
                         if (user_is_like === 1) {
-                            // Убираем лайк
+                            //убираем лайк
                             await delete_mark_route(p_id);
                             console.log('Убрали лайк');
                         } else if (user_is_like === 0) {
-                            // Убираем дизлайк и ставим лайк
+                            //убираем дизлайк и ставим лайк
                             await delete_mark_route(p_id);
                             await set_mark_route(p_id, true);
                             console.log('Поставили лайк');
                         } else {
-                            // Ставим лайк
+                            //ставим лайк
                             await set_mark_route(p_id, true);
                             console.log('Поставили лайк');
                         }
@@ -425,6 +431,12 @@ button_close.addEventListener('click', () => {
 });
 
 
+//закрытие модального онка с инфоормацией о маршруте
+button_info_exit.addEventListener('click', () => {
+    info_route.close()
+    console.log('Вы закрыли модальное окно с информацией о маршруте')
+})
+
 
 //сохранения данных о маршруте на сервере
 async function set_save_route() {
@@ -542,3 +554,5 @@ async function add_user_comment(p_id) {
     }
     
 }
+
+

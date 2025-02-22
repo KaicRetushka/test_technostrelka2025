@@ -11,15 +11,36 @@ let change_login = document.querySelector('#button_change_login')
 let modal_change_login = document.querySelector('#modal_change_login')
 let modal_change_login_exit = document.querySelector('#button_change_login_exit')
 let accept_change_login = document.querySelector('#accept_change_login')
+let button_info_exit = document.getElementById('button_info_exit')
+let del_route_dialog = document.querySelector('#del_route_dialog')
+let but_del_cancel = document.getElementById('but_del_cancel')
+let but_del_route = document.getElementById('but_del_route')
+let but_delete_route = document.getElementById('but_delete_route')
+let is_public_route
 
 
 change_login.addEventListener('click', () => {
     modal_change_login.showModal()
+    console.log('Вы открыли модальное окно с изменением логина')
 })
 
 modal_change_login_exit.addEventListener('click', () => {
     modal_change_login.close()
+    console.log('Вы закрыли модальное окно с изменением логина')
 })
+
+button_info_exit.addEventListener('click', () => {
+    info_route.close()
+    console.log('Вы закрыли модальное окно с информацией о маршруте')
+})
+
+
+but_del_cancel.addEventListener('click', () => {
+    del_route_dialog.close()
+});
+
+
+
 
 accept_change_login.addEventListener('click', async () => {
 
@@ -172,63 +193,142 @@ async function init(){
     but_check_route = document.querySelector('#check_route')
     but_check_route.addEventListener('click', async () => {
 
-        console.log('РАБОТАЕТ')
-
         if (polyline) {
-            myMap.geoObjects.removeAll(polyline);
-            console.log('РАБОТАЕТ_3')
+            myMap.geoObjects.removeAll(polyline)
         }
-
-        console.log('РАБОТАЕТ_2')
 
         let response = await fetch('http://127.0.0.1:8000/polylines/private/', {
             headers: {'Content-Type': 'application/json'}
         })
         
         let route = await response.json()
-        console.log('Маршруты: ', route)
-        
-        //проходимся по каждому маршруту
+        console.log('Приватные маршруты: ', route)
+
+
+
+
+
+        //вывод приватных маршрутов пользователя на карту
         for (let j = 0; j < route.length; ++j){
             polyline = new ymaps.Polyline(route[j].p_arr, {}, {
                 strokeColor: route[j].p_color,
                 strokeWidth: 4
-            })     
+            })
             myMap.geoObjects.add(polyline)
             polyline.events.add(['click'], () => {
                
-                console.log(route[j].p_id)
+                console.log(route[j])
 
                 info_route.showModal()
                 
+                console.log('Вы открыли модальное окно с информацией о маршруте')
+
                 star.innerHTML = ''
                 space.innerHTML = ''
                 universe.innerHTML = ''
                 
                 star.innerHTML += route[j].p_name
                 space.innerHTML += route[j].p_text
+
                 let p_id_route = route[j].p_id
+                is_public_route = false  
+
+                info_image(p_id_route)                
+
+                but_del_route.addEventListener('click', () => {
+                    del_route_dialog.showModal()
+                });
+
+
+                but_delete_route.addEventListener('click', () => {
+                    delete_route(p_id_route, is_public_route)
+                    myMap.geoObjects.remove(polyline)
+                })
                 
-                console.log('aaaaa')
                 
-                info_image(p_id_route)
                 
-                console.log('fdsgd')
-                
+
             })
+
+            
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //вывод публичных маршрутов пользователя на карту
+        let response_public = await fetch('http://127.0.0.1:8000/polylines/public/', {
+            headers: {'Content-Type': 'application/json'}
+        })
+        
+        let route_public = await response_public.json()
+        console.log('Публичные маршруты: ', route_public)
+
+        //проходимся по каждому маршруту
+        for (let g = 0; g < route_public.length; ++g){
+
+            let 
+
+            polyline = new ymaps.Polyline(route_public[g].p_arr, {}, {
+                strokeColor: route_public[g].p_color,
+                strokeWidth: 4
+            })     
+            myMap.geoObjects.add(polyline)
+            polyline.events.add(['click'], () => {
+               
+                console.log(route_public[g])
+
+                console.log(polyline)
+
+                info_route.showModal()
+                
+                console.log('Вы открыли модальное окно с информацией о маршруте')
+
+                star.innerHTML = ''
+                space.innerHTML = ''
+                universe.innerHTML = ''
+                
+                star.innerHTML += route_public[g].p_name
+                space.innerHTML += route_public[g].p_text
+
+                let p_id_route = route_public[g].p_id
+                let is_public_route = true
+
+                info_image(p_id_route)
+
+                but_del_route.addEventListener('click', () => {
+                    del_route_dialog.showModal()
+                });
+
+                but_delete_route.addEventListener('click', () => {
+                    delete_route(p_id_route, is_public_route)
+                    //пытаюсь удалить линию, на которую нажимаю, но удаляется последняя созданная
+                    myMap.geoObjects.remove(polyline)
+                })
+
+            })
+
+        }
+
+
         
     })
     
-
-
-
-
-
-
-
-
-
     myMap.geoObjects.add(myPolyline)
     myMap.events.add('click', (event) => {
     if (is_polyline){
@@ -272,6 +372,25 @@ async function info_image(p_id_route) {
     }
 
 }
+
+
+//удаление маршрута пользователя
+async function delete_route(p_id_route, is_public_route) {
+    
+    let del_route = await fetch(`http://127.0.0.1:8000/polyline/?p_id=${p_id_route}&is_public=${is_public_route}`, {
+        method: 'DELETE',
+        headers:{'Content-Type': 'application/json'}
+    })
+
+    del_route = await del_route.json()
+    console.log(del_route)
+
+    info_route.close()
+
+    del_route_dialog.close()
+
+}
+
 
 
 //позволяет создавать ломанную линию (маршрут) при нажатии на кнопку
