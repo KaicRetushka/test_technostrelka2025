@@ -19,8 +19,8 @@ let but_mark_bad = document.querySelector('#but_mark_bad')
 let myMap
 let but_visit_route = document.querySelector('#visit_route')
 let button_info_exit = document.getElementById('button_info_exit')
-
-
+let but_exist_route_exit = document.querySelector('#but_exist_route_exit')
+let exist_route_dialog = document.querySelector('#exist_route')
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -121,6 +121,10 @@ async function init(){
 
             let route = await response.json()
             console.log('Маршруты: ', route)
+
+            if (route.length === 0) {
+                exist_route_dialog.showModal()
+            }
             
             //вывод всех маршрутов пользователя при нажатии на его кнопку с логином
             for (let j = 0; j < route.length; ++j){
@@ -444,6 +448,11 @@ button_info_exit.addEventListener('click', () => {
     console.log('Вы закрыли модальное окно с информацией о маршруте')
 })
 
+
+//закрытие модального окна "У данного пользователя нет маршрутов"
+but_exist_route_exit.addEventListener('click', () => {
+    exist_route_dialog.close()
+})
 
 //сохранения данных о маршруте на сервере
 async function set_save_route() {
