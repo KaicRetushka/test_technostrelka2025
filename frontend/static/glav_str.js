@@ -496,6 +496,11 @@ async function set_save_route() {
 
     okno.close()
 
+    document.querySelector('#p_name').value = ''
+    document.querySelector('#p_text').value = ''
+    document.querySelector('#p_color').value = ''
+    document.querySelector('#public').checked = ''
+
     myMap.geoObjects.removeAll(polyline);
 
 }
