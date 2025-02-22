@@ -235,7 +235,15 @@ async function init(){
                     let user_info = await get_user_info()
                     
                     let isVisited = user_info.viseted_polylines_public.includes(p_id);
+                    
                     but_visit_route.textContent = isVisited ? '𒊹' : '𒊹';
+
+                    if(isVisited) {
+                        but_visit_route.style.color = 'rgb(0, 255, 0)'
+                    } else {
+                        but_visit_route.style.color = 'rgb(255, 0, 0)'
+                    }
+
 
                     but_visit_route.onclick = async () => {
                         if (isVisited) {
