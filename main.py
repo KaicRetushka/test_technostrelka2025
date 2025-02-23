@@ -277,6 +277,7 @@ async def delete_polyline(request: Request, p_id: int = Query(...), is_public: b
 
 @app.put('/polyline/change/', tags=['Изменить маршрут'])
 async def change_polyline(request: Request, body: BodyChangePolyline) -> PydanticDetail:
+    print(body.photos_arr)
     try:
         data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
     except:

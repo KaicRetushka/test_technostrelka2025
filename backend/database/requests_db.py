@@ -273,19 +273,18 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
         if polyline:
             if is_public:
                 photos = session.query(TablePhotosPolylinePublic).filter(TablePhotosPolylinePublic.p_id == p_id).all()
-                photos_arr = []
+                new_photos_arr = []
                 for photo in photos:
-                    photos_arr.append(photo)
-                history_polyline = TableHistoryPolylinePublic(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=photos_arr)
+                    new_photos_arr.append(photo)
+                history_polyline = TableHistoryPolylinePublic(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=new_photos_arr)
             else:
                 photos = session.query(TableHistoryPolylinePrivate).filter(TableHistoryPolylinePrivate.p_id == p_id).all()
-                photos_arr = []
+                new_photos_arr = []
                 for photo in photos:
-                    photos_arr.append(photo)
-                history_polyline = TableHistoryPolylinePrivate(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=photos_arr)
+                    new_photos_arr.append(photo)
+                history_polyline = TableHistoryPolylinePrivate(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=new_photos_arr)
             session.add(history_polyline)
             if p_name:
-                print('name')
                 polyline.p_name = p_name
             if p_text:
                 polyline.p_text = p_text
@@ -293,8 +292,11 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
                 polyline.p_arr = p_arr
             if p_color:
                 polyline.p_color = p_color
+            print('p', photos_arr)
             if photos_arr:
+                print('a')
                 if is_public:
+                    print('aa')
                     photos = session.query(TablePhotosPolylinePublic).filter(TablePhotosPolylinePublic.p_id == p_id).all()
                     for photo in photos:
                         session.delete(photo)
