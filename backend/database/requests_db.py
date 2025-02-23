@@ -261,3 +261,40 @@ def delete_polyline_db(login, p_id, is_public):
             session.commit()
             return True
         return False
+    
+def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, photos_arr):
+    with Session() as session:
+        if is_public:
+            polyline = session.query(TablePolylinePublic).filter((TablePolylinePublic.login_user == login)
+                                                                & (TablePolylinePublic.p_id == p_id)).first()
+        else:
+            polyline = session.query(TablePolylinePrivate).filter((TablePolylinePrivate.login_user == login)
+                                                                & (TablePolylinePrivate.p_id == p_id)).first()
+        if polyline:
+            if p_name:
+                print('name')
+                polyline.p_name = p_name
+            if p_text:
+                polyline.p_text = p_text
+            if p_arr:
+                polyline.p_arr = p_arr
+            if p_color:
+                polyline.p_color = p_color
+            if photos_arr:
+                if is_public:
+                    photos = session.query(TablePhotosPolylinePublic).filter(TablePhotosPolylinePublic.p_id == p_id).all()
+                    for photo in photos:
+                        session.delete(photo)
+                    for photo_blob in photos_arr:
+                        photo = TablePhotosPolylinePublic(photo_blob=photo_blob, p_id=p_id)
+                        session.add(photo)
+                else:
+                    photos = session.query(TablePhotosPolylinePrivate).filter(TablePhotosPolylinePrivate.p_id == p_id).all()
+                    for photo in photos:
+                        session.delete(photo)
+                    for photo_blob in photos_arr:
+                        photo = TablePhotosPolylinePrivate(photo_blob=photo_blob, p_id=p_id)
+                        session.add(photo)
+            session.commit()
+            return True             
+        return False

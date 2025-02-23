@@ -12,12 +12,12 @@ import jwt
 
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import (PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, 
-                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline, BodyLike)
+                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline, BodyLike, BodyChangePolyline)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
                                           update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user,
                                           update_login, add_mark, drop_mark, select_marks, delte_visited_polylines, select_mark_polyline_user,
-                                          delete_polyline_db)
+                                          delete_polyline_db, update_polyline)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -274,6 +274,17 @@ async def delete_polyline(request: Request, p_id: int = Query(...), is_public: b
     if data:
         return {'detail': 'Вы удалили маршрут'}
     raise HTTPException(status_code=400, detail='Неверные данные')    
+
+@app.put('/polyline/change/', tags=['Изменить маршрут'])
+async def change_polyline(request: Request, body: BodyChangePolyline) -> PydanticDetail:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы') 
+    data = update_polyline(data_token['login'], body.is_public, body.p_id, body.p_name, body.p_text, body.p_arr, body.p_color, body.photos_arr)
+    if data:
+        return {'detail': 'Маршрут изменён'}
+    raise HTTPException(status_code=400, detail='Неверные данные')
 
 if __name__ == '__main__':
     create_db()

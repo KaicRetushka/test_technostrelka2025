@@ -54,3 +54,12 @@ class MarksPolyline(BaseModel):
 
 class BodyLike(BaseModel):
     is_like: Optional[int] = None
+
+class BodyChangePolyline(BaseModel):
+    is_public: bool
+    p_id: int
+    p_name: Optional[str] = None
+    p_text: Optional[str] = None
+    p_arr: Optional[List[Tuple[float, float]]] = None
+    p_color: Optional[str] = None
+    photos_arr: Optional[List[str]] = None
