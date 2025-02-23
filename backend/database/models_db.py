@@ -24,6 +24,8 @@ class TableUsers(Base):
     polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='users')
     viseted_polylines_public: Mapped[list] = mapped_column(JSON, default='[]')
     polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='users')
+    history_polyline_public = relationship('TableHistoryPolylinePublic', back_populates='users', cascade='all, delete-orphan')
+    history_polyline_private = relationship('TableHistoryPolylinePrivate', back_populates='users', cascade='all, delete-orphan')
 
 class TableRoles(Base):
     __tablename__ = 'roles'
@@ -43,7 +45,20 @@ class TablePolylinePublic(Base):
     users = relationship('TableUsers', back_populates='polylines_public')
     polylines_public_comments = relationship('TableCommentsPolylinePublic', back_populates='polylines_public', cascade="all, delete-orphan")
     polylines_public_marks = relationship('TableMarksPolylinePublic', back_populates='polylines_public', cascade="all, delete-orphan")
+    history_polyline_public = relationship('TableHistoryPolylinePublic', back_populates='polylines_public', cascade="all, delete-orphan")
 
+class TableHistoryPolylinePublic(Base):
+    __tablename__ = 'history_polyline_public'
+    p_id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
+    head_p_id: Mapped[int] = mapped_column(ForeignKey('polylines_public.p_id', onupdate='CASCADE', ondelete='CASCADE'))
+    polylines_public = relationship('TablePolylinePublic', back_populates='history_polyline_public')
+    p_name: Mapped[str] = mapped_column(VARCHAR(100))
+    p_text: Mapped[str] = mapped_column(TEXT)
+    p_arr: Mapped[list] = mapped_column(JSON)
+    p_color: Mapped[str] = mapped_column(VARCHAR(100))
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
+    users = relationship('TableUsers', back_populates='history_polyline_public')
+    photos_arr: Mapped[list] = mapped_column(JSON, default='[]')
 
 class TableMarksPolylinePublic(Base):
     __tablename__ = 'polylines_public_marks'
@@ -79,6 +94,20 @@ class TablePolylinePrivate(Base):
     polylines_private_photos = relationship('TablePhotosPolylinePrivate', back_populates='polylines_private', cascade="all, delete-orphan")
     login_user: Mapped[int] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
     users = relationship('TableUsers', back_populates='polylines_private')
+    history_polyline_private = relationship('TableHistoryPolylinePrivate', back_populates='polylines_private', cascade="all, delete-orphan")
+
+class TableHistoryPolylinePrivate(Base):
+    __tablename__ = 'history_polyline_private'
+    p_id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
+    head_p_id: Mapped[int] = mapped_column(ForeignKey('polylines_private.p_id', onupdate='CASCADE', ondelete='CASCADE'))
+    polylines_private = relationship('TablePolylinePrivate', back_populates='history_polyline_private')
+    p_name: Mapped[str] = mapped_column(VARCHAR(100))
+    p_text: Mapped[str] = mapped_column(TEXT)
+    p_arr: Mapped[list] = mapped_column(JSON)
+    p_color: Mapped[str] = mapped_column(VARCHAR(100))
+    login_user: Mapped[str] = mapped_column(ForeignKey('users.login', onupdate='CASCADE', ondelete='CASCADE'))
+    users = relationship('TableUsers', back_populates='history_polyline_private')
+    photos_arr: Mapped[list] = mapped_column(JSON, default='[]')
 
 class TablePhotosPolylinePrivate(Base):
     __tablename__ = 'polylines_private_photos'

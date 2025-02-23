@@ -63,3 +63,11 @@ class BodyChangePolyline(BaseModel):
     p_arr: Optional[List[Tuple[float, float]]] = None
     p_color: Optional[str] = None
     photos_arr: Optional[List[str]] = None
+
+class ReturnHistoryPolyline(BaseModel):
+    id: int
+    p_name: str
+    p_text: str
+    p_arr: List[Tuple[float, float]]
+    p_color: str
+    photos_arr: List[str]

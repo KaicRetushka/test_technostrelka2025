@@ -4,7 +4,7 @@ import base64
 import json
 
 from backend.database.models_db import (engine, TableUsers, TablePolylinePublic, TablePolylinePrivate, TablePhotosPolylinePublic, TablePhotosPolylinePrivate,
-                                        TableCommentsPolylinePublic, TableMarksPolylinePublic)
+                                        TableCommentsPolylinePublic, TableMarksPolylinePublic, TableHistoryPolylinePublic, TableHistoryPolylinePrivate)
 
 Session = sessionmaker(bind=engine, autoflush=False)
 
@@ -271,6 +271,19 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
             polyline = session.query(TablePolylinePrivate).filter((TablePolylinePrivate.login_user == login)
                                                                 & (TablePolylinePrivate.p_id == p_id)).first()
         if polyline:
+            if is_public:
+                photos = session.query(TablePhotosPolylinePublic).filter(TablePhotosPolylinePublic.p_id == p_id).all()
+                photos_arr = []
+                for photo in photos:
+                    photos_arr.append(photo)
+                history_polyline = TableHistoryPolylinePublic(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=photos_arr)
+            else:
+                photos = session.query(TableHistoryPolylinePrivate).filter(TableHistoryPolylinePrivate.p_id == p_id).all()
+                photos_arr = []
+                for photo in photos:
+                    photos_arr.append(photo)
+                history_polyline = TableHistoryPolylinePrivate(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=photos_arr)
+            session.add(history_polyline)
             if p_name:
                 print('name')
                 polyline.p_name = p_name
@@ -298,3 +311,32 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
             session.commit()
             return True             
         return False
+    
+def select_history_polylines(login, p_id, is_public):
+    with Session() as session:
+        history_polylines = []
+        if is_public:
+            responses = session.query(TableHistoryPolylinePublic).filter((TableHistoryPolylinePublic.login_user == login) &
+                                                                         (TableHistoryPolylinePublic.head_p_id == p_id)).all()
+            for response in responses:
+                history_polylines.append({
+                    'id': response.p_id,
+                    'p_name': response.p_name,
+                    'p_text': response.p_text,
+                    'p_arr': response.p_arr,
+                    'p_color': response.p_color,
+                    'photos_arr': response.photos_arr
+                })
+        else:
+            responses = session.query(TableHistoryPolylinePrivate).filter((TableHistoryPolylinePrivate.login_user == login) &
+                                                                         (TableHistoryPolylinePrivate.head_p_id == p_id)).all()
+            for response in responses:
+                history_polylines.append({
+                    'id': response.p_id,
+                    'p_name': response.p_name,
+                    'p_text': response.p_text,
+                    'p_arr': response.p_arr,
+                    'p_color': response.p_color,
+                    'photos_arr': response.photos_arr
+                })
+        return history_polylines

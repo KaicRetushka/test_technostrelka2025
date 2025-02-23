@@ -12,12 +12,12 @@ import jwt
 
 from backend.database.models_db import create_db, engine
 from backend.pydantic_models import (PydanticRegistration, PydanticEnter, PydanticDetail, BodyAddPolyline, PydanticDetailPolylineId, InfoPolyline, 
-                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline, BodyLike, BodyChangePolyline)
+                                     BodyCom, InfoCom, ResponseInfoUser, MarksPolyline, BodyLike, BodyChangePolyline, ReturnHistoryPolyline)
 from backend.database.requests_db import (add_user, check_user, select_fullname, insert_polyline, check_admin, insert_photo_polyline,  
                                           selet_logins_all, select_p_p_all, select_p_p_photos_all, select_private_p_all, select_private_p_photos_all,
                                           update_avatar, select_avatar, insert_message, update_visited_polylines, select_comments, select_info_user,
                                           update_login, add_mark, drop_mark, select_marks, delte_visited_polylines, select_mark_polyline_user,
-                                          delete_polyline_db, update_polyline)
+                                          delete_polyline_db, update_polyline, select_history_polylines)
 from backend.admin_models import PolylinePublicAdmin, PhotosPolylinePublicAdmin
 
 app = FastAPI(title='Тестовое задание технострелка 2025')
@@ -285,6 +285,15 @@ async def change_polyline(request: Request, body: BodyChangePolyline) -> Pydanti
     if data:
         return {'detail': 'Маршрут изменён'}
     raise HTTPException(status_code=400, detail='Неверные данные')
+
+@app.get('/polyline/history/', tags=['Получить историю маршрута'])
+async def give_history_polylines(request: Request, p_id: int = Query(...), is_public: bool = Query(...)) -> List[ReturnHistoryPolyline]:
+    try:
+        data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
+    except:
+        raise HTTPException(status_code=400, detail='Вы не зарегистрированы') 
+    data = select_history_polylines(data_token['login'], p_id, is_public)
+    return data
 
 if __name__ == '__main__':
     create_db()
