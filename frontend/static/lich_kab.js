@@ -1,9 +1,11 @@
-const btn_add_polyline = document.getElementById('btn_add_route')
+let btn_add_polyline = document.getElementById('btn_add_route')
 let is_polyline = false
 let arr = []
 let star = document.querySelector('#info_name')
 let space = document.querySelector('#info_opisanie')
 const universe = document.getElementById('info_photo_route')
+const dobav_foto = document.getElementById('dobav_foto')
+const change_dobav_foto = document.getElementById('change_dobav_foto')
 let polyline
 let info_route = document.querySelector('#info_route')
 let myMap
@@ -18,8 +20,27 @@ let but_del_route = document.getElementById('but_del_route')
 let but_delete_route = document.getElementById('but_delete_route')
 let is_public_route
 let info_type_route = document.querySelector('#info_type_route')
+let but_change_route = document.querySelector('#but_change_route')
+let change = document.querySelector('#change')
+let change_route_cancel = document.querySelector('#change_route_cancel')
+let change_button_cancel = document.querySelector('#change_button_cancel')
+let change_route = document.querySelector('#change_route')
+let change_button_send = document.querySelector('#change_button_send')
 
 
+
+change_route_cancel.style.display = 'none'
+change_route.style.display = 'none'
+
+
+
+change_route.addEventListener('click', () => {
+    change.showModal()
+});
+
+change_button_cancel.addEventListener('click', () => {
+    change.close()
+});
 
 
 change_login.addEventListener('click', () => {
@@ -40,9 +61,20 @@ button_info_exit.addEventListener('click', () => {
 
 but_del_cancel.addEventListener('click', () => {
     del_route_dialog.close()
-});
+})
 
 
+change_route_cancel.addEventListener('click', () => {
+
+    myMap.geoObjects.removeAll(polyline)
+
+    but_check_route.style.display = 'block'
+    btn_add_polyline.style.display = 'block'
+    button_save_route.style.display = 'block'
+    change_route.style.display = 'none'
+    change_route_cancel.style.display = 'none'
+
+})    
 
 accept_change_login.addEventListener('click', async () => {
 
@@ -227,6 +259,51 @@ async function init(){
                     delete_route(p_id_route, is_public_route)
                     myMap.geoObjects.remove(polyline)
                 })
+
+                //изменение приватного маршрута (удаление всех линий и возможность редактировать конкретный маршрут)
+                but_change_route.addEventListener('click', () => {
+                    
+                    myMap.geoObjects.removeAll(polyline)
+                    myMap.geoObjects.add(new_polyline = new ymaps.Polyline(route[j].p_arr, {}, {
+                        strokeColor: route[j].p_color,
+                        strokeWidth: 4
+                    }))
+                    
+                    info_route.close()
+
+                    new_polyline.editor.startEditing();
+
+                    but_check_route.style.display = 'none'
+                    btn_add_polyline.style.display = 'none'
+                    button_save_route.style.display = 'none'
+                    change_route.style.display = 'block'
+                    change_route_cancel.style.display = 'block'
+
+                    change_button_send.addEventListener('click', () =>{
+                        let p_arr_new_route = []
+                        p_arr_new_route = new_polyline.geometry.getCoordinates();
+                        myMap.geoObjects.add(new_polyline = new ymaps.Polyline(p_arr_new_route, {}, {
+                            strokeColor: "#00000088",
+                            strokeWidth: 4
+                        }))
+                        console.log('Новые корды ', p_arr_new_route)
+                        func_change_route(p_id_route, is_public_route)
+
+                        change.close()
+
+                        myMap.geoObjects.removeAll(polyline)
+
+                        myMap.geoObjects.add(new_polyline)
+
+                        but_check_route.style.display = 'block'
+                        btn_add_polyline.style.display = 'block'
+                        button_save_route.style.display = 'block'
+                        change_route.style.display = 'none'
+                        change_route_cancel.style.display = 'none'
+
+                    })
+
+                })
            
             })
 
@@ -246,7 +323,8 @@ async function init(){
             polyline = new ymaps.Polyline(route_public[g].p_arr, {}, {
                 strokeColor: route_public[g].p_color,
                 strokeWidth: 4
-            })     
+            })
+
             myMap.geoObjects.add(polyline)
             polyline.events.add(['click'], () => {
                
@@ -280,6 +358,50 @@ async function init(){
                     delete_route(p_id_route, is_public_route)
                     //пытаюсь удалить линию, на которую нажимаю, но удаляется последняя созданная
                     myMap.geoObjects.remove(polyline)
+                })
+
+
+                //изменение публичного маршрута (удаление всех линий и возможность редактировать конкретный маршрут)
+                but_change_route.addEventListener('click', () => {
+                    
+                    myMap.geoObjects.removeAll(polyline)
+                    myMap.geoObjects.add(new_polyline = new ymaps.Polyline(route_public[g].p_arr, {}, {
+                        strokeColor: route_public[g].p_color,
+                        strokeWidth: 4
+                    }))
+
+                    info_route.close()
+
+                    new_polyline.editor.startEditing();
+
+                    but_check_route.style.display = 'none'
+                    btn_add_polyline.style.display = 'none'
+                    button_save_route.style.display = 'none'
+                    change_route.style.display = 'block'
+                    change_route_cancel.style.display = 'block'
+
+                    change_button_send.addEventListener('click', () =>{
+                        let p_arr_new_route = []
+                        p_arr_new_route = new_polyline.geometry.getCoordinates();
+                        myMap.geoObjects.add(new_polyline = new ymaps.Polyline(p_arr_new_route, {}, {
+                            strokeColor: "#00000088",
+                            strokeWidth: 4
+                        }))
+                        console.log('Новые корды ', p_arr_new_route)
+                        func_change_route(p_id_route, is_public_route, p_arr_new_route)
+
+                        change.close()
+
+                        myMap.geoObjects.removeAll(polyline)
+
+                        but_check_route.style.display = 'block'
+                        btn_add_polyline.style.display = 'block'
+                        button_save_route.style.display = 'block'
+                        change_route.style.display = 'none'
+                        change_route_cancel.style.display = 'none'
+
+                    })
+
                 })
 
             })
@@ -462,3 +584,93 @@ async function set_save_route() {
 }
 
 document.getElementById('button_send').onclick = set_save_route;
+
+
+
+
+//превращение фоток в массив base64
+function toBase64(files, onSuccess) {
+    let promises = [];
+
+    for (let file of files) {
+        let reader = new FileReader();
+        
+        let promise = new Promise((resolve, reject) => {
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error("Ошибка чтения файла"));
+            reader.readAsDataURL(file);
+        });
+
+        promises.push(promise);
+    }
+
+    Promise.all(promises).then(onSuccess).catch(error => console.error(error));
+}
+
+
+//изменения маршрута
+async function func_change_route(p_id_route, is_public_route, p_arr_new_route) {
+
+    let p_name_route = document.querySelector('#change_p_name');
+
+    if (p_name_route) {
+
+        p_name_route = p_name_route.value;
+
+        if (p_name_route === '') {
+            p_name_route = null;
+        }
+
+    } else {
+        console.error("Element with ID 'change_p_name' not found.");
+    }
+
+
+    let p_text_route = document.querySelector('#change_p_text');
+
+    if (p_text_route) {
+
+        p_text_route = p_text_route.value;
+
+        if (p_text_route === '') {
+            p_text_route = null;
+        }
+
+    } else {
+        console.error("Element with ID 'change_p_text' not found.");
+    }
+
+
+    let p_color_route = document.querySelector('#change_p_color');
+
+    if (p_color_route) {
+
+        p_color_route = p_color_route.value;
+
+        if (p_color_route === '') {
+            p_color_route = null;
+        }
+
+    } else {
+        console.error("Element with ID 'change_p_color' not found.");
+    }
+
+    
+    let answer = await fetch ('http://127.0.0.1:8000/polyline/change/', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            is_public: is_public_route,
+            p_id: p_id_route,
+            p_name: p_name_route,
+            p_text: p_text_route,
+            p_arr: p_arr_new_route,
+            p_color: p_color_route,
+            photos_arr: null
+        }) 
+    })
+
+    answer = await answer.json()
+    console.log('answer: ', answer)
+
+}

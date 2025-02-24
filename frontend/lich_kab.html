@@ -45,9 +45,6 @@
     </dialog>
 
 
-
-
-
     <div class="avatar" id="avatarka"> 
         <input id="smena_avatarki" type="file"> 
     </div> <br> 
@@ -60,12 +57,16 @@
 
     <div id="map" style="width: 600px; height: 400px"></div><br>
 
-    <div>
+    <div style="display: flex;">
         <button id="check_route">Посмотреть мои маршруты</button>
         <button id="btn_add_route">Создать маршрут</button>
-        <button id="btn_save_route">Сохрнаить маршрут</button><br>
+        <button id="btn_save_route">Сохрнаить маршрут</button>
     </div>
 
+    <div style="display: flex;">
+        <button id="change_route_cancel">Отменить</button>
+        <button id="change_route">Изменить маршрут</button>
+    </div>
     
     <dialog id="okno">
         <form id="form">
@@ -81,7 +82,7 @@
 
                     <div>
                         <p>Описание</p>
-                        <textarea id="p_text" name="" id=""></textarea>
+                        <textarea id="p_text"></textarea>
                     </div>
 
                     <div>
@@ -151,7 +152,11 @@
                         <p id="info_type_route"></p>
                     </div>
 
-                    <button id="but_del_route" type="button">Удалить маршрут</button>
+                    <div>
+                        <button id="but_change_route" type="button">Изменить маршрут</button>
+                        <button id="but_del_route" type="button">Удалить маршрут</button>
+                    </div>
+                    
                     <button id="button_info_exit" type="button">Выйти</button>
                 
                 </div>
@@ -181,6 +186,43 @@
                 
                 </div>
                 <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+
+
+
+    <dialog id="change">
+        <form id="change_form">
+            <div class="change-modal">
+                <div class="change-modal-window">
+                    <h1>Изменить маршрут</h1>
+
+                    <div>
+                        <p>Название</p>
+                        <input id="change_p_name" type="text">
+                    </div>
+
+                    <div>
+                        <p>Описание</p>
+                        <textarea id="change_p_text"></textarea>
+                    </div>
+
+                    <div>
+                        <p>Выберите цвет линий:</p>
+                        <input id="change_p_color" type="color">
+                    </div><br>
+                    
+                    <div class="change-file-input-container">
+                        <label class="change-file-input-label" for="dobav_foto">Добавить фото</label>
+                        <input id="change-dobav_foto" class="change-file-input" type="file" multiple>
+                    </div><br>
+                    
+                    <button id="change_button_cancel" type="button">Отменить</button>
+                    <button id="change_button_send" type="button">Изменить</button>
+
+                </div>
+                <div class="change-overlay"></div>
             </div>
         </form>
     </dialog>
