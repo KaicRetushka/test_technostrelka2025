@@ -275,14 +275,15 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
                 photos = session.query(TablePhotosPolylinePublic).filter(TablePhotosPolylinePublic.p_id == p_id).all()
                 new_photos_arr = []
                 for photo in photos:
-                    new_photos_arr.append(photo)
-                history_polyline = TableHistoryPolylinePublic(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=new_photos_arr)
+                    new_photos_arr.append(base64.b64encode(photo.photo_blob).decode('utf-8'))
+                print(new_photos_arr)
+                history_polyline = TableHistoryPolylinePublic(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=json.dumps(new_photos_arr))
             else:
                 photos = session.query(TableHistoryPolylinePrivate).filter(TableHistoryPolylinePrivate.p_id == p_id).all()
                 new_photos_arr = []
                 for photo in photos:
-                    new_photos_arr.append(photo)
-                history_polyline = TableHistoryPolylinePrivate(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=new_photos_arr)
+                    new_photos_arr.append(base64.b64encode(photo.photo_blob).decode('utf-8'))
+                history_polyline = TableHistoryPolylinePrivate(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=json.dumps(new_photos_arr))
             session.add(history_polyline)
             if p_name:
                 polyline.p_name = p_name
@@ -327,7 +328,7 @@ def select_history_polylines(login, p_id, is_public):
                     'p_text': response.p_text,
                     'p_arr': response.p_arr,
                     'p_color': response.p_color,
-                    'photos_arr': response.photos_arr
+                    'photos_arr': json.loads(response.photos_arr)
                 })
         else:
             responses = session.query(TableHistoryPolylinePrivate).filter((TableHistoryPolylinePrivate.login_user == login) &
@@ -339,6 +340,6 @@ def select_history_polylines(login, p_id, is_public):
                     'p_text': response.p_text,
                     'p_arr': response.p_arr,
                     'p_color': response.p_color,
-                    'photos_arr': response.photos_arr
+                    'photos_arr': json.loads(response.photos_arr)
                 })
         return history_polylines
