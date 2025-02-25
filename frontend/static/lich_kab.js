@@ -248,7 +248,7 @@ async function init(){
                 let p_id_route = route[j].p_id
                 is_public_route = false  
 
-                info_image(p_id_route)                
+                info_image_private(p_id_route)                
 
                 but_del_route.addEventListener('click', () => {
                     del_route_dialog.showModal()
@@ -268,7 +268,7 @@ async function init(){
                         strokeColor: route[j].p_color,
                         strokeWidth: 4
                     }))
-                    
+
                     info_route.close()
 
                     new_polyline.editor.startEditing();
@@ -279,7 +279,8 @@ async function init(){
                     change_route.style.display = 'block'
                     change_route_cancel.style.display = 'block'
 
-                    change_button_send.addEventListener('click', () =>{
+                    change_button_send.onclick = () => {
+
                         let p_arr_new_route = []
                         p_arr_new_route = new_polyline.geometry.getCoordinates();
                         myMap.geoObjects.add(new_polyline = new ymaps.Polyline(p_arr_new_route, {}, {
@@ -287,13 +288,11 @@ async function init(){
                             strokeWidth: 4
                         }))
                         console.log('Новые корды ', p_arr_new_route)
-                        func_change_route(p_id_route, is_public_route)
+                        func_change_route(p_id_route, is_public_route, p_arr_new_route)
 
                         change.close()
 
                         myMap.geoObjects.removeAll(polyline)
-
-                        myMap.geoObjects.add(new_polyline)
 
                         but_check_route.style.display = 'block'
                         btn_add_polyline.style.display = 'block'
@@ -301,7 +300,7 @@ async function init(){
                         change_route.style.display = 'none'
                         change_route_cancel.style.display = 'none'
 
-                    })
+                    }
 
                 })
            
@@ -348,7 +347,7 @@ async function init(){
                 let p_id_route = route_public[g].p_id
                 let is_public_route = true
 
-                info_image(p_id_route)
+                info_image_public(p_id_route)
 
                 but_del_route.addEventListener('click', () => {
                     del_route_dialog.showModal()
@@ -380,7 +379,8 @@ async function init(){
                     change_route.style.display = 'block'
                     change_route_cancel.style.display = 'block'
 
-                    change_button_send.addEventListener('click', () =>{
+                    change_button_send.onclick = () => {
+
                         let p_arr_new_route = []
                         p_arr_new_route = new_polyline.geometry.getCoordinates();
                         myMap.geoObjects.add(new_polyline = new ymaps.Polyline(p_arr_new_route, {}, {
@@ -400,7 +400,7 @@ async function init(){
                         change_route.style.display = 'none'
                         change_route_cancel.style.display = 'none'
 
-                    })
+                    }
 
                 })
 
@@ -424,11 +424,43 @@ async function init(){
 
 
 //получение фоток приватного маршрута
-async function info_image(p_id_route) { 
+async function info_image_private(p_id_route) { 
     
     try {
 
         let info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
+            headers: {'Content-Type': 'application/json'}
+        })
+    
+        image = await info_image.json()
+        console.log('массив изображений: ', image)
+    
+        for(photo of image){
+    
+            const base_to_img = document.createElement('img')
+        
+            base_to_img.src = `data:image/png;base64,${photo}`
+        
+            base_to_img.style.width = '50px'
+            base_to_img.style.height = '50px'
+        
+            universe.appendChild(base_to_img) 
+            
+        }
+
+    } catch (error) {
+        console.error('Ошибка при получении изображений:', error);
+    }
+
+}
+
+
+//получение фоток публичного маршрута
+async function info_image_public(p_id_route) { 
+    
+    try {
+
+        let info_image = await fetch(`http://127.0.0.1:8000/polylines/public/photos/?p_id=${p_id_route}`, {
             headers: {'Content-Type': 'application/json'}
         })
     
@@ -674,3 +706,18 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route) {
     console.log('answer: ', answer)
 
 }
+
+
+
+//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+
+//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+
+//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+
+//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+
+//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+
+//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+

@@ -4,10 +4,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqladmin import Admin
-from typing import List
+from typing import List, Tuple
 import uvicorn
 import os
 import jwt
+import json
 
 
 from backend.database.models_db import create_db, engine
@@ -276,13 +277,19 @@ async def delete_polyline(request: Request, p_id: int = Query(...), is_public: b
     raise HTTPException(status_code=400, detail='Неверные данные')    
 
 @app.put('/polyline/change/', tags=['Изменить маршрут'])
-async def change_polyline(request: Request, body: BodyChangePolyline) -> PydanticDetail:
-    print(body.photos_arr)
+async def change_polyline(request: Request, is_public: bool = Query(...), p_id: int = Query(...), p_name: str = Query(None), p_text: str = Query(None),
+                          p_arr: str = Query(None), p_color: str = Query(None),  photos_arr: List[UploadFile] = File(None)) -> PydanticDetail:
     try:
         data_token = jwt.decode(request.cookies.get('token'), 'secret', algorithms=['HS256'])    
     except:
         raise HTTPException(status_code=400, detail='Вы не зарегистрированы') 
-    data = update_polyline(data_token['login'], body.is_public, body.p_id, body.p_name, body.p_text, body.p_arr, body.p_color, body.photos_arr)
+    if p_arr:
+        p_arr = json.loads(p_arr)
+    photos_arr_blob = []
+    if photos_arr:
+        for photo in photos_arr:
+            photos_arr_blob.append(await photo.read())
+    data = update_polyline(data_token['login'], is_public, p_id, p_name, p_text, p_arr, p_color, photos_arr_blob)
     if data:
         return {'detail': 'Маршрут изменён'}
     raise HTTPException(status_code=400, detail='Неверные данные')
