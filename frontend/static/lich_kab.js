@@ -279,6 +279,10 @@ async function init(){
                     change_route.style.display = 'block'
                     change_route_cancel.style.display = 'block'
 
+                    console.log('Вы изменяете данный маршрут: ', route[j])
+
+                    route_change = route[j]
+
                     change_button_send.onclick = () => {
 
                         let p_arr_new_route = []
@@ -288,7 +292,7 @@ async function init(){
                             strokeWidth: 4
                         }))
                         console.log('Новые корды ', p_arr_new_route)
-                        func_change_route(p_id_route, is_public_route, p_arr_new_route)
+                        func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change)
 
                         change.close()
 
@@ -379,6 +383,10 @@ async function init(){
                     change_route.style.display = 'block'
                     change_route_cancel.style.display = 'block'
 
+                    console.log('Вы изменяете данный маршрут: ', route_public[g])
+                    
+                    route_change = route_public[g]
+
                     change_button_send.onclick = () => {
 
                         let p_arr_new_route = []
@@ -388,7 +396,7 @@ async function init(){
                             strokeWidth: 4
                         }))
                         console.log('Новые корды ', p_arr_new_route)
-                        func_change_route(p_id_route, is_public_route, p_arr_new_route)
+                        func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change)
 
                         change.close()
 
@@ -641,65 +649,38 @@ function toBase64(files, onSuccess) {
 
 
 //изменения маршрута
-async function func_change_route(p_id_route, is_public_route, p_arr_new_route) {
+async function func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change) {
 
-    let p_name_route = document.querySelector('#change_p_name');
+    document.querySelector('#change_p_name').value = route_change.p_name
 
-    if (p_name_route) {
+    document.querySelector('#change_p_text').value = route_change.p_text
 
-        p_name_route = p_name_route.value;
-
-        if (p_name_route === '') {
-            p_name_route = null;
-        }
-
-    } else {
-        console.error("Element with ID 'change_p_name' not found.");
-    }
+    document.querySelector('#change_p_color').value = route_change.p_color
 
 
-    let p_text_route = document.querySelector('#change_p_text');
-
-    if (p_text_route) {
-
-        p_text_route = p_text_route.value;
-
-        if (p_text_route === '') {
-            p_text_route = null;
-        }
-
-    } else {
-        console.error("Element with ID 'change_p_text' not found.");
-    }
 
 
-    let p_color_route = document.querySelector('#change_p_color');
 
-    if (p_color_route) {
 
-        p_color_route = p_color_route.value;
 
-        if (p_color_route === '') {
-            p_color_route = null;
-        }
-
-    } else {
-        console.error("Element with ID 'change_p_color' not found.");
-    }
-
+    const fileInput = document.querySelector('#change-dobav_foto');
+    const files = fileInput.files;
     
-    let answer = await fetch ('http://127.0.0.1:8000/polyline/change/', {
+
+    let formData = new FormData()
+    console.log('files_change_polyline', files)
+    for (file of files) {
+        console.log(file)
+        formData.append('photos_arr', file)
+    } 
+
+    for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+    }    
+
+    let answer = await fetch (`http://127.0.0.1:8000/polyline/change/?is_public=${is_public_route}&p_id=${p_id_route}&p_name=${p_name_route}&p_text=${p_text_route}&p_arr=${JSON.stringify(p_arr_new_route)}&p_color=${p_color_route}`, {
         method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            is_public: is_public_route,
-            p_id: p_id_route,
-            p_name: p_name_route,
-            p_text: p_text_route,
-            p_arr: p_arr_new_route,
-            p_color: p_color_route,
-            photos_arr: null
-        }) 
+        body: formData
     })
 
     answer = await answer.json()

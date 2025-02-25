@@ -292,11 +292,8 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
                 polyline.p_arr = p_arr
             if p_color:
                 polyline.p_color = p_color
-            print('p', photos_arr)
             if photos_arr:
-                print('a')
                 if is_public:
-                    print('aa')
                     photos = session.query(TablePhotosPolylinePublic).filter(TablePhotosPolylinePublic.p_id == p_id).all()
                     for photo in photos:
                         session.delete(photo)

@@ -2,7 +2,6 @@ const btn_add_polyline = document.getElementById('btn_add_route')
 const dobav_foto = document.getElementById('dobav_foto')
 const universe = document.getElementById('info_photo_route')
 let open_comment = document.querySelector('#comments')
-console.log(btn_add_polyline)
 let is_polyline = false
 let arr = []
 let mass = []
