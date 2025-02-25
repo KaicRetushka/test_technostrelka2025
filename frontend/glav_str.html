@@ -4,82 +4,137 @@
     <title>Document</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="https://api-maps.yandex.ru/2.1/?apikey=126279f8-7d73-4da9-a3e6-369f3c5d0f2f&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@700" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Volkhov:wght@700" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jolly+Lodger:wght@400" />
     <link rel="stylesheet" href="static/glav_str.css">
 </head>
 
 <body>
-    {% if is_enter %}
-        <button id="fullname">{{ fullname }}</button>
-        <button id="button_glav_exit" type="button">Выйти</button><br><br>
-    {% else %}
-        <a href="vhod.html" style="text-decoration: none;">
-            <button  id="button_glav_vhod">Войти</button>
+    <div class="EVM">EVM</div>
+    <a href="#blok3" class="link-map">Туристические маршруты</a>
+    <div style="width: 107.31px; height: 37.64px; left: 1162.25px; top: 136.46px; position: absolute">
+
+
+
+        {% if is_enter %}
+        <button id="fullname" class="fullname">{{ fullname }}</button>
+        <button id="button_glav_exit" type="button" class="button_glav_exit">Выйти</button><br><br>
+        {% else %}
+        <a href="vhod.html">
+            <button id="button_glav_vhod" class="button_glav_vhod">Войти</button>
         </a>
-
-        <a href="reg.html" style="text-decoration: none;">
-            <button id="button_glav_reg">Зарегистрироваться</button>
+        <a href="reg.html">
+            <button id="button_glav_reg" class="button_glav_reg">Рег</button>
         </a> <br><br>
-    {% endif %}
+        {% endif %}
 
-    <div id="map" style="width: 600px; height: 400px"></div><br>
-    
-    
-    <button id="btn_add_route">Создать маршрут</button>
-    <button id="btn_save_route">Сохрнаить маршрут</button><br>
-    <h1>Все пользователи</h1>
-   
+        <img class="Vsadnic" src="/static/image/Всадник.png" />
 
-    <dialog id="okno">
-        <form id="form">
+        <div class="sin-pattern">
+            <img src="/static/image/Синяя хреновина на фоне.png" alt="//////////">
+        </div>
+
+        <div class="zag1">Создай свой <br />туристический <br />марштрут</div>
+    </div>
+
+    <div class="predzag">ЛУЧШИЕ МАРШРУТЫ НАХОДЯТСЯ ЗДЕСЬ!!!</div>
+
+    <div class="zag2">
+        Планирование путешествия — это увлекательное приключение, и теперь вы можете стать архитектором
+        своего собственного маршрута! Каждый может создать уникальный туристический маршрут, будь то
+        исследование родного города или захватывающее путешествие в другую страну.
+    </div>
+
+    <div>
+        <div>
+            <div class="zag2-1">ВОЗМОЖНОСТИ САЙТА</div>
+            <img class="sozdanie" src="/static/image/Создание.png" />
+            <img class="reyting" src="/static/image/Рейтинг.png" />
+            <img class="prosmotr" src="/static/image/Просмотр.png" />
+            <img class="poisk" src="/static/image/Поиск.png" />
+        </div>
+        <div class="plus-blok">
+            <div class="plus-red">+</div>
+            <div class="plus-white1">+</div>
+            <div class="plus-white2">+</div>
+            <div class="plus-white3">+</div>
+            <div class="plus-white4">+</div>
+            <div class="plus-white5">+</div>
+            <div class="plus-white6">+</div>
+            <div class="plus-white7">+</div>
+            <div class="plus-white8">+</div>
+            <div class="plus-blue">+</div>
+            <div class="plus-white9">+</div>
+            <div class="plus-white10">+</div>
+            <div class="plus-white11">+</div>
+            <div class="plus-white12">+</div>
+            <div class="plus-white13">+</div>
+            <div class="plus-white14">+</div>
+            <div class="plus-white15">+</div>
+            <div class="plus-white16">+</div>
+            <div class="plus-white17">+</div>
+            <div class="plus-white18">+</div>
+            <div class="plus-white19">+</div>
+            <div class="plus-white20">+</div>
+        </div>
+    </div>
+    <div id="blok3" class="blok3">
+        <div class="zag-blok3">ПОСТРОЙ СОБСТВЕННЫЙ МАРШРУТ</div>
+        <div id="map" class="map"></div>
+        <button id="btn_save_route" class="btn-save-route">Сохранить маршрут</button>
+        <button id="btn_add_route" class="btn-add-route">Добавить маршрут</button>
+        <div class="loginii">
+            <div class="zag-loginii">Все пользователи:</div>
+            <div class="avatar" id="avatarka"></div>
+            <div class="login_all" id="login_all"></div>
+        </div>
+    </div>
+
+    <dialog id="okno" class="okno1">
+        <form id="form" class="form">
             <div class="modal">
                 <div class="modal-window">
-                    <h1>Сохранить маршрут</h1>
+                    <h1 class="modalzag"> Сохранить маршрут</h1>
                     <button id="btn_close" class="btn-close" type="button">X</button>
 
-                    <div>
-                        <p>Название</p>
-                        <input id="p_name" type="text">
+                    <div class="bl-modal-ok">
+                        <p class="nadpisi">Название</p>
+                        <input id="p_name" type="text" class="text-modal-window-save-marsh">
                     </div>
 
                     <div>
-                        <p>Описание</p>
-                        <textarea id="p_text" name="" id=""></textarea>
+                        <p class="nadpisi2">Описание</p>
+                        <textarea id="p_text" name="" id="" class="text-modal-window-save-marsh2"></textarea>
                     </div>
 
                     <div>
-                        <p>Выберите цвет линий:</p>
-                        <input id="p_color" type="color">
+                        <p class="nadpisi3">Выберите цвет линий:</p>
+                        <input id="p_color" type="color" class="p-color">
                     </div><br>
-                    
-                    <div class="file-input-container">
-                        <label class="file-input-label" for="dobav_foto">Добавить фото</label>
-                        <input id="dobav_foto" class="file-input" type="file" multiple>
-                    </div><br>
+
+                    <div class="custom-file-input">
+                        <label class="file-input" for="dobav_foto">Добавить фото</label>
+                    </div><input id="dobav_foto" class="file-upload-btn" type="file" multiple><br>
 
                     <div>
                         Выберите тип публикации: <br>
                         <div>
-                            <input 
-                                type="radio"
-                                id="public"
-                                name="choice"
-                                checked
-                            />
+                            <input class="radio" type="radio" id="public" name="choice" checked />
                             <label for="public">Публичная</label>
                         </div>
-            
+
                         <div>
-                            <input 
-                                type="radio"
-                                id="privat"
-                                name="choice"
-                            />
+                            <input class="radio" type="radio" id="privat" name="choice" />
                             <label for="privat">Приватная</label>
                         </div> <br>
                     </div>
+
+                    <button id="button_send" type="button" class="buttonOO">Отправить</button>
+                    <button id="button_cancel" type="button" class="buttonOO1">Отменить</button>
                     
-                    <button id="button_cancel" type="button">Отменить</button>
-                    <button id="button_send" type="button">Отправить</button>
                 </div>
                 <div class="overlay"></div>
             </div>
