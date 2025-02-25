@@ -283,6 +283,18 @@ async function init(){
 
                     route_change = route[j]
 
+                    document.querySelector('#change_p_name').value = ''
+                    document.querySelector('#change_p_name').value = route_change.p_name
+                    p_name_value = document.querySelector('#change_p_name').value
+                    
+                    document.querySelector('#change_p_text').value = ''
+                    document.querySelector('#change_p_text').value = route_change.p_text
+                    p_text_value = document.querySelector('#change_p_text').value
+                
+                    document.querySelector('#change_p_color').value = ''
+                    document.querySelector('#change_p_color').value = route_change.p_color
+                    p_color_value = document.querySelector('#change_p_color').value
+
                     change_button_send.onclick = () => {
 
                         let p_arr_new_route = []
@@ -291,8 +303,10 @@ async function init(){
                             strokeColor: "#00000088",
                             strokeWidth: 4
                         }))
+
                         console.log('Новые корды ', p_arr_new_route)
-                        func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change)
+
+                        func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change, p_name_value, p_text_value, p_color_value)
 
                         change.close()
 
@@ -387,6 +401,18 @@ async function init(){
                     
                     route_change = route_public[g]
 
+                    document.querySelector('#change_p_name').value = ''
+                    document.querySelector('#change_p_name').value = route_change.p_name
+                    p_name_value = document.querySelector('#change_p_name').value
+                    
+                    document.querySelector('#change_p_text').value = ''
+                    document.querySelector('#change_p_text').value = route_change.p_text
+                    p_text_value = document.querySelector('#change_p_text').value
+                
+                    document.querySelector('#change_p_color').value = ''
+                    document.querySelector('#change_p_color').value = route_change.p_color
+                    p_color_value = document.querySelector('#change_p_color').value
+
                     change_button_send.onclick = () => {
 
                         let p_arr_new_route = []
@@ -395,8 +421,10 @@ async function init(){
                             strokeColor: "#00000088",
                             strokeWidth: 4
                         }))
+
                         console.log('Новые корды ', p_arr_new_route)
-                        func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change)
+                        
+                        func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change, p_name_value, p_text_value, p_color_value)
 
                         change.close()
 
@@ -649,16 +677,25 @@ function toBase64(files, onSuccess) {
 
 
 //изменения маршрута
-async function func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change) {
+async function func_change_route(p_id_route, is_public_route, p_arr_new_route, route_change, p_name_value, p_text_value, p_color_value) {
 
-    document.querySelector('#change_p_name').value = route_change.p_name
+    if (document.querySelector('#change_p_name').value === p_name_value) {
 
-    document.querySelector('#change_p_text').value = route_change.p_text
+        document.querySelector('#change_p_name').value = null
 
-    document.querySelector('#change_p_color').value = route_change.p_color
+    }
 
+    if (document.querySelector('#change_p_text').value === p_text_value) {
 
+        document.querySelector('#change_p_text').value = null
+        
+    }
 
+    if (document.querySelector('#change_p_color').value === p_color_value) {
+
+        document.querySelector('#change_p_color').value = null
+        
+    }
 
 
 
@@ -666,7 +703,6 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
     const fileInput = document.querySelector('#change-dobav_foto');
     const files = fileInput.files;
     
-
     let formData = new FormData()
     console.log('files_change_polyline', files)
     for (file of files) {
@@ -678,7 +714,7 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
         console.log(key, value);
     }    
 
-    let answer = await fetch (`http://127.0.0.1:8000/polyline/change/?is_public=${is_public_route}&p_id=${p_id_route}&p_name=${p_name_route}&p_text=${p_text_route}&p_arr=${JSON.stringify(p_arr_new_route)}&p_color=${p_color_route}`, {
+    let answer = await fetch (`http://127.0.0.1:8000/polyline/change/?is_public=${is_public_route}&p_id=${p_id_route}&p_name=${document.querySelector('#change_p_name').value}&p_text=${document.querySelector('#change_p_text').value}&p_arr=${JSON.stringify(p_arr_new_route)}&p_color=${document.querySelector('#change_p_color').value}`, {
         method: 'PUT',
         body: formData
     })
