@@ -276,10 +276,9 @@ def update_polyline(login, is_public, p_id, p_name, p_text, p_arr, p_color, phot
                 new_photos_arr = []
                 for photo in photos:
                     new_photos_arr.append(base64.b64encode(photo.photo_blob).decode('utf-8'))
-                print(new_photos_arr)
                 history_polyline = TableHistoryPolylinePublic(head_p_id=polyline.p_id, p_name=polyline.p_name, p_text=polyline.p_text,  p_arr=polyline.p_arr, p_color=polyline.p_color, login_user=polyline.login_user, photos_arr=json.dumps(new_photos_arr))
             else:
-                photos = session.query(TableHistoryPolylinePrivate).filter(TableHistoryPolylinePrivate.p_id == p_id).all()
+                photos = session.query(TablePhotosPolylinePrivate).filter(TablePhotosPolylinePrivate.p_id == p_id).all()
                 new_photos_arr = []
                 for photo in photos:
                     new_photos_arr.append(base64.b64encode(photo.photo_blob).decode('utf-8'))
