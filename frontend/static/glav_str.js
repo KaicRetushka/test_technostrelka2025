@@ -168,7 +168,13 @@ async function init(){
                     get_user_comment(p_id);
 
                     let otpravka = document.getElementById('set_comments')
-                    otpravka.onclick = () => add_user_comment(p_id)
+                    otpravka.onclick = () => {
+
+                        add_user_comment(p_id)
+
+                        document.querySelector('#input_comment').value = ''
+
+                    } 
                     
                     
 
@@ -433,12 +439,26 @@ button_save_route.addEventListener('click', () => {
 
 let button_cancel = document.querySelector('#button_cancel')
 button_cancel.addEventListener('click', () => {
+
+    document.querySelector('#p_name').value = ''
+    document.querySelector('#p_text').value = ''
+    document.querySelector('#p_color').value = ''
+    document.querySelector('#public').checked = ''
+
     okno.close()
+
 });
 
 let button_close = document.getElementById('btn_close')
 button_close.addEventListener('click', () => {
+    
+    document.querySelector('#p_name').value = ''
+    document.querySelector('#p_text').value = ''
+    document.querySelector('#p_color').value = ''
+    document.querySelector('#public').checked = ''
+
     okno.close()
+
 });
 
 
@@ -505,7 +525,15 @@ async function set_save_route() {
 
 }
 
-document.getElementById('button_send').onclick = set_save_route;
+document.getElementById('button_send').onclick = () => {
+
+    set_save_route;
+    
+    document.querySelector('#p_name').value = ''
+    document.querySelector('#p_text').value = ''
+    document.querySelector('#p_color').value = ''
+
+}
 
 
 

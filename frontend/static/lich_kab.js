@@ -242,9 +242,7 @@ async function init(){
     but_check_route = document.querySelector('#check_route')
     but_check_route.addEventListener('click', async () => {
 
-        if (polyline) {
-            myMap.geoObjects.removeAll(polyline)
-        }
+        myMap.geoObjects.removeAll()
 
         let response = await fetch('http://127.0.0.1:8000/polylines/private/', {
             headers: {'Content-Type': 'application/json'}
@@ -253,6 +251,8 @@ async function init(){
         let route = await response.json()
         console.log('Приватные маршруты: ', route)
 
+        let polylines = [];
+
         //вывод приватных маршрутов пользователя на карту
         for (let j = 0; j < route.length; ++j){
 
@@ -260,42 +260,43 @@ async function init(){
                 strokeColor: route[j].p_color,
                 strokeWidth: 4
             })
-            myMap.geoObjects.add(polyline)
+
+            myMap.geoObjects.add(polyline);
+            polylines.push(polyline); // Сохраняем полилинию в массив
+
             polyline.events.add(['click'], () => {
-               
-                console.log(route[j])
+                console.log(route[j]);
 
-                info_route.showModal()
-                
-                console.log('Вы открыли модальное окно с информацией о маршруте')
+                info_route.showModal();
 
-                star.innerHTML = ''
-                space.innerHTML = ''
-                universe.innerHTML = ''
-                info_type_route.innerHTML = ''
+                console.log('Вы открыли модальное окно с информацией о маршруте');
 
-                star.innerHTML += route[j].p_name
-                space.innerHTML += route[j].p_text
-                info_type_route.innerHTML += 'Приватный'
+                star.innerHTML = '';
+                space.innerHTML = '';
+                universe.innerHTML = '';
+                info_type_route.innerHTML = '';
 
-                let p_id_route = route[j].p_id
-                is_public_route = false  
+                star.innerHTML += route[j].p_name;
+                space.innerHTML += route[j].p_text;
+                info_type_route.innerHTML += 'Приватный';
 
-                info_image_private(p_id_route)                
+                let p_id_route = route[j].p_id;
+                is_public_route = false;
+
+                info_image_private(p_id_route);
 
                 but_del_route.addEventListener('click', () => {
-                    del_route_dialog.showModal()
+
+                    del_route_dialog.showModal();
+
+                    but_delete_route.onclick = () => {
+                        delete_route(p_id_route, is_public_route);
+                        myMap.geoObjects.remove(polyline); // Удаляем конкретную полилинию
+                        polylines = polylines.filter(pl => pl !== polyline);
+                    };
+
                 });
 
-                delete_polyline = new ymaps.Polyline(route[j].p_arr, {}, {
-                    strokeColor: route[j].p_color,
-                    strokeWidth: 4
-                })
-
-                but_delete_route.onclick = () => {
-                    delete_route(p_id_route, is_public_route)
-                    myMap.geoObjects.remove(delete_polyline)
-                }
 
                 //изменение приватного маршрута (удаление всех линий и возможность редактировать конкретный маршрут)
                 but_change_route.addEventListener('click', () => {
@@ -393,44 +394,42 @@ async function init(){
                 strokeWidth: 4
             })
 
-            myMap.geoObjects.add(polyline)
+            myMap.geoObjects.add(polyline);
+            polylines.push(polyline); // Сохраняем полилинию в массив
+
             polyline.events.add(['click'], () => {
-               
-                console.log(route_public[g])
+                console.log(route_public[g]);
 
-                console.log(polyline)
+                info_route.showModal();
 
-                info_route.showModal()
-                
-                console.log('Вы открыли модальное окно с информацией о маршруте')
+                console.log('Вы открыли модальное окно с информацией о маршруте');
 
-                star.innerHTML = ''
-                space.innerHTML = ''
-                universe.innerHTML = ''
-                info_type_route.innerHTML = ''
-                
-                star.innerHTML += route_public[g].p_name
-                space.innerHTML += route_public[g].p_text
-                info_type_route.innerHTML += 'Публичный'
+                star.innerHTML = '';
+                space.innerHTML = '';
+                universe.innerHTML = '';
+                info_type_route.innerHTML = '';
 
-                let p_id_route = route_public[g].p_id
-                let is_public_route = true
+                star.innerHTML += route_public[g].p_name;
+                space.innerHTML += route_public[g].p_text;
+                info_type_route.innerHTML += 'Приватный';
 
-                info_image_public(p_id_route)
+                let p_id_route = route_public[g].p_id;
+                is_public_route = true;
+
+                info_image_private(p_id_route);
 
                 but_del_route.addEventListener('click', () => {
-                    del_route_dialog.showModal()
+
+                    del_route_dialog.showModal();
+
+                    but_delete_route.onclick = () => {
+                        delete_route(p_id_route, is_public_route);
+                        myMap.geoObjects.remove(polyline); // Удаляем конкретную полилинию
+                        polylines = polylines.filter(pl => pl !== polyline);
+                    };
+
                 });
-
-                delete_polyline = new ymaps.Polyline(route_public[g].p_arr, {}, {
-                    strokeColor: route_public[g].p_color,
-                    strokeWidth: 4
-                })
-
-                but_delete_route.onclick = () => {
-                    delete_route(p_id_route, is_public_route)
-                    myMap.geoObjects.remove(delete_polyline)
-                }
+        
 
 
                 //изменение публичного маршрута (удаление всех линий и возможность редактировать конкретный маршрут)
@@ -544,7 +543,7 @@ async function info_image_public(p_id_route) {
         for(photo of image){
     
             const base_to_img = document.createElement('img')
-        
+            
             base_to_img.src = `data:image/png;base64,${photo}`
         
             universe.appendChild(base_to_img) 
@@ -622,12 +621,26 @@ button_save_route.addEventListener('click', () => {
 
 let button_cancel = document.querySelector('#button_cancel')
 button_cancel.addEventListener('click', () => {
+    
+    document.querySelector('#p_name').value = ''
+    document.querySelector('#p_text').value = ''
+    document.querySelector('#p_color').value = ''
+    document.querySelector('#public').checked = ''
+
     okno.close()
+
 });
 
 let button_close = document.getElementById('btn_close')
 button_close.addEventListener('click', () => {
+    
+    document.querySelector('#p_name').value = ''
+    document.querySelector('#p_text').value = ''
+    document.querySelector('#p_color').value = ''
+    document.querySelector('#public').checked = ''
+    
     okno.close()
+
 });
 
 
@@ -672,13 +685,12 @@ async function set_save_route() {
             console.log(response.detail)
         }
     
-        okno.close()
-    
         document.querySelector('#p_name').value = ''
         document.querySelector('#p_text').value = ''
         document.querySelector('#p_color').value = ''
-        document.querySelector('#public').checked = ''
 
+        okno.close()
+    
         myMap.geoObjects.removeAll(polyline);
     } catch (error) {
         console.error('Ошибка при получении изображений:', error);
@@ -686,8 +698,7 @@ async function set_save_route() {
     
 }
 
-document.getElementById('button_send').onclick = set_save_route;
-
+document.getElementById('button_send').onclick = set_save_route
 
 
 
@@ -754,6 +765,17 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
     answer = await answer.json()
     console.log('answer: ', answer)
 
+    console.log('Отправляемые данные:', {
+        is_public_route,
+        p_id_route,
+        p_name: document.querySelector('#change_p_name').value,
+        p_text: document.querySelector('#change_p_text').value,
+        p_color: document.querySelector('#change_p_color').value,
+        p_arr: JSON.stringify(p_arr_new_route)
+    });
+
+
+    console.log('typeof', typeof(document.querySelector('#change_p_color').value))
 }
 
 
