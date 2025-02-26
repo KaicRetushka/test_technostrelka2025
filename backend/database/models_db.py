@@ -123,5 +123,6 @@ def create_db():
         if not(session.query(TableRoles.role).filter(TableRoles.role == 'Admin').first()):
             role_admin = TableRoles(role='Admin')
             role_user = TableRoles(role='User')
-            session.add_all([role_admin, role_user])
+            admin = TableUsers(login='admin', password='admin', name='admin', surname='admin', role='Admin')
+            session.add_all([role_admin, role_user, admin])
             session.commit()
