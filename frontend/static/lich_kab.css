@@ -1,3 +1,14 @@
+* {
+    zoom: 100%;
+}
+
+.container12{
+    display: flex;
+    justify-content: space-between;
+    margin: -8px;
+}
+
+
 .modal {
     position: fixed;
     top: 0;
@@ -64,9 +75,17 @@
     z-index: -1;
 }
 
+.modalzag{
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
 
-
-
+.info{
+    width: 500px;
+    margin: 0 auto;
+}
 
 
 .change-modal {
