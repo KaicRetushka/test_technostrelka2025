@@ -85,6 +85,7 @@ async function init(){
         //создаем кнопку с логином
         const button = document.createElement('button');
         button.id = `but_login${i}`;
+        button.classList.add("class-but-login");
         button.innerText = logs[i];
         userContainer.appendChild(button); // Добавляем кнопку в контейнер
 

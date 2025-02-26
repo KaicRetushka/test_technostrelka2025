@@ -154,10 +154,53 @@
 
                     <div>
                         <button id="but_change_route" type="button">Изменить маршрут</button>
-                        <button id="but_del_route" type="button">Удалить маршрут</button>
-                    </div>
+                        <button id="but_change_route_history" type="button">История изменения</button>
+                    </div><br>
                     
+                    <button id="but_del_route" type="button">Удалить маршрут</button><br><br>
+
                     <button id="button_info_exit" type="button">Выйти</button>
+                
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+
+
+    <dialog id="history_change_route_modal">
+        <form id="history_form">
+            <div class="history_modal">
+                <div class="history_modal-window">
+                    
+                    <h1>История изменения маршрута</h1>
+
+                    <div>
+                        <div>Название</div>
+                        <p id="history_info_name"></p>
+                    </div><br>
+
+                    <div>
+                        <div>Описание</div>
+                        <p id="history_info_opisanie"></p>
+                    </div><br>
+
+                    <div>
+                        <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative"></div>
+                    </div><br>
+
+                    <div>
+                        <div>Фотографии маршрута</div>
+                        <p id="history_info_photo_route"></p>
+                    </div><br>
+
+                    <div style="display: flex;">
+                        <button id="back" type="button"> ❮❮ </button>
+                        <p id="number_change">1</p>
+                        <button id="forward" type="button"> ❯❯ </button>
+                    </div><br>
+
+                    <button id="but_change_route_history_exit" type="button">Выйти</button>
                 
                 </div>
                 <div class="overlay"></div>

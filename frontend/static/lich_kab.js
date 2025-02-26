@@ -26,6 +26,19 @@ let change_route_cancel = document.querySelector('#change_route_cancel')
 let change_button_cancel = document.querySelector('#change_button_cancel')
 let change_route = document.querySelector('#change_route')
 let change_button_send = document.querySelector('#change_button_send')
+let history_change_route_modal = document.querySelector('#history_change_route_modal')
+let but_change_route_history = document.querySelector("#but_change_route_history")
+let but_change_route_history_exit = document.querySelector('#but_change_route_history_exit')
+
+let history_star = document.querySelector('#history_info_name')
+let history_space = document.querySelector('#history_info_opisanie')
+const history_universe = document.getElementById('history_info_photo_route')
+let bask = document.querySelector('#back')
+let forward = document.querySelector('#forward')
+let number_change = document.querySelector('#number_change')
+let x = 0
+let history = []
+
 
 
 
@@ -34,13 +47,30 @@ change_route.style.display = 'none'
 
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    ymaps.ready(initNew);
+});
+
+async function initNew(){
+    
+    myNewMap = new ymaps.Map("map2", {
+        center: [55.76, 37.64],
+        zoom: 16
+    });
+
+}
+
+but_change_route_history_exit.addEventListener('click', () => {
+    history_change_route_modal.close()
+})
+
 change_route.addEventListener('click', () => {
     change.showModal()
-});
+})
 
 change_button_cancel.addEventListener('click', () => {
     change.close()
-});
+})
 
 
 change_login.addEventListener('click', () => {
@@ -119,6 +149,7 @@ async function get_user_avatar() {
     
     const img = document.createElement('img')
     
+    img.classList.add("class-avatar-user");
     img.src = `data:image/png;base64,${base64}`
     
     img.style.width = '100px'
@@ -177,6 +208,10 @@ but_back_glav_str.addEventListener('click', () => {
 });
 
 
+
+
+
+//работа с основной картой
 ymaps.ready(init);
 
 async function init(){
@@ -205,6 +240,7 @@ async function init(){
             return items;
         }
     });
+    
 
     //действия при нажатии на линию маршрута
     but_check_route = document.querySelector('#check_route')
@@ -223,6 +259,7 @@ async function init(){
 
         //вывод приватных маршрутов пользователя на карту
         for (let j = 0; j < route.length; ++j){
+
             polyline = new ymaps.Polyline(route[j].p_arr, {}, {
                 strokeColor: route[j].p_color,
                 strokeWidth: 4
@@ -254,11 +291,15 @@ async function init(){
                     del_route_dialog.showModal()
                 });
 
-
-                but_delete_route.addEventListener('click', () => {
-                    delete_route(p_id_route, is_public_route)
-                    myMap.geoObjects.remove(polyline)
+                delete_polyline = new ymaps.Polyline(route[j].p_arr, {}, {
+                    strokeColor: route[j].p_color,
+                    strokeWidth: 4
                 })
+
+                but_delete_route.onclick = () => {
+                    delete_route(p_id_route, is_public_route)
+                    myMap.geoObjects.remove(delete_polyline)
+                }
 
                 //изменение приватного маршрута (удаление всех линий и возможность редактировать конкретный маршрут)
                 but_change_route.addEventListener('click', () => {
@@ -298,6 +339,7 @@ async function init(){
                     change_button_send.onclick = () => {
 
                         let p_arr_new_route = []
+
                         p_arr_new_route = new_polyline.geometry.getCoordinates();
                         myMap.geoObjects.add(new_polyline = new ymaps.Polyline(p_arr_new_route, {}, {
                             strokeColor: "#00000088",
@@ -321,6 +363,35 @@ async function init(){
                     }
 
                 })
+
+                
+
+                //история изменения приватного маршрута
+                but_change_route_history.onclick = async () =>  {
+
+                    history_star.innerHTML = ''
+                    history_space.innerHTML = ''
+                    history_universe.innerHTML = ''
+
+                    history_change_route_modal.showModal()
+                    
+                    history_star.innerHTML = route[j].p_name
+                    history_space.innerHTML = route[j].p_text
+                    history_universe.innerHTML = ''
+
+                    console.log('РРРРР: ', route[j].p_arr)
+
+                    let history_polyline = new ymaps.Polyline(route[j].p_arr, {}, {
+                        strokeColor: route[j].p_color,
+                        strokeWidth: 4
+                    })
+
+                    myNewMap.geoObjects.add(history_polyline)
+                    myNewMap.setCenter(route[j].p_arr[0])
+                    
+                    await get_history_change_route(p_id_route, is_public_route)
+                    
+                }
            
             })
 
@@ -371,11 +442,15 @@ async function init(){
                     del_route_dialog.showModal()
                 });
 
-                but_delete_route.addEventListener('click', () => {
-                    delete_route(p_id_route, is_public_route)
-                    //пытаюсь удалить линию, на которую нажимаю, но удаляется последняя созданная
-                    myMap.geoObjects.remove(polyline)
+                delete_polyline = new ymaps.Polyline(route_public[g].p_arr, {}, {
+                    strokeColor: route_public[g].p_color,
+                    strokeWidth: 4
                 })
+
+                but_delete_route.onclick = () => {
+                    delete_route(p_id_route, is_public_route)
+                    myMap.geoObjects.remove(delete_polyline)
+                }
 
 
                 //изменение публичного маршрута (удаление всех линий и возможность редактировать конкретный маршрут)
@@ -416,6 +491,7 @@ async function init(){
                     change_button_send.onclick = () => {
 
                         let p_arr_new_route = []
+
                         p_arr_new_route = new_polyline.geometry.getCoordinates();
                         myMap.geoObjects.add(new_polyline = new ymaps.Polyline(p_arr_new_route, {}, {
                             strokeColor: "#00000088",
@@ -697,9 +773,6 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
         
     }
 
-
-
-
     const fileInput = document.querySelector('#change-dobav_foto');
     const files = fileInput.files;
     
@@ -725,16 +798,75 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
 }
 
 
+async function get_history_change_route(p_id_route, is_public_route) {
+    
+    let history = await fetch(`http://127.0.0.1:8000/polyline/history/?p_id=${p_id_route}&is_public=${is_public_route}`, {
+        headers: {'Content-Type': 'application/json'}
+    })
 
-//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+    history = await history.json()
+    console.log('История изменения маршрута: ', history)
 
-//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
 
-//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+    //переход на страницу назад изменения маршрута
+    back.onclick = () => {
+        if (x > 0) {
+            x--; // Уменьшаем индекс
+            history_star.innerHTML = history[x].p_name
+            history_space.innerHTML = history[x].p_text // Обновляем отображение
+        } else {
+            console.log('Вы находитесь на первом элементе истории.');
+        }
+    };
 
-//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
 
-//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+    //переход на страницу вперед изменения маршрута
+    forward.onclick = () => {
+        if (x < history.length - 1) {
+            x++; // Увеличиваем индекс
+            history_star.innerHTML = history[x].p_name
+            history_space.innerHTML = history[x].p_text // Обновляем отображение
+        } else {
+            console.log('Вы находитесь на последнем элементе истории.');
+        }
+    };
 
-//РАБОТАЕТ ИЗМЕНЕНИЕ БЕЗ ФОТОК
+}
 
+
+
+function updateHistory() {
+    if (history.length > 0) {
+        
+
+        // Здесь можно добавить код для обновления полилинии на карте, если это необходимо
+    } else {
+        console.log('История изменений пуста.');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
+
+//НАЧАЛ ДЕЛАТЬ ИСТОРИЮ ИЗМЕНЕНИЯ МАРШРУТА (ДОБАВИЛ КНОПКИ И МОДАЛЬНОЕ ОКНО)
