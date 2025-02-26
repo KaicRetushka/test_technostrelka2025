@@ -97,9 +97,7 @@ async function init(){
         let base64 = await response.json();
         const img = document.createElement('img');
         img.src = `data:image/png;base64,${base64}`;
-        img.style.width = '100px';
-        img.style.height = '100px';
-        img.style.marginLeft = '10px'; //отступ между логином и аватаркой
+        img.classList.add("class-users-avatar");
 
         userContainer.appendChild(img); //добавляем аватарку в контейнер
         el.appendChild(userContainer); //добавляем контейнер в основной элемент
@@ -333,8 +331,7 @@ async function info_image(p_id_route) {
     
         base_to_img.src = `data:image/png;base64,${photo}`
     
-        base_to_img.style.width = '50px'
-        base_to_img.style.height = '50px'
+        base_to_img.classList.add("public-route-photo");
     
         universe.appendChild(base_to_img)
         console.log('asdasdasdasdasdasd')

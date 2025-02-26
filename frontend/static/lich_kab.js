@@ -546,6 +546,8 @@ async function info_image_public(p_id_route) {
             
             base_to_img.src = `data:image/png;base64,${photo}`
         
+            base_to_img.classList.add("public-photo-route");
+
             universe.appendChild(base_to_img) 
             
         }
@@ -813,6 +815,7 @@ async function get_history_change_route(p_id_route, is_public_route, history_rou
             
                 history_first_route_image.src = `data:image/png;base64,${photo}`
             
+                history_first_route_image.classList.add("class-history-first-route-image");
 
                 history_universe.appendChild(history_first_route_image) 
                 
@@ -833,6 +836,7 @@ async function get_history_change_route(p_id_route, is_public_route, history_rou
             
                 history_first_route_image.src = `data:image/png;base64,${photo}`
             
+                history_first_route_image.classList.add("class-history-first-route-image");
             
                 history_universe.appendChild(history_first_route_image) 
                 
