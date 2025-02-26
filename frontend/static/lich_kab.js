@@ -36,10 +36,9 @@ const history_universe = document.getElementById('history_info_photo_route')
 let bask = document.querySelector('#back')
 let forward = document.querySelector('#forward')
 let number_change = document.querySelector('#number_change')
-let x = 0
 let history = []
-
-
+let route_view_now = document.querySelector('#route_view_now')
+let x = 0
 
 
 change_route_cancel.style.display = 'none'
@@ -151,9 +150,6 @@ async function get_user_avatar() {
     
     img.classList.add("class-avatar-user");
     img.src = `data:image/png;base64,${base64}`
-    
-    img.style.width = '100px'
-    img.style.height = '100px'
     
     container.appendChild(img)
 
@@ -369,27 +365,11 @@ async function init(){
                 //история изменения приватного маршрута
                 but_change_route_history.onclick = async () =>  {
 
-                    history_star.innerHTML = ''
-                    history_space.innerHTML = ''
-                    history_universe.innerHTML = ''
-
                     history_change_route_modal.showModal()
                     
-                    history_star.innerHTML = route[j].p_name
-                    history_space.innerHTML = route[j].p_text
-                    history_universe.innerHTML = ''
+                    let history_route = route[j]
 
-                    console.log('РРРРР: ', route[j].p_arr)
-
-                    let history_polyline = new ymaps.Polyline(route[j].p_arr, {}, {
-                        strokeColor: route[j].p_color,
-                        strokeWidth: 4
-                    })
-
-                    myNewMap.geoObjects.add(history_polyline)
-                    myNewMap.setCenter(route[j].p_arr[0])
-                    
-                    await get_history_change_route(p_id_route, is_public_route)
+                    await get_history_change_route(p_id_route, is_public_route, history_route)
                     
                 }
            
@@ -540,25 +520,7 @@ async function info_image_private(p_id_route) {
     
     try {
 
-        let info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
-            headers: {'Content-Type': 'application/json'}
-        })
-    
-        image = await info_image.json()
-        console.log('массив изображений: ', image)
-    
-        for(photo of image){
-    
-            const base_to_img = document.createElement('img')
         
-            base_to_img.src = `data:image/png;base64,${photo}`
-        
-            base_to_img.style.width = '50px'
-            base_to_img.style.height = '50px'
-        
-            universe.appendChild(base_to_img) 
-            
-        }
 
     } catch (error) {
         console.error('Ошибка при получении изображений:', error);
@@ -584,9 +546,6 @@ async function info_image_public(p_id_route) {
             const base_to_img = document.createElement('img')
         
             base_to_img.src = `data:image/png;base64,${photo}`
-        
-            base_to_img.style.width = '50px'
-            base_to_img.style.height = '50px'
         
             universe.appendChild(base_to_img) 
             
@@ -798,55 +757,155 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
 }
 
 
-async function get_history_change_route(p_id_route, is_public_route) {
+async function get_history_change_route(p_id_route, is_public_route, history_route) {
     
-    let history = await fetch(`http://127.0.0.1:8000/polyline/history/?p_id=${p_id_route}&is_public=${is_public_route}`, {
+    let x = 0;
+
+    let response = await fetch(`http://127.0.0.1:8000/polyline/history/?p_id=${p_id_route}&is_public=${is_public_route}`, {
         headers: {'Content-Type': 'application/json'}
-    })
+    });
 
-    history = await history.json()
-    console.log('История изменения маршрута: ', history)
+    let history = await response.json();
+    console.log('История изменения маршрута: ', history);
+
+    let reverse_history = history.slice().reverse();
+    console.log('Реверс массив: ', reverse_history);
+
+    const fullHistory = [history_route, ...reverse_history];
 
 
-    //переход на страницу назад изменения маршрута
+    history_universe.innerHTML = ''; // Очистка предыдущих изображений
+
+        try {
+
+            let history_info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
+                headers: {'Content-Type': 'application/json'}
+            })
+        
+            image = await history_info_image.json()
+            console.log('массив изображений: ', image)
+        
+            for(photo of image){
+        
+                const history_first_route_image = document.createElement('img')
+            
+                history_first_route_image.src = `data:image/png;base64,${photo}`
+            
+
+                history_universe.appendChild(history_first_route_image) 
+                
+            }
+    
+        } catch {
+            
+            let history_info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
+                headers: {'Content-Type': 'application/json'}
+            })
+        
+            image = await history_info_image.json()
+            console.log('массив SDF изображений: ', image)
+        
+            for(photo of image) {
+        
+                const history_first_route_image = document.createElement('img')
+            
+                history_first_route_image.src = `data:image/png;base64,${photo}`
+            
+            
+                history_universe.appendChild(history_first_route_image) 
+                
+            }
+
+        }
+
+    //////////////////////////////////////////////////////////////////////////////
+    async function updateDisplay() {
+
+        const history_image_route = document.createElement('img');
+
+        route_view_now.innerHTML = 'Так маршрут выглядит сейчас';
+        history_star.innerHTML = fullHistory[x].p_name;
+        history_space.innerHTML = fullHistory[x].p_text;
+        number_change.innerHTML = x + 1;
+        
+        myNewMap.geoObjects.removeAll();
+        let history_polyline = new ymaps.Polyline(fullHistory[x].p_arr, {}, {
+            strokeColor: fullHistory[x].p_color,
+            strokeWidth: 4
+        });
+
+        myNewMap.geoObjects.add(history_polyline);
+        myNewMap.setCenter(fullHistory[x].p_arr[0]);
+
+        
+
+
+
+
+
+
+
+
+
+
+        // Обновление изображений
+        
+        let history_image = fullHistory[x].photos_arr; // Обновляем массив фотографий
+        history_universe.innerHTML = ''
+        // Проверяем, есть ли фотографии для текущего маршрута
+        if (history_image && Array.isArray(history_image) && history_image.length > 0) {
+            for (let photo of history_image) {
+                const clonedImage = history_image_route.cloneNode(); // Клонируем элемент для каждой фотографии
+                clonedImage.src = `data:image/png;base64,${photo}`;
+                clonedImage.classList.add("history-image-route");
+                history_universe.appendChild(clonedImage);
+            }
+        } else {
+            // Если фотографий нет, можно добавить сообщение или скрыть контейнер
+            history_universe.innerHTML = 'Фотографии отсутствуют'; // Сообщение об отсутствии фотографий
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    // Инициализация отображения
+    updateDisplay();
+
+    // Переход на страницу назад изменения маршрута
     back.onclick = () => {
         if (x > 0) {
             x--; // Уменьшаем индекс
-            history_star.innerHTML = history[x].p_name
-            history_space.innerHTML = history[x].p_text // Обновляем отображение
+            updateDisplay();
         } else {
             console.log('Вы находитесь на первом элементе истории.');
         }
     };
 
-
-    //переход на страницу вперед изменения маршрута
+    // Переход на страницу вперед изменения маршрута
     forward.onclick = () => {
-        if (x < history.length - 1) {
+        if (x < fullHistory.length - 1) {
             x++; // Увеличиваем индекс
-            history_star.innerHTML = history[x].p_name
-            history_space.innerHTML = history[x].p_text // Обновляем отображение
+            updateDisplay();
         } else {
             console.log('Вы находитесь на последнем элементе истории.');
         }
     };
-
 }
 
 
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
 
-function updateHistory() {
-    if (history.length > 0) {
-        
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
 
-        // Здесь можно добавить код для обновления полилинии на карте, если это необходимо
-    } else {
-        console.log('История изменений пуста.');
-    }
-}
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
 
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
 
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
 
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
+
+//ПЫТАЮСЬ СДЕЛАТЬ ФОТКИ В ИСТОРИИ ИЗМЕНЕНИЯ МАРШРУТА
 
 
 
