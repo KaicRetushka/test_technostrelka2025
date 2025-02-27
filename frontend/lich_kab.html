@@ -1,166 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=126279f8-7d73-4da9-a3e6-369f3c5d0f2f&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=126279f8-7d73-4da9-a3e6-369f3c5d0f2f&lang=ru_RU"
+        type="text/javascript"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@700" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700" />
     <link rel="stylesheet" href="static/lich_kab.css">
     <title>Личный кабинет</title>
 </head>
+
 <body>
 
     {% if url_admin != '' %}
     <a href="{{ url_admin }}">Панель администратора</a>
     {% endif %}
 
-    
 
-    <div id="login">
-        <div id="name_user"></div>
-        <button id="button_change_login">Поменять логин</button>
-    </div>
+    <div class="container12" style="display: flex; justify-content: space-between; margin: -8px; gap: 30px;">
+        <img src="/static/image/Vector 6.svg" alt="" class="sin-pattern">
+        <img src="/static/image/линия.png" alt="" class="linia-karta">
+        <img src="/static/image/чемодан.png" alt="" class="chemod">
+        <div class="glav-content">
+            <div class="content-start">
+                <div id="login" style="display: flex;
+                gap: 15px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                justify-content: space-around;">
+                    <div class="avatar" id="avatarka">
+                        <input id="smena_avatarki" type="file">
+                    </div> <br>
 
+                    <label for="smena_avatarki" class="file-upload-label" style="position: relative;
+                    margin-left: -275px;
+                    /* padding: 0; */
+                    margin-top: 60px;
+                    font-size: 24px;
+                    margin-top: 75px;
+                    border: 2px solid #000;
+                    border-radius: 5px;
+                    width: 122px;
+                    height: 21px;
+                    text-align: center;
+                    font-family: var(--font7);
+                    font-weight: 700;
+                    font-size: 16px;
+                    color: #000;
+                    background-color: transparent;">Сменить аватар</label>
 
-
-
-    <dialog id="modal_change_login">
-        <form id="change_login_form">
-            <div class="change_modal">
-                <div class="change_login_modal-window">
-                    <h1>Смена логина</h1>
-
-                    <label for="input_change_login">Введите новый логин</label> 
-
-                    <div>
-                        <input id="input_change_login" type="text" placeholder="new login"> 
-                        <button id="accept_change_login" type="submit">✔️</button>
-                    </div><br>
-                    
-                    <button id="button_change_login_exit" type="button">Отменить</button>
-                
+                    <button id="button_avatarka" type="submit" style="    margin-top: 112px;
+                    margin-left: -218px;
+                    border: 2px solid #000;
+                    border-radius: 5px;
+                    width: 109px;
+                    height: 26px;
+                    font-family: var(--font7);
+                    font-weight: 700;
+                    font-size: 16px;
+                    color: #000;
+                    background-color: transparent;">Подтвердить</button><br><br>
+                    <div id="name_user" style="margin-top: 35px;"></div>
+                    <button id="button_change_login" style="    margin-top: 62px;
+                    margin-left: -175px;
+                    border: 2px solid #000;
+                    border-radius: 5px;
+                    width: 109px;
+                    height: 46px;
+                    font-family: var(--font7);
+                    font-weight: 700;
+                    font-size: 16px;
+                    color: #000;
+                    background-color: transparent;">Поменять логин</button>
                 </div>
-                <div class="overlay"></div>
+
+
+
+
+                <dialog id="modal_change_login">
+                    <form id="change_login_form">
+                        <div class="change_modal">
+                            <div class="change_login_modal-window">
+                                <h1 class="smena-login">Смена логина</h1>
+
+                                <label for="input_change_login" class="new-login">Введите новый логин</label>
+
+                                <div>
+                                    <input id="input_change_login" type="text" placeholder="new login">
+                                    <button id="accept_change_login" type="submit">✔️</button>
+                                </div><br>
+                                <div class="button_change_login_exit">
+                                    <button id="button_change_login_exit" type="button">Отменить</button>
+                                </div>
+                            </div>
+                            <div class="overlay"></div>
+                        </div>
+                    </form>
+                </dialog>
+
+
+
             </div>
-        </form>
-    </dialog>
 
+            <button id="back_glav_str" type="button">На Главную</button>
 
-    <div class="avatar" id="avatarka"> 
-        <input id="smena_avatarki" type="file"> 
-    </div> <br> 
-    
-    <label for="smena_avatarki" class="file-upload-label">+</label> 
- 
-    <button id="button_avatarka" type="submit">Поменять аватарку</button><br><br>
+            <div id="map" style="width: 600px; height: 400px"></div><br>
 
-    <button id="back_glav_str" type="button">На Главную</button>
+            <div style="display: flex; justify-content: space-around; ">
+                <button id="check_route">Посмотреть мои маршруты</button>
+                <button id="btn_add_route">Создать маршрут</button>
+                <button id="btn_save_route">Сохранить маршрут</button>
+            </div>
 
-    <div id="map" style="width: 600px; height: 400px"></div><br>
-
-    <div style="display: flex;">
-        <button id="check_route">Посмотреть мои маршруты</button>
-        <button id="btn_add_route">Создать маршрут</button>
-        <button id="btn_save_route">Сохрнаить маршрут</button>
+            <div style="display: flex;">
+                <button id="change_route_cancel">Отменить</button>
+                <button id="change_route">Изменить маршрут</button>
+            </div>
+        </div>
+        <img src="/static/image/Vector 7.svg" alt="" class="sin-pattern">
     </div>
 
-    <div style="display: flex;">
-        <button id="change_route_cancel">Отменить</button>
-        <button id="change_route">Изменить маршрут</button>
-    </div>
-    
-    <dialog id="okno">
-        <form id="form">
+    <dialog id="okno" class="okno1">
+        <form id="form" class="form">
             <div class="modal">
                 <div class="modal-window">
-                    <h1>Сохранить маршрут</h1>
+                    <h1 class="modalzag"> Сохранить маршрут</h1>
                     <button id="btn_close" class="btn-close" type="button">X</button>
 
-                    <div>
-                        <p>Название</p>
-                        <input id="p_name" type="text">
+                    <div class="text-modal-okna">
+                        <p class="nadpisi">Название</p>
+                        <input id="p_name" type="text" class="text-modal-window-save-marsh">
                     </div>
 
-                    <div>
-                        <p>Описание</p>
-                        <textarea id="p_text"></textarea>
+                    <div class="text-modal-okna">
+                        <p class="nadpisi2">Описание</p>
+                        <textarea id="p_text" name="" id="" class="text-modal-window-save-marsh2"></textarea>
                     </div>
 
-                    <div>
-                        <p>Выберите цвет линий:</p>
-                        <input id="p_color" type="color">
-                    </div><br>
-                    
-                    <div class="file-input-container">
-                        <label class="file-input-label" for="dobav_foto">Добавить фото</label>
-                        <input id="dobav_foto" class="file-input" type="file" multiple>
+                    <div class="text-modal-okna">
+                        <p class="nadpisi3">Выберите цвет линий:</p>
+                        <input id="p_color" type="color" class="p-color">
                     </div><br>
 
-                    <div>
+                    <div class="custom-file-input">
+                        <label class="file-input" for="dobav_foto">Добавить фото</label>
+                    </div><input id="dobav_foto" class="file-upload-btn" type="file" multiple><br>
+
+                    <div class="text-modal-okna">
                         Выберите тип публикации: <br>
                         <div>
-                            <input 
-                                type="radio"
-                                id="public"
-                                name="choice"
-                                checked
-                            />
+                            <input class="radio" type="radio" id="public" name="choice" checked />
                             <label for="public">Публичная</label>
                         </div>
-            
-                        <div>
-                            <input 
-                                type="radio"
-                                id="privat"
-                                name="choice"
-                            />
+
+                        <div class="text-modal-okna">
+                            <input class="radio" type="radio" id="privat" name="choice" />
                             <label for="privat">Приватная</label>
                         </div> <br>
                     </div>
-                    
-                    <button id="button_cancel" type="button">Отменить</button>
-                    <button id="button_send" type="button">Отправить</button>
+
+                    <button id="button_cancel" type="button" class="buttonOO">Отменить</button>
+                    <button id="button_send" type="button" class="buttonOO1">Отправить</button>
+
+
                 </div>
                 <div class="overlay"></div>
             </div>
         </form>
     </dialog>
-    
 
     <dialog id="info_route">
         <form id="info_form">
             <div class="info_modal">
                 <div class="info_modal-window">
-                    <h1>Маршрут</h1>
+                    <h1 class="modalzag">Маршрут</h1>
 
-                    <div>
+                    <div class="text-modal-okna">
                         <div>Название</div>
                         <p id="info_name"></p>
                     </div><br>
 
-                    <div>
+                    <div class="text-modal-okna">
                         <div>Описание</div>
                         <p id="info_opisanie"></p>
                     </div><br>
 
-                    <div>
+                    <div class="text-modal-okna">
                         <div>Фотографии маршрута</div>
                         <p id="info_photo_route"></p>
                     </div><br>
 
-                    <div>
+                    <div class="text-modal-okna">
                         <div> Тип маршрута</div>
                         <p id="info_type_route"></p>
                     </div>
 
                     <div>
-                        <button id="but_change_route" type="button">Изменить маршрут</button>
-                        <button id="but_change_route_history" type="button">История изменения</button>
+                        <button id="but_change_route" type="button" class="knopka-modal-okna">Изменить маршрут</button>
+                        <button id="but_change_route_history" type="button" class="knopka-modal-okna">История изменения</button>
                     </div><br>
-                    
-                    <button id="but_del_route" type="button">Удалить маршрут</button><br><br>
 
-                    <button id="button_info_exit" type="button">Выйти</button>
-                
+                    <button id="but_del_route" type="button" class="knopka-modal-okna">Удалить маршрут</button><br><br>
+
+                    <button id="button_info_exit" type="button" class="knopka-modal-okna">Выйти</button>
+
                 </div>
                 <div class="overlay"></div>
             </div>
@@ -172,36 +217,38 @@
         <form id="history_form">
             <div class="history_modal">
                 <div class="history_modal-window">
-                    
+
                     <h1>История изменения маршрута</h1>
-                    <h3 id="route_view_now"></h2>
-                    <div>
-                        <div>Название</div>
-                        <p id="history_info_name"></p>
-                    </div><br>
+                    <h3 id="route_view_now">
+                        </h2>
+                        <div>
+                            <div>Название</div>
+                            <p id="history_info_name"></p>
+                        </div><br>
 
-                    <div>
-                        <div>Описание</div>
-                        <p id="history_info_opisanie"></p>
-                    </div><br>
+                        <div>
+                            <div>Описание</div>
+                            <p id="history_info_opisanie"></p>
+                        </div><br>
 
-                    <div>
-                        <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative"></div>
-                    </div><br>
+                        <div>
+                            <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative">
+                            </div>
+                        </div><br>
 
-                    <div>
-                        <div>Фотографии маршрута</div>
-                        <p id="history_info_photo_route"></p>
-                    </div><br>
+                        <div>
+                            <div>Фотографии маршрута</div>
+                            <p id="history_info_photo_route"></p>
+                        </div><br>
 
-                    <div style="display: flex;">
-                        <button id="back" type="button"> ❮❮ </button>
-                        <p id="number_change">1</p>
-                        <button id="forward" type="button"> ❯❯ </button>
-                    </div><br>
+                        <div style="display: flex;">
+                            <button id="back" type="button"> ❮❮ </button>
+                            <p id="number_change">1</p>
+                            <button id="forward" type="button"> ❯❯ </button>
+                        </div><br>
 
-                    <button id="but_change_route_history_exit" type="button">Выйти</button>
-                
+                        <button id="but_change_route_history_exit" type="button">Выйти</button>
+
                 </div>
                 <div class="overlay"></div>
             </div>
@@ -220,13 +267,13 @@
                     </div><br>
 
                     <div>
-                        
+
                         <button id="but_del_cancel" type="button">Отменить</button>
                         <button id="but_delete_route" type="button">Удалить маршрут</button>
-                        
+
                     </div>
-                    
-                
+
+
                 </div>
                 <div class="overlay"></div>
             </div>
@@ -255,14 +302,15 @@
                         <p>Выберите цвет линий:</p>
                         <input id="change_p_color" type="color">
                     </div><br>
-                    
+
                     <div class="change-file-input-container">
                         <label class="change-file-input-label" for="change-dobav_foto">Добавить фото</label>
                         <input id="change-dobav_foto" class="change-file-input" type="file" multiple>
                     </div><br>
-                    
+
                     <button id="change_button_cancel" type="button">Отменить</button>
                     <button id="change_button_send" type="button">Изменить</button>
+
                 </div>
                 <div class="change-overlay"></div>
             </div>
@@ -273,4 +321,5 @@
     <script src="static/lich_kab.js"></script>
 
 </body>
+
 </html>

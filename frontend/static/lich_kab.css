@@ -1,13 +1,7 @@
-* {
-    zoom: 100%;
+html{
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
-
-.container12{
-    display: flex;
-    justify-content: space-between;
-    margin: -8px;
-}
-
 
 .modal {
     position: fixed;
@@ -18,6 +12,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.class-avatar-user {
+    width: 100px;
+    height: 100px;
+}
+
+.avatar {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#smena_avatarki {
+    z-index: -5;
+    margin-top: -20px;
+    /* border: 1px solid #000; */
+    /* border-radius: 5px; */
+    width: 47%;
+    /* height: 24px; */
+    /* font-family: Vollcorn; */
+    /* font-weight: 700; */
+    font-size: 11px;
 }
 
 .modal .overlay {
@@ -36,7 +52,7 @@
     z-index: 2;
     width: 550px;
     border-radius: 10px;
-    box-shadow: 0 10px 15px rgba(0,0,0, .4);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, .4);
     background-color: #fff;
     padding: 30px;
 }
@@ -58,7 +74,7 @@
     overflow: hidden;
     position: relative;
 }
-  
+
 .file-input-label {
     background: #f0f0f0;
     padding: 8px 15px;
@@ -66,7 +82,7 @@
     border-radius: 5px;
     border: 1px solid #d3d3d3;
 }
-  
+
 .file-input {
     width: 0.1px;
     height: 0.1px;
@@ -74,19 +90,6 @@
     position: absolute;
     z-index: -1;
 }
-
-.modalzag{
-    text-align: center;
-    margin: 0 0 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.info{
-    width: 500px;
-    margin: 0 auto;
-}
-
 
 .change-modal {
     position: fixed;
@@ -115,7 +118,7 @@
     z-index: 2;
     width: 550px;
     border-radius: 10px;
-    box-shadow: 0 10px 15px rgba(0,0,0, .4);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, .4);
     background-color: #fff;
     padding: 30px;
 }
@@ -124,7 +127,7 @@
     overflow: hidden;
     position: relative;
 }
-  
+
 .change-file-input-label {
     background: #f0f0f0;
     padding: 8px 15px;
@@ -132,11 +135,134 @@
     border-radius: 5px;
     border: 1px solid #d3d3d3;
 }
-  
+
 .change-file-input {
     width: 0.1px;
     height: 0.1px;
     opacity: 0;
     position: absolute;
     z-index: -1;
+}
+
+.smena-login {
+    font-family: Vollkorn;
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.new-login {
+    font-family: math;
+}
+
+#accept_change_login {
+    border: none;
+    background-color: transparent;
+}
+
+#input_change_login {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
+#button_change_login_exit {
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    border: 2px solid #000;
+    border-radius: 12px;
+    background-color: #c1cbff;
+}
+
+.button_change_login_exit {
+    display: flex;
+    justify-content: center;
+}
+
+#back_glav_str {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    width: 100%;
+    height: 43px;
+    font-family: Vollkorn;
+    font-weight: 700;
+    font-size: 30px;
+    color: rgb(0, 0, 0);
+    background-color: transparent;
+    margin-bottom: 5px;
+    margin-top: 35px;
+}
+
+#check_route {
+    display: block;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    width: 139px;
+    height: 43px;
+    font-family: var(--font7);
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    background-color: transparent;
+}
+
+#btn_add_route {
+    display: block;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    width: 109px;
+    height: 43px;
+    font-family: var(--font7);
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    background-color: transparent;
+}
+
+#btn_save_route {
+    display: block;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    width: 109px;
+    height: 43px;
+    font-family: var(--font7);
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    background-color: transparent;
+}
+
+.modalzag {
+    margin: 0 auto;
+    text-align: center;
+    font-family: Vollkorn;
+}
+
+.knopka-modal-okna {
+    border: #000;
+    background-color: #9aa6ff;
+    border-radius: 5px;
+}
+
+.text-modal-okna {
+    font-family: Poppins;
+}
+
+.linia-karta {
+    position: absolute;
+    width: 270px;
+    height: 300px;
+    left: 20px;
+}
+
+.chemod {
+    position: absolute;
+    width: 270px;
+    height: 300px;
+    left: 1240px;
+    top: 500px;
 }
