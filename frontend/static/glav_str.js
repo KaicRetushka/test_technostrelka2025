@@ -1,5 +1,4 @@
 const btn_add_polyline = document.getElementById('btn_add_route')
-const dobav_foto = document.getElementById('dobav_foto')
 const universe = document.getElementById('info_photo_route')
 let open_comment = document.querySelector('#comments')
 let is_polyline = false
@@ -20,6 +19,9 @@ let but_visit_route = document.querySelector('#visit_route')
 let button_info_exit = document.getElementById('button_info_exit')
 let but_exist_route_exit = document.querySelector('#but_exist_route_exit')
 let exist_route_dialog = document.querySelector('#exist_route')
+
+const gallery = document.querySelector('#gallery')
+const dobav_foto = document.getElementById('dobav_foto')
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -472,6 +474,49 @@ button_info_exit.addEventListener('click', () => {
 //закрытие модального окна "У данного пользователя нет маршрутов"
 but_exist_route_exit.addEventListener('click', () => {
     exist_route_dialog.close()
+})
+
+function myFunc() {
+    var files = dobav_foto.files || dobav_foto.currentTarget.files;
+    var reader = [];
+    
+    // Очищаем галерею перед добавлением новых изображений
+    gallery.innerHTML = '';
+
+    for (let i = 0; i < files.length; i++) {
+        let name = 'file' + i; // Уникальное имя для каждого изображения
+        let clas = 'file-class-' + i;
+
+        reader[i] = new FileReader();
+        reader[i].readAsDataURL(files[i]);
+        
+        // Создаем элемент изображения и добавляем его в галерею
+        let imgElement = document.createElement('img');
+        imgElement.id = name;
+        imgElement.className = clas;
+        imgElement.src = ''; // Изначально пустой src
+        imgElement.style.width = '100px'
+        imgElement.style.height = '100px'
+        imgElement.style.margin = '15px'
+
+        gallery.appendChild(imgElement); // Добавляем элемент в галерею
+
+        // Устанавливаем обработчик onload
+        reader[i].onload = function (e) {
+            console.log(document.getElementById(name));
+            imgElement.src = e.target.result; // Устанавливаем src для изображения
+        };
+
+        console.log(files[i]);
+    }
+}
+
+
+
+
+
+dobav_foto.addEventListener("change", (event) => {
+    myFunc()
 })
 
 //сохранения данных о маршруте на сервере
