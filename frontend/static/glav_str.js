@@ -97,7 +97,8 @@ async function init(){
         let base64 = await response.json();
         const img = document.createElement('img');
         img.src = `data:image/png;base64,${base64}`;
-        img.classList.add("class-users-avatar");
+        img.style.width = '100px'
+        img.style.height = '100px'
 
         userContainer.appendChild(img); //добавляем аватарку в контейнер
         el.appendChild(userContainer); //добавляем контейнер в основной элемент
@@ -331,7 +332,9 @@ async function info_image(p_id_route) {
     
         base_to_img.src = `data:image/png;base64,${photo}`
     
-        base_to_img.classList.add("public-route-photo");
+        base_to_img.style.width = '100px'
+        base_to_img.style.height = '100px'
+        base_to_img.style.margin = '20px'
     
         universe.appendChild(base_to_img)
         console.log('asdasdasdasdasdasd')
@@ -473,7 +476,6 @@ but_exist_route_exit.addEventListener('click', () => {
 
 //сохранения данных о маршруте на сервере
 async function set_save_route() {
-
     console.log('Отправка формы:', {
         p_name: document.querySelector('#p_name').value,
         p_text: document.querySelector('#p_text').value,
@@ -482,55 +484,51 @@ async function set_save_route() {
         is_public: document.querySelector('#public').checked
     });
 
-    let response = await fetch('http://127.0.0.1:8000/polyline/add/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            p_name: document.querySelector('#p_name').value,
-            p_text: document.querySelector('#p_text').value,
-            p_arr: arr,
-            p_color: document.querySelector('#p_color').value,
-            is_public: document.querySelector('#public').checked,
-        })
-    });
 
-    let data = await response.json();
-    console.log(data);
-
-    let route_id  = data.p_id;
-    let pub = document.querySelector('#public').checked; 
-
-    for (file of dobav_foto.files){
-        let formData = new FormData()
-        formData.append('photo', file)
-        let response = await fetch(`http://127.0.0.1:8000/polyline/add/photo/?p_id=${route_id}&is_public=${pub}`, {
+    try {
+        let response = await fetch('http://127.0.0.1:8000/polyline/add/', {
             method: 'POST',
-            body: formData
-        })
-        response = await response.json()
-        console.log(response.detail)
-    }
-
-    okno.close()
-
-    document.querySelector('#p_name').value = ''
-    document.querySelector('#p_text').value = ''
-    document.querySelector('#p_color').value = ''
-    document.querySelector('#public').checked = ''
-
-    myMap.geoObjects.removeAll(polyline);
-
-}
-
-document.getElementById('button_send').onclick = () => {
-
-    set_save_route;
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                p_name: document.querySelector('#p_name').value,
+                p_text: document.querySelector('#p_text').value,
+                p_arr: arr,
+                p_color: document.querySelector('#p_color').value,
+                is_public: document.querySelector('#public').checked,
+            })
+        });
     
-    document.querySelector('#p_name').value = ''
-    document.querySelector('#p_text').value = ''
-    document.querySelector('#p_color').value = ''
+        let data = await response.json();
+        console.log(data);
+    
+        let route_id  = data.p_id;
+        let pub = document.querySelector('#public').checked; 
+    
+        for (file of dobav_foto.files){
+            let formData = new FormData()
+            formData.append('photo', file)
+            let response = await fetch(`http://127.0.0.1:8000/polyline/add/photo/?p_id=${route_id}&is_public=${pub}`, {
+                method: 'POST',
+                body: formData
+            })
+            response = await response.json()
+            console.log(response.detail)
+        }
+    
+        document.querySelector('#p_name').value = ''
+        document.querySelector('#p_text').value = ''
+        document.querySelector('#p_color').value = ''
 
+        okno.close()
+    
+        myMap.geoObjects.removeAll(polyline);
+    } catch (error) {
+        console.error('Ошибка при получении изображений:', error);
+    }
+    
 }
+
+document.getElementById('button_send').onclick = set_save_route
 
 
 
