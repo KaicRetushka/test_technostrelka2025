@@ -447,6 +447,8 @@ button_cancel.addEventListener('click', () => {
     document.querySelector('#p_color').value = ''
     document.querySelector('#public').checked = ''
 
+    gallery.innerHTML = ''
+
     okno.close()
 
 });
@@ -458,6 +460,8 @@ button_close.addEventListener('click', () => {
     document.querySelector('#p_text').value = ''
     document.querySelector('#p_color').value = ''
     document.querySelector('#public').checked = ''
+
+    gallery.innerHTML = ''
 
     okno.close()
 
@@ -563,6 +567,9 @@ async function set_save_route() {
         document.querySelector('#p_name').value = ''
         document.querySelector('#p_text').value = ''
         document.querySelector('#p_color').value = ''
+        document.querySelector('#dobav_foto').value = ''
+
+        gallery.innerHTML = ''
 
         okno.close()
     

@@ -43,6 +43,10 @@ let number_change = document.querySelector('#number_change')
 let history = []
 let route_view_now = document.querySelector('#route_view_now')
 let x = 0
+let close_not_history = document.querySelector('#close_not_history')
+let not_history_route = document.querySelector('#not_history_route')
+
+
 
 
 change_route_cancel.style.display = 'none'
@@ -62,6 +66,12 @@ async function initNew(){
     });
 
 }
+
+
+close_not_history.addEventListener('click', () => {
+    not_history_route.close()
+})
+
 
 but_change_route_history_exit.addEventListener('click', () => {
     history_change_route_modal.close()
@@ -371,11 +381,7 @@ async function init(){
                 //история изменения приватного маршрута
                 but_change_route_history.onclick = async () =>  {
 
-                    history_change_route_modal.showModal()
-                    
-                    let history_route = route[j]
-
-                    await get_history_change_route(p_id_route, is_public_route, history_route)
+                    await get_history_change_route(p_id_route, is_public_route)
                     
                 }
            
@@ -467,7 +473,8 @@ async function init(){
                     document.querySelector('#change_p_text').value = route_change.p_text
                     p_text_value = document.querySelector('#change_p_text').value
                 
-                    document.querySelector('#change_p_color').value = route_change.p_color || '';
+                    document.querySelector('#change_p_text').value = ''
+                    document.querySelector('#change_p_color').value = route_change.p_color.slice(1)
                     p_color_value = document.querySelector('#change_p_color').value
 
                     change_button_send.onclick = () => {
@@ -497,6 +504,13 @@ async function init(){
                     }
 
                 })
+
+                //история изменения публичного маршрута
+                but_change_route_history.onclick = async () =>  {
+
+                    await get_history_change_route(p_id_route, is_public_route)
+                    
+                }
 
             })
 
@@ -657,9 +671,9 @@ function myFunc() {
         reader[i].readAsDataURL(files[i]);
         
         // Создаем элемент изображения и добавляем его в галерею
-        let imgElement = document.createElement('img');
-        imgElement.id = name;
-        imgElement.className = clas;
+        let imgElement = document.createElement('img')
+        imgElement.id = name
+        imgElement.className = clas
         imgElement.src = ''; // Изначально пустой src
         imgElement.style.width = '100px'
         imgElement.style.height = '100px'
@@ -701,6 +715,8 @@ button_cancel.addEventListener('click', () => {
     document.querySelector('#p_color').value = ''
     document.querySelector('#public').checked = ''
 
+    gallery.innerHTML = ''
+    
     okno.close()
 
 });
@@ -712,7 +728,9 @@ button_close.addEventListener('click', () => {
     document.querySelector('#p_text').value = ''
     document.querySelector('#p_color').value = ''
     document.querySelector('#public').checked = ''
-    
+
+    gallery.innerHTML = ''
+
     okno.close()
 
 });
@@ -760,19 +778,17 @@ async function set_save_route() {
         }
 
         
-
-
-
-
-
-    
         document.querySelector('#p_name').value = ''
         document.querySelector('#p_text').value = ''
         document.querySelector('#p_color').value = ''
+        document.querySelector('#dobav_foto').value = ''
+
+        gallery.innerHTML = ''
 
         okno.close()
     
         myMap.geoObjects.removeAll(polyline);
+        
     } catch (error) {
         console.error('Ошибка при получении изображений:', error);
     }
@@ -861,7 +877,11 @@ async function func_change_route(p_id_route, is_public_route, p_arr_new_route, r
 }
 
 
-async function get_history_change_route(p_id_route, is_public_route, history_route) {
+function show_modal_not_history() {
+    not_history_route.showModal()
+}
+
+async function get_history_change_route(p_id_route, is_public_route) {
     
     let x = 0;
 
@@ -872,125 +892,137 @@ async function get_history_change_route(p_id_route, is_public_route, history_rou
     let history = await response.json();
     console.log('История изменения маршрута: ', history);
 
-    let reverse_history = history.slice().reverse();
-    console.log('Реверс массив: ', reverse_history);
-
-    const fullHistory = [history_route, ...reverse_history];
-
-
-    history_universe.innerHTML = ''; // Очистка предыдущих изображений
-
-        try {
-
-            let history_info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
-                headers: {'Content-Type': 'application/json'}
-            })
-        
-            image = await history_info_image.json()
-            console.log('массив изображений: ', image)
-        
-            for(photo of image){
-        
-                const history_first_route_image = document.createElement('img')
-            
-                history_first_route_image.src = `data:image/png;base64,${photo}`
-            
-                history_first_route_image.style.width = '100px'
-                history_first_route_image.style.height = '100px'
-
-                history_universe.appendChild(history_first_route_image) 
-                
-            }
+    if (history.length === 0) {
+        console.log('Массив пустой');
+        not_history_route.close(); // Закрываем текущее модальное окно
     
-        } catch {
-            
-            let history_info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
-                headers: {'Content-Type': 'application/json'}
-            })
-        
-            image = await history_info_image.json()
-            console.log('массив SDF изображений: ', image)
-        
-            for(photo of image) {
-        
-                const history_first_route_image = document.createElement('img')
-            
-                history_first_route_image.src = `data:image/png;base64,${photo}`
-            
-                history_first_route_image.style.width = '100px'
-                history_first_route_image.style.height = '100px'
-                history_first_route_image.style.margin = '20px'
-            
-                history_universe.appendChild(history_first_route_image) 
-                
-            }
+        show_modal_not_history()
 
-        }
+        return;
 
-    //////////////////////////////////////////////////////////////////////////////
-    async function updateDisplay() {
+    } else {
 
-        const history_image_route = document.createElement('img');
+        history_change_route_modal.showModal()
 
-        route_view_now.innerHTML = 'Так маршрут выглядит сейчас';
-        history_star.innerHTML = fullHistory[x].p_name;
-        history_space.innerHTML = fullHistory[x].p_text;
-        number_change.innerHTML = x + 1;
-        
-        myNewMap.geoObjects.removeAll();
-        let history_polyline = new ymaps.Polyline(fullHistory[x].p_arr, {}, {
-            strokeColor: fullHistory[x].p_color,
-            strokeWidth: 4
-        });
+        let reverse_history = history.slice().reverse();
+        console.log('Реверс массив: ', reverse_history);
 
-        myNewMap.geoObjects.add(history_polyline);
-        myNewMap.setCenter(fullHistory[x].p_arr[0]);
-
-        
-
-        // Обновление изображений
-        
-        let history_image = fullHistory[x].photos_arr; // Обновляем массив фотографий
         history_universe.innerHTML = ''
-        // Проверяем, есть ли фотографии для текущего маршрута
-        if (history_image && Array.isArray(history_image) && history_image.length > 0) {
-            for (let photo of history_image) {
-                const clonedImage = history_image_route.cloneNode(); // Клонируем элемент для каждой фотографии
-                clonedImage.src = `data:image/png;base64,${photo}`;
-                clonedImage.style.width = '100px'
-                clonedImage.style.height = '100px'
-                history_universe.appendChild(clonedImage);
+
+            try {
+
+                let history_info_image = await fetch(`http://127.0.0.1:8000/polylines/private/photos/?p_id=${p_id_route}`, {
+                    headers: {'Content-Type': 'application/json'}
+                })
+            
+                image = await history_info_image.json()
+                console.log('массив изображений: ', image)
+            
+                for(photo of image){
+            
+                    const history_first_route_image = document.createElement('img')
+                
+                    history_first_route_image.src = `data:image/png;base64,${photo}`
+                
+                    history_first_route_image.style.width = '100px'
+                    history_first_route_image.style.height = '100px'
+                    history_first_route_image.style.margin = '20px'
+
+                    history_universe.appendChild(history_first_route_image) 
+                    
+                }
+        
+            } catch {
+                
+                let history_info_image = await fetch(`http://127.0.0.1:8000/polylines/public/photos/?p_id=${p_id_route}`, {
+                    headers: {'Content-Type': 'application/json'}
+                })
+            
+                image = await history_info_image.json()
+                console.log('массив SDF изображений: ', image)
+            
+                for(photo of image) {
+            
+                    const history_first_route_image = document.createElement('img')
+                
+                    history_first_route_image.src = `data:image/png;base64,${photo}`
+                
+                    history_first_route_image.style.width = '100px'
+                    history_first_route_image.style.height = '100px'
+                    history_first_route_image.style.margin = '20px'
+                
+                    history_universe.appendChild(history_first_route_image) 
+                    
+                }
+
             }
-        } else {
-            // Если фотографий нет, можно добавить сообщение или скрыть контейнер
-            history_universe.innerHTML = 'Фотографии отсутствуют'; // Сообщение об отсутствии фотографий
+
+        //////////////////////////////////////////////////////////////////////////////
+        async function updateDisplay() {
+
+            const history_image_route = document.createElement('img');
+
+            history_star.innerHTML = reverse_history[x].p_name;
+            history_space.innerHTML = reverse_history[x].p_text;
+            number_change.innerHTML = x + 1;
+            
+            myNewMap.geoObjects.removeAll();
+            let history_polyline = new ymaps.Polyline(reverse_history[x].p_arr, {}, {
+                strokeColor: reverse_history[x].p_color,
+                strokeWidth: 4
+            });
+
+            myNewMap.geoObjects.add(history_polyline)
+            myNewMap.setCenter(reverse_history[x].p_arr[0])
+
+            
+
+            // Обновление изображений
+            
+            let history_image = reverse_history[x].photos_arr; // Обновляем массив фотографий
+            history_universe.innerHTML = ''
+            // Проверяем, есть ли фотографии для текущего маршрута
+            if (history_image && Array.isArray(history_image) && history_image.length > 0) {
+                for (let photo of history_image) {
+                    const clonedImage = history_image_route.cloneNode(); // Клонируем элемент для каждой фотографии
+                    clonedImage.src = `data:image/png;base64,${photo}`;
+                    clonedImage.style.width = '100px'
+                    clonedImage.style.height = '100px'
+                    history_universe.appendChild(clonedImage);
+                }
+            } else {
+                // Если фотографий нет, можно добавить сообщение или скрыть контейнер
+                history_universe.innerHTML = 'Фотографии отсутствуют'; // Сообщение об отсутствии фотографий
+            }
         }
+
+        //////////////////////////////////////////////////////////////////////////////
+
+        // Инициализация отображения
+        updateDisplay();
+
+        // Переход на страницу назад изменения маршрута
+        back.onclick = () => {
+            if (x > 0) {
+                x--; // Уменьшаем индекс
+                updateDisplay();
+            } else {
+                console.log('Вы находитесь на первом элементе истории.');
+            }
+        };
+
+        // Переход на страницу вперед изменения маршрута
+        forward.onclick = () => {
+            if (x < reverse_history.length - 1) {
+                x++; // Увеличиваем индекс
+                updateDisplay();
+            } else {
+                console.log('Вы находитесь на последнем элементе истории.');
+            }
+        };
+
     }
 
-    //////////////////////////////////////////////////////////////////////////////
-
-    // Инициализация отображения
-    updateDisplay();
-
-    // Переход на страницу назад изменения маршрута
-    back.onclick = () => {
-        if (x > 0) {
-            x--; // Уменьшаем индекс
-            updateDisplay();
-        } else {
-            console.log('Вы находитесь на первом элементе истории.');
-        }
-    };
-
-    // Переход на страницу вперед изменения маршрута
-    forward.onclick = () => {
-        if (x < fullHistory.length - 1) {
-            x++; // Увеличиваем индекс
-            updateDisplay();
-        } else {
-            console.log('Вы находитесь на последнем элементе истории.');
-        }
-    };
 }
 
 

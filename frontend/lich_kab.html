@@ -208,7 +208,7 @@
 
                     <button id="but_del_route" type="button" class="knopka-modal-okna">Удалить маршрут</button><br><br>
 
-                    <button id="button_info_exit" type="button" class="knopka-modal-okna">Выйти</button>
+                    <button id="button_info_exit" type="button" class="knopka-modal-okna">Закрыть</button>
 
                 </div>
                 <div class="overlay"></div>
@@ -223,35 +223,52 @@
                 <div class="history_modal-window">
 
                     <h1>История изменения маршрута</h1>
-                    <h3 id="route_view_now">
-                        </h2>
-                        <div>
-                            <div>Название</div>
-                            <p id="history_info_name"></p>
-                        </div><br>
+    
+                    <div>
+                        <div>Название</div>
+                        <p id="history_info_name"></p>
+                    </div><br>
 
-                        <div>
-                            <div>Описание</div>
-                            <p id="history_info_opisanie"></p>
-                        </div><br>
+                    <div>
+                        <div>Описание</div>
+                        <p id="history_info_opisanie"></p>
+                    </div><br>
+                    
+                    <div>
+                        <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative"></div>
+                    </div><br>
 
-                        <div>
-                            <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative">
-                            </div>
-                        </div><br>
+                    <div>
+                        <div>Фотографии маршрута</div>
+                        <p id="history_info_photo_route"></p>
+                    </div><br>
 
-                        <div>
-                            <div>Фотографии маршрута</div>
-                            <p id="history_info_photo_route"></p>
-                        </div><br>
+                    <div style="display: flex;">
+                        <button id="back" type="button"> ❮❮ </button>
+                        <p id="number_change">1</p>
+                        <button id="forward" type="button"> ❯❯ </button>
+                    </div><br>
 
-                        <div style="display: flex;">
-                            <button id="back" type="button"> ❮❮ </button>
-                            <p id="number_change">1</p>
-                            <button id="forward" type="button"> ❯❯ </button>
-                        </div><br>
+                    <button id="but_change_route_history_exit" type="button">Закрыть</button>
 
-                        <button id="but_change_route_history_exit" type="button">Выйти</button>
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </form>
+    </dialog>
+
+
+    <dialog id="not_history_route">
+        <form id="not_history_form">
+            <div class="not_history_modal">
+                <div class="not_history_modal-window">
+                    <h1>История изменения маршрута</h1>
+
+                    <div>
+                       <p>Этот маршрут не изменялся</p>
+                    </div>
+
+                    <button id="close_not_history" type="button">Закрыть</button>
 
                 </div>
                 <div class="overlay"></div>
