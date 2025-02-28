@@ -23,6 +23,9 @@ let exist_route_dialog = document.querySelector('#exist_route')
 const gallery = document.querySelector('#gallery')
 const dobav_foto = document.getElementById('dobav_foto')
 
+let close_comment = document.querySelector('#close_comment')
+
+let comment_route = document.querySelector('#comment_route')
 
 document.addEventListener('DOMContentLoaded', () => {
     if (exit_glav_str !== null) {
@@ -45,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
 });
 
-
+close_comment.addEventListener('click', () => {
+    comment_route.close()
+})
 
 //создание карты и возможность добавлять маршрут
 ymaps.ready(init);
@@ -337,6 +342,7 @@ async function info_image(p_id_route) {
         base_to_img.style.width = '100px'
         base_to_img.style.height = '100px'
         base_to_img.style.margin = '20px'
+        base_to_img.style.borderRadius = '10px';
     
         universe.appendChild(base_to_img)
         console.log('asdasdasdasdasdasd')
@@ -626,7 +632,7 @@ async function get_user_comment(p_id) {
     
     //ДОБАВИТЬ СЮДА АВАТАРКУ ПОЛЬЗОВАТЕЛЯ ПОСЛЕ +=
     for(let i = 0; i < data.length; i++) {
-        el.innerHTML += '<p>' + data[i].login_user + '</p>' + '<p>' + data[i].c_text + '</p>' + '</br>'
+        el.innerHTML += '<p class="pozagolovok">' + data[i].login_user + '</p>' + '<p class="podtext">' + data[i].c_text + '</p>' + '</br>'
         console.log('КОММЕНТАРИИ ПОЛУЧЕНЫ УСПЕШНО ', p_id)
     }
     

@@ -82,6 +82,7 @@ change_route.addEventListener('click', () => {
 })
 
 change_button_cancel.addEventListener('click', () => {
+    gallery_change.innerHTML = ''
     change.close()
 })
 
@@ -653,6 +654,7 @@ btn_add_polyline.addEventListener('click', () => {
 })
 
 
+
 const dobav_foto_change = document.querySelector('#change-dobav_foto')
 const gallery_change = document.querySelector('#gallery_change')
 
@@ -690,6 +692,11 @@ function myFunc_change() {
         console.log(files[i]);
     }
 }
+
+
+dobav_foto_change.addEventListener("change", (event) => {
+    myFunc_change()
+})
 
 
 dobav_foto_change.addEventListener("change", (event) => {

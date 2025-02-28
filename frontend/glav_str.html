@@ -20,7 +20,7 @@
     <div class="EVM">EVM</div>
     <a href="#blok3" class="link-map">Туристические маршруты</a>
     <img src="/static/image/Vector 41.svg" alt="">
-    <div style="width: 107.31px; height: 37.64px; left: 1162.25px; top: 136.46px; position: absolute"> 
+    <div style="width: 107.31px; height: 37.64px; left: 1162.25px; top: 136.46px; position: absolute">
         {% if is_enter %}
         <button id="fullname" class="fullname">{{ fullname }}</button>
         <button id="button_glav_exit" type="button" class="button_glav_exit">Выйти</button><br><br>
@@ -31,7 +31,7 @@
         <a href="reg.html">
             <button id="button_glav_reg" class="button_glav_reg">Рег</button>
         </a>
-       <br><br>
+        <br><br>
         {% endif %}
 
         <img class="Vsadnic" src="/static/image/Всадник.png" />
@@ -158,40 +158,40 @@
         <form id="info_form">
             <div class="info_modal">
                 <div class="info_modal-window">
-                    <h1>Маршрут</h1>
+                    <h1 id="zag_mar">Маршрут</h1>
 
-                    <div>
-                        <div>Название</div>
-                        <p id="info_name"></p>
+                    <div class="div_stroka">
+                        <div class="pozagolovok">Название</div>
+                        <p class="podtext" id="info_name"></p>
+                    </div><br>
+
+                    <div class="div_stroka">
+                        <div class="pozagolovok">Описание</div>
+                        <p class="podtext" id="info_opisanie"></p>
                     </div><br>
 
                     <div>
-                        <div>Описание</div>
-                        <p id="info_opisanie"></p>
-                    </div><br>
-
-                    <div>
-                        <div>Фотографии маршрута</div>
+                        <div class="pozagolovok">Фотографии маршрута</div>
                         <p id="info_photo_route"></p>
                     </div><br>
 
-                    <div>
-                        <p>Отметка о посещении: </p>
-                        <button id="visit_route" type="button">Да</button>
+                    <div class="div_stroka" style="display: flex; align-items: center;">
+                        <p class="pozagolovok">Отметка о посещении: </p>
+                        <button class="btn" id="visit_route" type="button">Да</button>
                     </div><br>
 
 
-                    <div>
-                        <p id="kolvo_mark_good"></p>
-                        <button id="but_mark_good" type="button">👍</button>
+                    <div class="div_stroka" style="display: flex; align-items: center;">
+                        <p class="pozagolovok" id="kolvo_mark_good"></p>
+                        <button class="btn" id="but_mark_good" type="button">👍</button>
 
-                        <p id="kolvo_mark_bad"></p>
-                        <button id="but_mark_bad" type="button">👎</button>
+                        <p class="pozagolovok" id="kolvo_mark_bad"></p>
+                        <button class="btn" id="but_mark_bad" type="button">👎</button>
                     </div><br>
 
-                    <button id="comments" type="button">Комментарии</button>
+                    <button class="btn" id="comments" type="button">Комментарии</button>
 
-                    <button id="button_info_exit" type="button">Выйти</button>
+                    <button class="btn" id="button_info_exit" type="button">Выйти</button>
 
                 </div>
                 <div class="overlay"></div>
@@ -204,19 +204,23 @@
         <form id="comment_form">
             <div class="comment_modal">
                 <div class="info_modal-window">
-                    <h1>Комментарии</h1>
+                    <div id="zagolovok_comments">
+                        <h1 id="zag_mar">Комментарии</h1>
+                        <button id="close_comment" type="button">Х</button>
+                    </div>
 
-                    <div id="image_from_comments"></div>
+                    <div id="image_from_comments" class="pozagolovok"></div>
 
-                    <div id="comments">
+                    <div id="comments" style="max-height: 550px; overflow: auto;">
                         <div id="div_comment">g</div>
                     </div>
-
-                    <div id="vvod_comments">
-                        <input id="input_comment" type="text">
+                    <div class="comments">
+                        <div id="vvod_comments">
+                            <input id="input_comment" type="text" class="podtext">
+                        </div>
+                    
+                        <img style="width: 30px;" id="set_comments" src="/static/image/strelka.png" alt="">
                     </div>
-                    <button id="set_comments" type="button">Отправить комментарий</button>
-
                 </div>
                 <div class="overlay"></div>
             </div>
@@ -228,9 +232,9 @@
         <form id="exist_form">
             <div class="exist_modal">
                 <div class="exist_modal-window">
-                    <div>У данного пользователя нет маршрутов</div>
+                    <div class="pozagolovok">У данного пользователя нет маршрутов</div>
 
-                    <button id="but_exist_route_exit" type="button">Закрыть</button>
+                    <button id="but_exist_route_exit" type="button" class="btn3">Закрыть</button>
 
                 </div>
                 <div class="overlay"></div>

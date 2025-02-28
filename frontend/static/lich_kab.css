@@ -124,7 +124,6 @@ html {
 }
 
 .change-file-input-container {
-    overflow: hidden;
     position: relative;
 }
 
@@ -134,6 +133,19 @@ html {
     cursor: pointer;
     border-radius: 5px;
     border: 1px solid #d3d3d3;
+}
+
+#change_p_text {
+    width: 97%;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    outline: none;
+    resize: none;
+    transition: border-color 0.3s;
+    font-family: Roboto;
+    color: black;
 }
 
 .change-file-input {
@@ -247,11 +259,14 @@ html {
     border: #000;
     background-color: #9aa6ff;
     border-radius: 5px;
+    margin-top: -28px;
+
 }
 
+/* 
 .text-modal-okna {
     font-family: Poppins;
-}
+} */
 
 .linia-karta {
     position: absolute;
@@ -287,4 +302,74 @@ html {
     text-decoration: none;
     padding: 10px;
     color: black;
+}
+
+.info_modal-window {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#change {
+    max-height: 650px;
+}
+
+#zag_mar {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.div_stroka {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.pozagolovok {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.podtext {
+    font-size: 24px;
+}
+
+.btn {
+    outline: none;
+    background-color: white;
+    font-size: 24px;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 10px 30px 10px 30px;
+}
+
+.btn2 {
+    outline: none;
+    background-color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 0px 5px 0px 5px;
+    margin: 0 5px;
+}
+
+#info_route {
+    height: 700px;
+    align-self: center;
+    justify-self: center;
+    border: 0;
+    border-radius: 10px;
+    padding: 15px;
+    width: 30%;
+}
+
+#history_change_route_modal{
+    height: 700px;
+    align-self: center;
+    justify-self: center;
+    border: 0;
+    border-radius: 10px;
+    padding: 15px;
+    width: 30%;
 }

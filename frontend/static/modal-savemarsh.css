@@ -18,15 +18,19 @@
 
 /* Окно диалога */
 #okno {
-    background-color: #fff;
     border-radius: 10px;
     padding: 20px;
     width: 70%;
     max-width: 530px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    z-index: 9999;  
+
 }
+
+#okno .overlay{
+    background-color: #000005;
+}
+
 
 /* Заголовок модального окна */
 .modalzag {
@@ -49,9 +53,9 @@
 }
 
 /* Основной текст в модальном окне */
-.text-modal-okna {
+/* .text-modal-okna {
     margin-bottom: 20px;
-}
+} */
 
 /* Надписи */
 .nadpisi {

@@ -18,18 +18,18 @@
 
 /* Окно диалога */
 #okno {
-    background-color: #fff;
+    align-self: center;
+  justify-self: center;
     border-radius: 10px;
     padding: 20px;
     width: 70%;
     max-width: 530px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    position: fixed;          /* Фиксируем положение окна */
-    top: 50%;                 /* Смещаем сверху на 50% */
-    left: 50%;                /* Смещаем слева на 50% */
-    transform: translate(-50%, -50%); /* Сдвигаем на 50% вверх и влево, чтобы центрировать */
-    z-index: 9999;  
+}
+
+#okno .overlay{
+    background-color: #000005;
 }
 
 /* Заголовок модального окна */

@@ -131,17 +131,17 @@
                     <h1 class="modalzag"> Сохранить маршрут</h1>
                     <button id="btn_close" class="btn-close" type="button">X</button>
 
-                    <div class="text-modal-okna">
+                    <div class="text-modal-okna div_stroka">
                         <p class="nadpisi">Название</p>
                         <input id="p_name" type="text" class="text-modal-window-save-marsh">
                     </div>
 
-                    <div class="text-modal-okna">
+                    <div class="text-modal-okna div_stroka" >
                         <p class="nadpisi2">Описание</p>
                         <textarea id="p_text" name="" id="" class="text-modal-window-save-marsh2"></textarea>
                     </div>
 
-                    <div class="text-modal-okna">
+                    <div class="text-modal-okna div_stroka">
                         <p class="nadpisi3">Выберите цвет линий:</p>
                         <input id="p_color" type="color" class="p-color">
                     </div><br>
@@ -184,24 +184,24 @@
                 <div class="info_modal-window">
                     <h1 class="modalzag">Маршрут</h1>
 
-                    <div class="text-modal-okna">
-                        <div>Название</div>
-                        <p id="info_name"></p>
+                    <div class="text-modal-okna div_stroka">
+                        <div class="pozagolovok">Название</div>
+                        <p id="info_name" class="podtext"></p>
+                    </div><br>
+
+                    <div class="text-modal-okna div_stroka">
+                        <div class="pozagolovok">Описание</div>
+                        <p id="info_opisanie" class="podtext"></p>
                     </div><br>
 
                     <div class="text-modal-okna">
-                        <div>Описание</div>
-                        <p id="info_opisanie"></p>
+                        <div class="pozagolovok">Фотографии маршрута</div>
+                        <p id="info_photo_route" class="podtext"></p>
                     </div><br>
 
-                    <div class="text-modal-okna">
-                        <div>Фотографии маршрута</div>
-                        <p id="info_photo_route"></p>
-                    </div><br>
-
-                    <div class="text-modal-okna">
-                        <div> Тип маршрута</div>
-                        <p id="info_type_route"></p>
+                    <div class="text-modal-okna div_stroka">
+                        <div class="pozagolovok"> Тип маршрута</div>
+                        <p id="info_type_route" class="podtext"></p>
                     </div>
 
                     <div>
@@ -226,34 +226,34 @@
             <div class="history_modal">
                 <div class="history_modal-window">
 
-                    <h1>История изменения маршрута</h1>
+                    <h1 class="zag_mar">История изменения маршрута</h1>
 
-                    <div>
-                        <div>Название</div>
-                        <p id="history_info_name"></p>
+                    <div class="text-modal-okna div_stroka">
+                        <div class="pozagolovok">Название</div>
+                        <p id="history_info_name" class="podtext"></p>
                     </div><br>
 
-                    <div>
-                        <div>Описание</div>
-                        <p id="history_info_opisanie"></p>
+                    <div class="text-modal-okna div_stroka">
+                        <div class="pozagolovok">Описание</div>
+                        <p id="history_info_opisanie" class="podtext"></p>
                     </div><br>
 
-                    <div>
+                    <div >
                         <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative"></div>
                     </div><br>
 
                     <div>
-                        <div>Фотографии маршрута</div>
+                        <div class="pozagolovok">Фотографии маршрута</div>
                         <p id="history_info_photo_route"></p>
                     </div><br>
 
                     <div style="display: flex;">
-                        <button id="back" type="button"> ❮❮ </button>
-                        <p id="number_change">1</p>
-                        <button id="forward" type="button"> ❯❯ </button>
+                        <button id="back" type="button" class="btn2"> ❮❮ </button>
+                        <p id="number_change" class="pozagolovok">1</p>
+                        <button id="forward" type="button" class="btn2"> ❯❯ </button>
                     </div><br>
 
-                    <button id="but_change_route_history_exit" type="button">Закрыть</button>
+                    <button id="but_change_route_history_exit" type="button" class="btn">Закрыть</button>
 
                 </div>
                 <div class="overlay"></div>
@@ -285,16 +285,16 @@
         <form id="del_form">
             <div class="del_modal">
                 <div class="del_modal-window">
-                    <h1>Удаление маршрута</h1>
+                    <h1 id="zag_mar">Удаление маршрута</h1>
 
                     <div>
-                        <div>Вы уверены, что хотите удалить маршрут?</div>
+                        <div class="podtext">Вы уверены, что хотите удалить маршрут?</div>
                     </div><br>
 
                     <div>
 
-                        <button id="but_del_cancel" type="button">Отменить</button>
-                        <button id="but_delete_route" type="button">Удалить маршрут</button>
+                        <button id="but_del_cancel" type="button" class="btn">Отменить</button>
+                        <button id="but_delete_route" type="button" class="btn">Удалить маршрут</button>
 
                     </div>
 
@@ -311,25 +311,28 @@
         <form id="change_form">
             <div class="change-modal">
                 <div class="change-modal-window">
-                    <h1>Изменить маршрут</h1>
+                    <h1 id="zag_mar">Изменить маршрут</h1>
 
                     <div>
-                        <p>Название</p>
-                        <input id="change_p_name" type="text">
+                        <p class="pozagolovok">Название</p>
+                        <input id="change_p_name" type="text" class="podtext">
                     </div>
 
                     <div>
-                        <p>Описание</p>
-                        <textarea id="change_p_text"></textarea>
+                        <p class="pozagolovok">Описание</p>
+                        <textarea id="change_p_text" class="podtext"></textarea>
                     </div>
 
                     <div>
-                        <p>Выберите цвет линий:</p>
+                        <p class="pozagolovok">Выберите цвет линий:</p>
                         <input id="change_p_color" type="color">
                     </div><br>
 
                     <div class="change-file-input-container">
-                        <label class="change-file-input-label" for="change-dobav_foto">Добавить фото</label>
+                        <div id="gallery_change">
+
+                        </div>
+                        <label class="change-file-input-label" for="change-dobav_foto" >Добавить фото</label>
                         <input id="change-dobav_foto" class="change-file-input" type="file" multiple>
                     </div><br>
 
