@@ -9,20 +9,22 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@700" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700" />
     <link rel="stylesheet" href="static/lich_kab.css">
+    <link rel="stylesheet" href="static/modal-savemarsh.css">
     <title>Личный кабинет</title>
 </head>
 
 <body>
 
     {% if url_admin != '' %}
-    <a href="{{ url_admin }}">Панель администратора</a>
+    <div class="administr">
+        <a href="{{ url_admin }}" class="button-panel-administrators">Панель администратора</a>
+    </div>
     {% endif %}
 
-
+    <button id="back_glav_str" type="button">Главная</button>
     <div class="container12" style="display: flex; justify-content: space-between; margin: -8px; gap: 30px;">
-        <img src="/static/image/Vector 6.svg" alt="" class="sin-pattern">
-        <img src="/static/image/линия.png" alt="" class="linia-karta">
-        <img src="/static/image/чемодан.png" alt="" class="chemod">
+        <img src="/static/image/Vector 6.svg" alt="">
+        
         <div class="glav-content">
             <div class="content-start">
                 <div id="login" style="display: flex;
@@ -104,8 +106,6 @@
 
             </div>
 
-            <button id="back_glav_str" type="button">На Главную</button>
-
             <div id="map" style="width: 600px; height: 400px"></div><br>
 
             <div style="display: flex; justify-content: space-around; ">
@@ -118,8 +118,10 @@
                 <button id="change_route_cancel">Отменить</button>
                 <button id="change_route">Изменить маршрут</button>
             </div>
+
         </div>
-        <img src="/static/image/Vector 7.svg" alt="" class="sin-pattern">
+        <img src="/static/image/Image.svg" alt="" style="width: 250px; height: 250px; position: absolute; right: 10px; bottom: 25px;">
+        <img src="/static/image/Vector 7.svg" alt="">
     </div>
 
     <dialog id="okno" class="okno1">
@@ -144,30 +146,31 @@
                         <input id="p_color" type="color" class="p-color">
                     </div><br>
 
+
+                    <label class="file-input" for="dobav_foto">Добавить фото</label>
                     <div id="not_galary" class="custom-file-input">
                         <div id="gallery">
 
                         </div>
-                        <label class="file-input" for="dobav_foto">Добавить фото</label>
                         <input id="dobav_foto" class="file-upload-btn" type="file" multiple><br>
                     </div>
 
                     <div class="text-modal-okna">
-                        Выберите тип публикации: <br>
-                        <div>
+                        Выберите тип публикации: <br><br>
+                        <div style="margin-top: -15px;">
                             <input class="radio" type="radio" id="public" name="choice" checked />
                             <label for="public">Публичная</label>
                         </div>
 
-                        <div class="text-modal-okna">
+                        <div>
                             <input class="radio" type="radio" id="privat" name="choice" />
                             <label for="privat">Приватная</label>
                         </div> <br>
                     </div>
-
-                    <button id="button_cancel" type="button" class="buttonOO">Отменить</button>
-                    <button id="button_send" type="button" class="buttonOO1">Отправить</button>
-
+                    <div class="otm-otp">
+                        <button id="button_cancel" type="button" class="buttonOO">Отменить</button>
+                        <button id="button_send" type="button" class="buttonOO1">Отправить</button>
+                    </div>
 
                 </div>
                 <div class="overlay"></div>
@@ -203,7 +206,8 @@
 
                     <div>
                         <button id="but_change_route" type="button" class="knopka-modal-okna">Изменить маршрут</button>
-                        <button id="but_change_route_history" type="button" class="knopka-modal-okna">История изменения</button>
+                        <button id="but_change_route_history" type="button" class="knopka-modal-okna">История
+                            изменения</button>
                     </div><br>
 
                     <button id="but_del_route" type="button" class="knopka-modal-okna">Удалить маршрут</button><br><br>
@@ -223,7 +227,7 @@
                 <div class="history_modal-window">
 
                     <h1>История изменения маршрута</h1>
-    
+
                     <div>
                         <div>Название</div>
                         <p id="history_info_name"></p>
@@ -233,7 +237,7 @@
                         <div>Описание</div>
                         <p id="history_info_opisanie"></p>
                     </div><br>
-                    
+
                     <div>
                         <div id="map2" style="height: 300px; width: 450px; overflow-y: auto; position:relative"></div>
                     </div><br>
@@ -265,7 +269,7 @@
                     <h1>История изменения маршрута</h1>
 
                     <div>
-                       <p>Этот маршрут не изменялся</p>
+                        <p>Этот маршрут не изменялся</p>
                     </div>
 
                     <button id="close_not_history" type="button">Закрыть</button>

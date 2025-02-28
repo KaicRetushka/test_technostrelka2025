@@ -1,4 +1,4 @@
-html{
+html {
     overflow-x: hidden;
     overflow-y: hidden;
 }
@@ -180,7 +180,7 @@ html{
 }
 
 #back_glav_str {
-    display: flex;
+    position: absolute;
     justify-content: center;
     text-align: center;
     align-items: center;
@@ -192,9 +192,10 @@ html{
     font-weight: 700;
     font-size: 30px;
     color: rgb(0, 0, 0);
+    margin-left: -600px;
     background-color: transparent;
     margin-bottom: 5px;
-    margin-top: 35px;
+    margin-top: 45px;
 }
 
 #check_route {
@@ -265,4 +266,25 @@ html{
     height: 300px;
     left: 1240px;
     top: 500px;
+}
+
+.administr {
+    text-align: center;
+    text-decoration: none;
+    width: 190px;
+    padding: 3px;
+    margin: 15px;
+    left: 85%;
+    top: 30px;
+    position: fixed;
+    color: black;
+    border: 2px solid black;
+    border-radius: 9px;
+    background-color: #88c3ff;
+}
+
+.button-panel-administrators {
+    text-decoration: none;
+    padding: 10px;
+    color: black;
 }

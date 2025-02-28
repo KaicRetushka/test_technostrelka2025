@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <title>Document</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=126279f8-7d73-4da9-a3e6-369f3c5d0f2f&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=126279f8-7d73-4da9-a3e6-369f3c5d0f2f&lang=ru_RU"
+        type="text/javascript"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@700" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Volkhov:wght@700" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jolly+Lodger:wght@400" />
     <link rel="stylesheet" href="static/glav_str.css">
+    <link rel="stylesheet" href="static/modal-okna.css">
 </head>
 
 <body>
+
     <div class="EVM">EVM</div>
     <a href="#blok3" class="link-map">Туристические маршруты</a>
-    <div style="width: 107.31px; height: 37.64px; left: 1162.25px; top: 136.46px; position: absolute">
-
-
-
+    <img src="/static/image/Vector 41.svg" alt="">
+    <div style="width: 107.31px; height: 37.64px; left: 1162.25px; top: 136.46px; position: absolute"> 
         {% if is_enter %}
         <button id="fullname" class="fullname">{{ fullname }}</button>
         <button id="button_glav_exit" type="button" class="button_glav_exit">Выйти</button><br><br>
@@ -28,7 +30,8 @@
         </a>
         <a href="reg.html">
             <button id="button_glav_reg" class="button_glav_reg">Рег</button>
-        </a> <br><br>
+        </a>
+       <br><br>
         {% endif %}
 
         <img class="Vsadnic" src="/static/image/Всадник.png" />
@@ -89,7 +92,9 @@
         <div class="loginii">
             <div class="zag-loginii">Все пользователи:</div>
             <div class="avatar" id="avatarka"></div>
-            <div class="login_all" id="login_all"></div>
+            <div class="login_all" id="login_all">
+
+            </div>
         </div>
     </div>
 
@@ -100,32 +105,33 @@
                     <h1 class="modalzag"> Сохранить маршрут</h1>
                     <button id="btn_close" class="btn-close" type="button">X</button>
 
-                    <div class="bl-modal-ok">
+                    <div class="text-modal-okna">
                         <p class="nadpisi">Название</p>
                         <input id="p_name" type="text" class="text-modal-window-save-marsh">
                     </div>
 
-                    <div>
+                    <div class="text-modal-okna">
                         <p class="nadpisi2">Описание</p>
                         <textarea id="p_text" name="" id="" class="text-modal-window-save-marsh2"></textarea>
                     </div>
 
-                    <div>
+                    <div class="text-modal-okna">
                         <p class="nadpisi3">Выберите цвет линий:</p>
                         <input id="p_color" type="color" class="p-color">
                     </div><br>
 
+
+                    <label class="file-input" for="dobav_foto">Добавить фото</label>
                     <div id="not_galary" class="custom-file-input">
                         <div id="gallery">
 
                         </div>
-                        <label class="file-input" for="dobav_foto">Добавить фото</label>
                         <input id="dobav_foto" class="file-upload-btn" type="file" multiple><br>
                     </div>
 
-                    <div>
-                        Выберите тип публикации: <br>
-                        <div>
+                    <div class="text-modal-okna">
+                        Выберите тип публикации: <br><br>
+                        <div style="margin-top: -15px;">
                             <input class="radio" type="radio" id="public" name="choice" checked />
                             <label for="public">Публичная</label>
                         </div>
@@ -135,11 +141,11 @@
                             <label for="privat">Приватная</label>
                         </div> <br>
                     </div>
-                    
-                    <button id="button_cancel" type="button" class="buttonOO">Отменить</button>
-                    <button id="button_send" type="button" class="buttonOO1">Отправить</button>
-                    
-                    
+                    <div class="otm-otp">
+                        <button id="button_cancel" type="button" class="buttonOO">Отменить</button>
+                        <button id="button_send" type="button" class="buttonOO1">Отправить</button>
+                    </div>
+
                 </div>
                 <div class="overlay"></div>
             </div>
@@ -178,7 +184,7 @@
                     <div>
                         <p id="kolvo_mark_good"></p>
                         <button id="but_mark_good" type="button">👍</button>
-                        
+
                         <p id="kolvo_mark_bad"></p>
                         <button id="but_mark_bad" type="button">👎</button>
                     </div><br>
@@ -203,10 +209,10 @@
                     <div id="image_from_comments"></div>
 
                     <div id="comments">
-                       <div id="div_comment">g</div>
+                        <div id="div_comment">g</div>
                     </div>
 
-                    <div id="vvod_comments"> 
+                    <div id="vvod_comments">
                         <input id="input_comment" type="text">
                     </div>
                     <button id="set_comments" type="button">Отправить комментарий</button>
@@ -234,13 +240,13 @@
 
 
 
-    <div class="login_all" id="login_all">  </div>
+    <div class="login_all" id="login_all"> </div>
 
 
 
-    <div class="avatar" id="avatarka"> 
-    </div> <br> 
-    
+    <div class="avatar" id="avatarka">
+    </div> <br>
+
 
 
 

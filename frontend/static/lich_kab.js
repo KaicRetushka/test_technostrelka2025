@@ -653,6 +653,49 @@ btn_add_polyline.addEventListener('click', () => {
 })
 
 
+const dobav_foto_change = document.querySelector('#change-dobav_foto')
+const gallery_change = document.querySelector('#gallery_change')
+
+function myFunc_change() {
+    var files = dobav_foto_change.files || dobav_foto_change.currentTarget.files;
+    var reader = [];
+    
+    // Очищаем галерею перед добавлением новых изображений
+    gallery_change.innerHTML = '';
+
+    for (let i = 0; i < files.length; i++) {
+        let name = 'file' + i; // Уникальное имя для каждого изображения
+        let clas = 'file-class-' + i;
+
+        reader[i] = new FileReader();
+        reader[i].readAsDataURL(files[i]);
+        
+        // Создаем элемент изображения и добавляем его в галерею
+        let imgElement = document.createElement('img')
+        imgElement.id = name
+        imgElement.className = clas
+        imgElement.src = ''; // Изначально пустой src
+        imgElement.style.width = '100px'
+        imgElement.style.height = '100px'
+        imgElement.style.margin = '15px'
+
+        gallery_change.appendChild(imgElement); // Добавляем элемент в галерею
+
+        // Устанавливаем обработчик onload
+        reader[i].onload = function (e) {
+            console.log(document.getElementById(name));
+            imgElement.src = e.target.result; // Устанавливаем src для изображения
+        };
+
+        console.log(files[i]);
+    }
+}
+
+
+dobav_foto_change.addEventListener("change", (event) => {
+    myFunc_change()
+})
+
 
 
 
