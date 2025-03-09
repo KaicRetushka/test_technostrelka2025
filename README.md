@@ -1,4 +1,4 @@
-Ссылка на видео: https://disk.yandex.ru/client/disk/Технострелка%202025
+Ссылка на видео: https://disk.yandex.ru/d/LNebfdMNR0Bj4w
 
 Запуск сайта:
 Установить версию python 3.11 и выше, pip, модуль venv
